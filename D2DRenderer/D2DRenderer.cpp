@@ -1,10 +1,208 @@
-ï»¿// D2DRenderer.cpp : ì •ì  ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ìœ„í•œ í•¨ìˆ˜ë¥¼ ì •ì˜í•©ë‹ˆë‹¤.
-//
-
 #include "pch.h"
-#include "framework.h"
+#include "../Engine/CommonApp.h"
+#include "D2DRenderer.h"
 
-// TODO: ë¼ì´ë¸ŒëŸ¬ë¦¬ í•¨ìˆ˜ì˜ ì˜ˆì œìž…ë‹ˆë‹¤.
-void fnD2DRenderer()
+#pragma comment(lib, "d2d1.lib")
+#pragma comment(lib, "dwrite.lib")
+
+ID2D1HwndRenderTarget* D2DRenderer::m_pD2DRenderTarget = NULL;
+D2DRenderer* D2DRenderer::m_Instance = nullptr;
+
+D2DRenderer::D2DRenderer()
 {
+    D2DRenderer::m_Instance = this; // ¾îµð¼­µç ·»´õ·¯ °´Ã¼¿¡ Á¢±ÙÇÏ±â ½±°Ô ÀÎ½ºÅÏ½º¸¦ ÀúÀåÇØµÐ´Ù
+}
+
+D2DRenderer::~D2DRenderer()
+{
+    if (m_pIWICImagingFactory)   m_pIWICImagingFactory->Release();
+    if (m_pD2DRenderTarget)  m_pD2DRenderTarget->Release();
+    if (m_pD2DFactory)   m_pD2DFactory->Release();
+
+    CoUninitialize();
+}
+
+HRESULT D2DRenderer::Initialize()
+{
+    // COM »ç¿ë
+    HRESULT hr = S_OK;
+    hr = CoInitialize(NULL);
+    if (SUCCEEDED(hr))
+    {
+        // ·»´õÅ¸°ÙÀ» ¸¸µé¼öÀÖ´ÂÆÑÅä¸®°´Ã¼¸¦ »ý¼ºÇÏ°í ÀÎÅÍÆäÀÌ½º Æ÷ÀÎÅÍ¸¦¾ò¾î¿Â´Ù.
+        hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        // ÀÌ¹Ì À©µµ¿ì°¡¸¸µé¾îÁø »óÅÂ¿¡¼­ À©µµ¿ì »çÀÌÁî¸¦ ±¸ÇÑ´Ù.
+        RECT rc;
+        GetClientRect(CommonApp::m_hWnd, &rc);
+        D2D1_SIZE_U size = D2D1::SizeU(
+            static_cast<UINT>(rc.right - rc.left),
+            static_cast<UINT>(rc.bottom - rc.top)
+        );
+
+        // ÆÑÅä¸®·Î À©µµ¿ìÇÚµé, »çÀÌÁî¸¦ ³Ñ°Ü ·»´õÅ¸°ÙÀ» ¸¸µç´Ù.
+        hr = m_pD2DFactory->CreateHwndRenderTarget(
+            D2D1::RenderTargetProperties(),
+            D2D1::HwndRenderTargetProperties(CommonApp::m_hWnd, size),
+            &m_pD2DRenderTarget
+        );
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = m_pD2DRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_pBrush);
+
+    }
+
+    // ÅØ½ºÆ®
+    if (SUCCEEDED(hr))
+    {
+        hr = DWriteCreateFactory(
+            DWRITE_FACTORY_TYPE_SHARED,
+            __uuidof(m_pDWriteFactory),
+            reinterpret_cast<IUnknown**>(&m_pDWriteFactory)
+        );
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = m_pDWriteFactory->CreateTextFormat(
+            L"Bernard MT Condensed", // 
+            NULL,
+            DWRITE_FONT_WEIGHT_NORMAL,
+            DWRITE_FONT_STYLE_NORMAL,
+            DWRITE_FONT_STRETCH_NORMAL,
+            15.0f,
+            L"", //locale
+            &m_pDWriteTextFormat
+        );
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        // Center the text horizontally and vertically.
+        m_pDWriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+        //m_pDWriteTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        // ºñÆ®¸Ê Ãâ·ÂÀ» À§ÇÑ ÆÑÅä¸® »ý¼º
+        hr = CoCreateInstance(
+            CLSID_WICImagingFactory,
+            NULL,
+            CLSCTX_INPROC_SERVER,
+            IID_PPV_ARGS(&m_pIWICImagingFactory)
+        );
+    }
+
+    if (FAILED(hr))
+    {
+        _com_error err(hr);
+        ::MessageBox(CommonApp::m_hWnd, err.ErrorMessage(), L"FAILED", MB_OK);
+    }
+
+    return true;
+}
+
+HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2D1Bitmap)
+{
+    // ¹®ÀÚ¿­°ú Æ÷ÀÎÅÍ ½Ö¿¡¼­ ¹®ÀÚ¿­¸¸ °°À¸¸é ÇØ´ç ¿ø¼Ò¸¦ Ã£´Â´Ù.
+    auto it = std::find_if(m_SharingD2DBitmaps.begin(), m_SharingD2DBitmaps.end(),
+        [strFilePath](std::pair<std::wstring, ID2D1Bitmap*> ContainerData)
+        {
+            return (ContainerData.first == strFilePath);
+        }
+    );
+
+    // Ã£Àº °æ¿ì
+    if (it != m_SharingD2DBitmaps.end())
+    {
+        *pID2D1Bitmap = it->second;
+        (*pID2D1Bitmap)->AddRef();
+
+        return S_OK;
+    }
+
+    // ¾øÀ¸¸é »õ·Î ¸¸µç´Ù.
+    HRESULT hr;
+    // Create a decoder - µðÄÚ´õ¸¦ »ý¼ºÇØ¼­ ¾ÐÃàÀ» ÇØÁ¦ÇÏ°í ¸Þ¸ð¸®¿¡ ¿Ã¸²
+    IWICBitmapDecoder* pDecoder = NULL;
+
+    hr = m_pIWICImagingFactory->CreateDecoderFromFilename(
+        strFilePath.c_str(),                      // Image to be decoded
+        NULL,                            // Do not prefer a particular vendor
+        GENERIC_READ,                    // Desired read access to the file
+        WICDecodeMetadataCacheOnDemand,  // Cache metadata when needed
+        &pDecoder                        // Pointer to the decoder
+    );
+
+    // Retrieve the first frame of the image from the decoder
+    IWICBitmapFrameDecode* pFrame = NULL;
+    if (SUCCEEDED(hr))
+    {
+        hr = pDecoder->GetFrame(0, &pFrame);
+    }
+
+    IWICFormatConverter* pConverter = NULL;
+    //Step 3: Format convert the frame to 32bppPBGRA
+    if (SUCCEEDED(hr))
+    {
+        // ÆÑÅä¸®¸¦ ÅëÇØ ÄÁ¹öÅÍ¸¦ ¸¸µç´Ù
+        hr = m_pIWICImagingFactory->CreateFormatConverter(&pConverter);
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        // ÄÁ¹öÅÍ¸¦ ÅëÇØ ÇÈ¼¿ º¯È¯
+        hr = pConverter->Initialize(
+            pFrame,                          // Input bitmap to convert
+            GUID_WICPixelFormat32bppPBGRA,   // Destination pixel format
+            WICBitmapDitherTypeNone,         // Specified dither pattern
+            NULL,                            // Specify a particular palette 
+            0.f,                             // Alpha threshold
+            WICBitmapPaletteTypeCustom       // Palette translation type
+        );
+    }
+
+    if (SUCCEEDED(hr))
+    {
+        hr = m_pD2DRenderTarget->CreateBitmapFromWicBitmap(pConverter, NULL, pID2D1Bitmap);
+    }
+
+    // ÇÒ´ç ÇØÁ¦
+    if (pDecoder != NULL)
+        pDecoder->Release();
+    if (pFrame != NULL)
+        pFrame->Release();
+    if (pConverter != NULL)
+        pConverter->Release();
+
+    m_SharingD2DBitmaps.push_back(std::make_pair(strFilePath, *pID2D1Bitmap));
+
+    return hr;
+}
+
+void D2DRenderer::ReleaseD2DBitmapFromFile(ID2D1Bitmap* pID2D1Bitmap)
+{
+    ULONG count = pID2D1Bitmap->Release();
+    if (count > 0)
+        return;
+
+    // ¹®ÀÚ¿­°ú Æ÷ÀÎÅÍ ½Ö¿¡¼­ ¹®ÀÚ¿­¸¸ °°À¸¸é ÇØ´ç ¿ø¼Ò¸¦ Ã£´Â´Ù.
+    auto it = std::find_if(m_SharingD2DBitmaps.begin(), m_SharingD2DBitmaps.end(),
+        [pID2D1Bitmap](std::pair<std::wstring, ID2D1Bitmap*> ContainerData)
+        {
+            return (ContainerData.second == pID2D1Bitmap);
+        }
+    );
+
+    // Ã£Àº °æ¿ì
+    if (it != m_SharingD2DBitmaps.end())
+    {
+        m_SharingD2DBitmaps.erase(it);
+    }
 }
