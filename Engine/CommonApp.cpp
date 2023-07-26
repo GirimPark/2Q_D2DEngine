@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "../D2DRenderer/D2DRenderer.h"
 #include "CommonApp.h"
 
 CommonApp* CommonApp::m_pInstance = nullptr;
@@ -69,8 +68,7 @@ bool CommonApp::Initialize()
     m_currentTime = m_previousTime = (float)GetTickCount64() / 1000.f;
 
     // ·»´õ·¯ µî·Ï
-    //HRESULT hr = m_D2DRenderer.Initialize
-    HRESULT hr = D2DRenderer::m_Instance->Initialize();
+    HRESULT hr = m_D2DRenderer.Initialize();
     if (FAILED(hr))
     {
         MessageBoxComError(hr);

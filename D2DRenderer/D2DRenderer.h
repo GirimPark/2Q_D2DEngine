@@ -3,7 +3,7 @@
 
 class D2DRenderer
 {
-private:
+public:
 	D2DRenderer();
 	~D2DRenderer();
 

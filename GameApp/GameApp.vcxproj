@@ -135,6 +135,14 @@
   <ItemGroup>
     <ClCompile Include="GameApp.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\D2DRenderer\D2DRenderer.vcxproj">
+      <Project>{d83814b7-4fba-4258-96b6-31302f23ab46}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{68e71fcb-7fb4-4c6e-9d04-baa872f5cf9c}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
