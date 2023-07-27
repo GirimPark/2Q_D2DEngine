@@ -6,26 +6,51 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="0. pch">
-      <UniqueIdentifier>{725433c5-6753-4f0b-ba14-40b44b340698}</UniqueIdentifier>
+      <UniqueIdentifier>{ef012376-2d44-443a-bab5-0eec0f451e1e}</UniqueIdentifier>
     </Filter>
     <Filter Include="1. Core">
-      <UniqueIdentifier>{67b9e380-c303-477c-957f-c931d8ab7ffa}</UniqueIdentifier>
+      <UniqueIdentifier>{e3c3beb1-2f14-4ef7-b3c3-14f53c954db6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2. World">
+      <UniqueIdentifier>{51f8b8bb-4ac5-4fc3-a787-94ab49d57746}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GameApp.cpp">
-      <Filter>1. Core</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GameApp.h">
-      <Filter>1. Core</Filter>
-    </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>0. pch</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>0. pch</Filter>
     </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>0. pch</Filter>
+    </ClInclude>
+    <ClInclude Include="GameApp.h">
+      <Filter>1. Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TestWorld.h">
+      <Filter>2. World</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameApp.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="GameApp.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameApp.cpp">
+      <Filter>1. Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TestWorld.cpp">
+      <Filter>2. World</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

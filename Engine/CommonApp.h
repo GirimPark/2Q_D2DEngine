@@ -6,21 +6,17 @@
 게임에서 사용할 공통적인 처리를 하는 class
 실제로 만들 게임은 CommonApp을 상속 받아 부가적인 처리를 한다.
 ----------------------------------------------------------*/
-
-#include "../D2DRenderer/D2DRenderer.h"
 class CommonApp
 {
-public:
+protected:
 	CommonApp(HINSTANCE hInstance);
 	virtual ~CommonApp();
 
 public:
 	static HWND m_hWnd;
-	static CommonApp* m_pInstance;
+	static CommonApp* m_pInstance;	// 매 프레임 돌아야하기 때문에 public으로 선언
 
 	static float m_deltaTime;
-	static float m_nWidth;
-	static float m_nHeight;
 
 protected:
 	HACCEL m_hAccelTable;
@@ -31,8 +27,6 @@ protected:
 	WNDCLASSEXW m_wcex;
 	int m_nCmdShow;
 
-	D2DRenderer m_D2DRenderer;
-
 	float m_previousTime;
 	float m_currentTime;
 
@@ -41,6 +35,7 @@ public:
 	void Loop();
 	virtual void Update();
 	virtual void Render();
+	virtual void Finalize();
 
 public:
 	BOOL GetClientRect(LPRECT lpRect);

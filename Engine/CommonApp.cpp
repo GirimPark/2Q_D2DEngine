@@ -1,11 +1,10 @@
 #include "pch.h"
+#include "../D2DRenderer/D2DRenderer.h"
 #include "CommonApp.h"
 
 CommonApp* CommonApp::m_pInstance = nullptr;
 HWND CommonApp::m_hWnd;
 float CommonApp::m_deltaTime = 0.f;
-float CommonApp::m_nWidth = 1024;
-float CommonApp::m_nHeight = 768;
 
 LRESULT CALLBACK DefaultWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -47,7 +46,7 @@ bool CommonApp::Initialize()
     // 등록
     RegisterClassExW(&m_wcex);
 
-    RECT rt = { 0, 0, m_nWidth, m_nHeight };
+    RECT rt = { 0, 0, ScreenWidth, ScreenHeight };
     AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true);
     // 생성
     m_hWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW,
@@ -68,7 +67,7 @@ bool CommonApp::Initialize()
     m_currentTime = m_previousTime = (float)GetTickCount64() / 1000.f;
 
     // 렌더러 등록
-    HRESULT hr = m_D2DRenderer.Initialize();
+    HRESULT hr = D2DRenderer::getInstance()->Initialize();
     if (FAILED(hr))
     {
         MessageBoxComError(hr);
@@ -98,6 +97,7 @@ void CommonApp::Loop()
             Render();
         }
     }
+    Finalize();
 }
 
 void CommonApp::Update()
@@ -116,6 +116,11 @@ void CommonApp::Render()
 //    D2DRenderer::m_pD2DRenderTarget->Clear(color);
 //
 //    D2DRenderer::m_pD2DRenderTarget->EndDraw();
+}
+
+void CommonApp::Finalize()
+{
+    D2DRenderer::getInstance()->Finalize();
 }
 
 BOOL CommonApp::GetClientRect(LPRECT lpRect)

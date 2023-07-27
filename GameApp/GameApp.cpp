@@ -1,22 +1,22 @@
-#include "framework.h"
-#include "Resource.h"
-//#include "../D2DRenderer/D2DRenderer.h"
+ï»¿#include "framework.h"
+#include "../D2DRenderer/D2DRenderer.h"
+#include "../Engine/World.h"
+#include "TestWorld.h"
 #include "GameApp.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow) 
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // TODO: ¿©±â¿¡ ÄÚµå¸¦ ÀÔ·ÂÇÕ´Ï´Ù.
     // Debug Memory Leak Check at start point
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(63680);
+    //_CrtSetBreakAlloc(222);
 
-    // Àü¿ª ¹®ÀÚ¿­À» ÃÊ±âÈ­ÇÕ´Ï´Ù.
+    // ì „ì—­ ë¬¸ìžì—´ì„ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
     GameApp App(hInstance);
     App.Initialize();
     App.Loop();
@@ -31,31 +31,32 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 GameApp::GameApp(HINSTANCE hInstance)
     :CommonApp::CommonApp(hInstance)
 {
-    // DemoApp¿¡¼­ ¸®¼Ò½º¸¦ ¾ò¾î¿Í Å¬·¡½º ¼³Á¤ÇÏ±â
+    // GameAppì—ì„œ ë¦¬ì†ŒìŠ¤ë¥¼ ì–»ì–´ì™€ í´ëž˜ìŠ¤ ì„¤ì •í•˜ê¸°
     LoadStringW(hInstance, IDS_APP_TITLE, m_szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_DEMOAPP, m_szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_GAMEAPP, m_szWindowClass, MAX_LOADSTRING);
 
-    m_wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DEMOAPP));
+    m_wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_GAMEAPP));
     m_wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SMALL));
     m_wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    m_wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_DEMOAPP);
+    m_wcex.lpszMenuName = MAKEINTRESOURCEW(IDI_GAMEAPP);
 
-    m_hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_DEMOAPP));
+    m_hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDI_GAMEAPP));
 }
 
-GameApp::~GameApp() 
+GameApp::~GameApp()
 {
 }
 
 void GameApp::Update()
 {
-    // ½Ã°£ °è»ê
+    // ì‹œê°„ ê³„ì‚°
     __super::Update();
 
-    // World Update
+    // Test
+    m_pTestWorld->Update();
 
+    // Manager Update
     // FixedUpdate
-
     // LateUpdate
 }
 
@@ -66,7 +67,9 @@ void GameApp::Render()
     D2D1::ColorF color(D2D1::ColorF::Black);
     D2DRenderer::m_pD2DRenderTarget->Clear(color);
 
-    // World Render
+    // Test
+    m_pTestWorld->Render();
+    // WorldManager Render
 
     D2DRenderer::m_pD2DRenderTarget->EndDraw();
 }
@@ -75,8 +78,19 @@ bool GameApp::Initialize()
 {
     assert(__super::Initialize());
 
-    // World Init
+    // Test
+    m_pTestWorld = new TestWorld;
+    m_pTestWorld->Initialize();
+    // WorldManager Init
 
     return false;
+}
+
+void GameApp::Finalize()
+{
+    
+    // World Finalize ?
+
+    __super::Finalize();
 }
 

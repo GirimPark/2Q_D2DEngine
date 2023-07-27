@@ -6,7 +6,7 @@
 #pragma comment(lib, "dwrite.lib")
 
 ID2D1HwndRenderTarget* D2DRenderer::m_pD2DRenderTarget = NULL;
-D2DRenderer* D2DRenderer::m_Instance = nullptr;
+D2DRenderer* D2DRenderer::m_Instance = new D2DRenderer;
 
 D2DRenderer::D2DRenderer()
 {
@@ -106,6 +106,11 @@ HRESULT D2DRenderer::Initialize()
     }
 
     return true;
+}
+
+void D2DRenderer::Finalize()
+{
+    delete m_Instance;
 }
 
 HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2D1Bitmap)

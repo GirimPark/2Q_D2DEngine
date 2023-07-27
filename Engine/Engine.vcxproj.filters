@@ -11,6 +11,33 @@
     <Filter Include="1. Core">
       <UniqueIdentifier>{e07e1d70-d6ee-4a24-ab1a-158f442aa0d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3. World">
+      <UniqueIdentifier>{01d068ba-2306-41c0-b66e-d7b69636e170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2. Manager">
+      <UniqueIdentifier>{c7cc2f92-2ae0-4753-be98-dffd48af7b45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. Object">
+      <UniqueIdentifier>{b3890fd6-e86a-464a-8011-b821dcc02c68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component">
+      <UniqueIdentifier>{73fb0963-91aa-40f1-bf43-fd88c184cf5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{4e27c1da-8aec-4e24-a13d-5cacdc00005c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent">
+      <UniqueIdentifier>{08b6e08d-7cc1-41d9-bad1-3d233590b34b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent">
+      <UniqueIdentifier>{c481620b-409c-40d0-8ad9-f3b907091d27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables">
+      <UniqueIdentifier>{6707b312-ffe5-408f-b87d-970a9c425d5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{7ded6040-4dd3-4b15-b2df-b4d6a2870161}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -22,6 +49,39 @@
     <ClInclude Include="CommonApp.h">
       <Filter>1. Core</Filter>
     </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>3. World</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>4. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>4. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldManager.h">
+      <Filter>2. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>5. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneComponent.h">
+      <Filter>5. Component\SceneComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderComponent.h">
+      <Filter>5. Component\SceneComponent\RenderComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>0. pch</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -29,6 +89,33 @@
     </ClCompile>
     <ClCompile Include="CommonApp.cpp">
       <Filter>1. Core</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>3. World</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>4. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>4. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldManager.cpp">
+      <Filter>2. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>5. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneComponent.cpp">
+      <Filter>5. Component\SceneComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderComponent.cpp">
+      <Filter>5. Component\SceneComponent\RenderComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
