@@ -1,5 +1,4 @@
 ﻿#include "framework.h"
-#include "../D2DRenderer/D2DRenderer.h"
 #include "../Engine/World.h"
 #include "TestWorld.h"
 #include "GameApp.h"
@@ -14,7 +13,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Debug Memory Leak Check at start point
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(222);
+    //_CrtSetBreakAlloc(213);
 
     // 전역 문자열을 초기화합니다.
     GameApp App(hInstance);
@@ -45,6 +44,7 @@ GameApp::GameApp(HINSTANCE hInstance)
 
 GameApp::~GameApp()
 {
+   
 }
 
 void GameApp::Update()
@@ -62,16 +62,17 @@ void GameApp::Update()
 
 void GameApp::Render()
 {
-    D2DRenderer::m_pD2DRenderTarget->BeginDraw();
+    m_pD2DRenderer->getRenderTarget()->BeginDraw();
 
     D2D1::ColorF color(D2D1::ColorF::Black);
-    D2DRenderer::m_pD2DRenderTarget->Clear(color);
+    m_pD2DRenderer->getRenderTarget()->Clear(color);
 
+    // WorldManager -> World -> GameObject -> Component로 renderTarget(m_pRenderer) 내려보내기
     // Test
     m_pTestWorld->Render();
     // WorldManager Render
 
-    D2DRenderer::m_pD2DRenderTarget->EndDraw();
+    m_pD2DRenderer->getRenderTarget()->EndDraw();
 }
 
 bool GameApp::Initialize()
@@ -88,9 +89,9 @@ bool GameApp::Initialize()
 
 void GameApp::Finalize()
 {
-    
+  
     // World Finalize ?
-
+    delete m_pTestWorld;
     __super::Finalize();
 }
 

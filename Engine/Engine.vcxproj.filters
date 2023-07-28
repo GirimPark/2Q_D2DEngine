@@ -23,9 +23,6 @@
     <Filter Include="5. Component">
       <UniqueIdentifier>{73fb0963-91aa-40f1-bf43-fd88c184cf5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Collision">
-      <UniqueIdentifier>{4e27c1da-8aec-4e24-a13d-5cacdc00005c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="5. Component\SceneComponent">
       <UniqueIdentifier>{08b6e08d-7cc1-41d9-bad1-3d233590b34b}</UniqueIdentifier>
     </Filter>
@@ -35,8 +32,23 @@
     <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables">
       <UniqueIdentifier>{6707b312-ffe5-408f-b87d-970a9c425d5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="math">
+    <Filter Include="5. Component\SceneComponent\CameraComponent">
+      <UniqueIdentifier>{c37f40be-de6a-4a01-bdfa-610ea0551e48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. Resource">
+      <UniqueIdentifier>{d2792b97-1776-4812-94e9-e17614d54498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="7. math">
       <UniqueIdentifier>{7ded6040-4dd3-4b15-b2df-b4d6a2870161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="8. Collision">
+      <UniqueIdentifier>{4e27c1da-8aec-4e24-a13d-5cacdc00005c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. Resource\ReferenceCounter">
+      <UniqueIdentifier>{516bab54-29fc-4112-8d56-ebd6532dfa25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. Resource\AnimationAsset">
+      <UniqueIdentifier>{ae6d63f1-89a5-4397-a326-aa7c8090da0b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +77,7 @@
       <Filter>5. Component</Filter>
     </ClInclude>
     <ClInclude Include="AABB.h">
-      <Filter>Collision</Filter>
+      <Filter>8. Collision</Filter>
     </ClInclude>
     <ClInclude Include="SceneComponent.h">
       <Filter>5. Component\SceneComponent</Filter>
@@ -79,8 +91,17 @@
     <ClInclude Include="define.h">
       <Filter>0. pch</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2D.h">
-      <Filter>math</Filter>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>5. Component\SceneComponent\CameraComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="struct.h">
+      <Filter>7. math</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferenceCounter.h">
+      <Filter>6. Resource\ReferenceCounter</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationAsset.h">
+      <Filter>6. Resource\AnimationAsset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +127,7 @@
       <Filter>5. Component</Filter>
     </ClCompile>
     <ClCompile Include="AABB.cpp">
-      <Filter>Collision</Filter>
+      <Filter>8. Collision</Filter>
     </ClCompile>
     <ClCompile Include="SceneComponent.cpp">
       <Filter>5. Component\SceneComponent</Filter>
@@ -116,6 +137,15 @@
     </ClCompile>
     <ClCompile Include="AnimationComponent.cpp">
       <Filter>5. Component\SceneComponent\RenderComponent\Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>5. Component\SceneComponent\CameraComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceCounter.cpp">
+      <Filter>6. Resource\ReferenceCounter</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationAsset.cpp">
+      <Filter>6. Resource\AnimationAsset</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

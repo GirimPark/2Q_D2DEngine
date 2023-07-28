@@ -1,13 +1,25 @@
 #pragma once
+#include "../D2DRenderer/D2DRenderer.h"
 
 #define MAX_LOADSTRING 100
-
 /*---------------------------------------------------------
 게임에서 사용할 공통적인 처리를 하는 class
 실제로 만들 게임은 CommonApp을 상속 받아 부가적인 처리를 한다.
 ----------------------------------------------------------*/
 class CommonApp
 {
+protected:
+	D2DRenderer* m_pD2DRenderer = nullptr;
+	ID2D1RenderTarget* m_pRenderTarget = nullptr;
+	ID2D1SolidColorBrush* m_pBrush = nullptr;
+	IDWriteTextFormat* m_pTextFormat = nullptr;
+
+public:
+	D2DRenderer*& getRenderer() { return m_pD2DRenderer; }
+	ID2D1RenderTarget*& getRenderTarget() { return m_pRenderTarget; }
+	ID2D1SolidColorBrush*& getBrush() { return m_pBrush; }
+	IDWriteTextFormat*& getTextFormat() { return m_pTextFormat; }
+
 protected:
 	CommonApp(HINSTANCE hInstance);
 	virtual ~CommonApp();
@@ -34,7 +46,7 @@ public:
 	virtual bool Initialize();
 	void Loop();
 	virtual void Update();
-	virtual void Render();
+	virtual void Render() abstract;
 	virtual void Finalize();
 
 public:

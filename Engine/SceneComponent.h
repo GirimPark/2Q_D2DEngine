@@ -17,10 +17,10 @@ protected:
 	std::vector<Component*> m_Children;
 	SceneComponent* m_pParentComponent = nullptr;
 
-	D2D_VECTOR_2F m_RelativeScale = { 1.f, 1.f };
+	framework::Vector2D m_RelativeScale = { 1.f, 1.f };
 	float m_RelativeRotation = 0.f;
-	D2D_VECTOR_2F m_RelativeLocation = { 0.f, 0.f };
-	D2D_VECTOR_2F m_WorldLocation = { 0.f, 0.f };	// 실시간 위치값
+	framework::Vector2D m_RelativeLocation = { 0.f, 0.f };
+	framework::Vector2D m_WorldLocation = { 0.f, 0.f };	// 실시간 위치값
 
 	// RelativeScale, Rotation, Location에 대한 변환연산 결과값
 	D2D_MATRIX_3X2_F m_RelativeTransform;
@@ -33,27 +33,22 @@ private:
 
 
 public:
-	virtual ~SceneComponent();
+	virtual ~SceneComponent() { }
 
 public:
-	void SetRelativeScale(float x, float y) { m_RelativeScale.x = x; m_RelativeScale.y = y; }
-	D2D_VECTOR_2F GetRelativeScale() { return m_RelativeScale; }
-	void SetRelativeRotation(float rotation) { m_RelativeRotation = rotation; }
-	float GetRelativeRotation() { return m_RelativeRotation; }
+	//void SetRelativeScale(float x, float y) { m_RelativeScale.x = x; m_RelativeScale.y = y; }
+	//Vector2D GetRelativeScale() { return m_RelativeScale; }
+	//void SetRelativeRotation(float rotation) { m_RelativeRotation = rotation; }
+	//float GetRelativeRotation() { return m_RelativeRotation; }
 	void SetRelativeLocation(float x, float y) { m_RelativeLocation.x = x; m_RelativeLocation.y = y; }
-	D2D_VECTOR_2F GetRelativeLocation() { return m_RelativeLocation; }
-	D2D_VECTOR_2F GetWorldLocation() { return m_WorldLocation; }
-	D2D_VECTOR_2F GetFinalLocation() { return { m_FinalTransform.dx, m_FinalTransform.dy }; }
-	D2D_MATRIX_3X2_F GetWorldTransform() { return m_WorldTransform; }
-	D2D_MATRIX_3X2_F GetFinalTransform() { return m_FinalTransform; }
+	framework::Vector2D GetRelativeLocation() { return m_RelativeLocation; }
+	framework::Vector2D GetWorldLocation() { return m_WorldLocation; }
+	framework::Vector2D GetFinalLocation() { return { m_FinalTransform.dx, m_FinalTransform.dy }; }
+	//D2D_MATRIX_3X2_F GetWorldTransform() { return m_WorldTransform; }
+	//D2D_MATRIX_3X2_F GetFinalTransform() { return m_FinalTransform; }
 
 	void AddRelativeRotation(float rotation) { m_RelativeRotation = m_RelativeRotation + rotation; UpdateTransform(); }
-	void AddRelativeLocation(float x, float y)
-	{
-		m_RelativeLocation.x = m_RelativeLocation.x + x;
-		m_RelativeLocation.y = m_RelativeLocation.y + y;
-		//UpdateTransform();
-	}
+	void AddRelativeLocation(float x, float y) { m_RelativeLocation.x += x; m_RelativeLocation.y += y; }
 
 	virtual bool Initialize();
 	virtual void Update() override;

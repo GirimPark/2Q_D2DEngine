@@ -20,7 +20,6 @@ private:
 	// 벡터 자체가 트리구조를 가지지는 않는다.
 	// 벡터 중 하나를 대표 위치값으로 설정하고, 벡터 내에서 부모자식 관계를 포인팅하게 한다.
 	std::vector<Component*> m_OwnedComponent;
-	//std::map<std::wstring, Component*> m_OwndComponent;
 	// m_pRootComponent는 m_OwnedComponent 중 하나로 설정, 대표 위치값
 	SceneComponent* m_pRootComponent = nullptr;
 

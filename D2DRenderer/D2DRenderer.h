@@ -1,18 +1,18 @@
 #pragma once
 #include <list>
 
+/*----------------------------------------------------------------------
+Renderer를 싱글톤으로 만들지 않기위해 싱글톤인 CommonApp(Core)를 활용한다.
+GameApp 단에서는 렌더러의 존재를 몰라야 하고,
+Engine까지만 렌더러의 존재를 안다.
+-----------------------------------------------------------------------*/
 class D2DRenderer
 {
-private:
-	D2DRenderer();
+public:
 	~D2DRenderer();
 
-	static D2DRenderer* m_Instance;
-public:
-	static D2DRenderer* getInstance() { return m_Instance; }
-
-public:
-	static ID2D1HwndRenderTarget* m_pD2DRenderTarget;
+private:
+	ID2D1HwndRenderTarget* m_pD2DRenderTarget;
 
 	// 기본 D2D 사용을 위한 Factory의 인터페이스 포인터
 	ID2D1Factory* m_pD2DFactory = NULL;
@@ -27,8 +27,11 @@ public:
 	std::list<std::pair<std::wstring, ID2D1Bitmap*>> m_SharingD2DBitmaps;
 
 public:
+	ID2D1HwndRenderTarget*& getRenderTarget() { return m_pD2DRenderTarget; }
+	ID2D1SolidColorBrush*& getBrush() { return m_pBrush; }
+	IDWriteTextFormat*& getTextFormat() { return m_pDWriteTextFormat; }
+
 	HRESULT Initialize();
-	void Finalize();
 	HRESULT CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2DBitmap);
 	void ReleaseD2DBitmapFromFile(ID2D1Bitmap* pID2D1Bitmap);
 };

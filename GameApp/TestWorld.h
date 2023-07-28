@@ -3,6 +3,8 @@
 class TestWorld
 	: public World
 {
+public:
+	~TestWorld() { }
 private:
 
 };

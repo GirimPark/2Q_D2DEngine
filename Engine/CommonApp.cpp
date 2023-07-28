@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "../D2DRenderer/D2DRenderer.h"
 #include "CommonApp.h"
 
 CommonApp* CommonApp::m_pInstance = nullptr;
@@ -31,6 +30,12 @@ CommonApp::CommonApp(HINSTANCE hInstance)
     m_wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
     m_wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     m_wcex.lpszClassName = m_szWindowClass;
+
+    // ·»´õ·¯ »ý¼º
+    m_pD2DRenderer = new D2DRenderer;
+    m_pRenderTarget = m_pD2DRenderer->getRenderTarget();
+    m_pBrush = m_pD2DRenderer->getBrush();
+    m_pTextFormat = m_pD2DRenderer->getTextFormat();
 }
 
 CommonApp::~CommonApp()
@@ -67,7 +72,7 @@ bool CommonApp::Initialize()
     m_currentTime = m_previousTime = (float)GetTickCount64() / 1000.f;
 
     // ·»´õ·¯ µî·Ï
-    HRESULT hr = D2DRenderer::getInstance()->Initialize();
+    HRESULT hr = m_pD2DRenderer->Initialize();
     if (FAILED(hr))
     {
         MessageBoxComError(hr);
@@ -108,19 +113,9 @@ void CommonApp::Update()
     CalculateFrameStats();
 }
 
-void CommonApp::Render()
-{
-//    D2DRenderer::m_pD2DRenderTarget->BeginDraw();
-//
-//    D2D1::ColorF color(D2D1::ColorF::Black);
-//    D2DRenderer::m_pD2DRenderTarget->Clear(color);
-//
-//    D2DRenderer::m_pD2DRenderTarget->EndDraw();
-}
-
 void CommonApp::Finalize()
 {
-    D2DRenderer::getInstance()->Finalize();
+    delete m_pD2DRenderer;
 }
 
 BOOL CommonApp::GetClientRect(LPRECT lpRect)

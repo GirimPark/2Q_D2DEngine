@@ -1,6 +1,6 @@
 #include "pch.h"
+#include "CommonApp.h"
 #include "RenderComponent.h"
-#include "../D2DRenderer/D2DRenderer.h"
 #include "GameObject.h"
 
 GameObject::~GameObject()
@@ -44,7 +44,7 @@ void GameObject::Render()
 		RenderComponent* renderComponent = dynamic_cast<RenderComponent*>(component);
 		if (renderComponent != nullptr)
 		{
-			renderComponent->Render(D2DRenderer::m_pD2DRenderTarget);
+			renderComponent->Render(CommonApp::m_pInstance->getRenderTarget());
 		}
 	}
 
@@ -71,7 +71,7 @@ void GameObject::CalAABB()
 		RenderComponent* renderComponent = dynamic_cast<RenderComponent*>(component);
 		if (renderComponent != nullptr)
 		{
-			D2D_RECT_F boundingBox = renderComponent->GetComponentAABB()->m_CullingBox;
+			framework::Rect boundingBox = renderComponent->GetComponentAABB()->m_CullingBox;
 			// 네 점의 위치를 비교해서 CullingRect 결정
 
 			if (tempExtend < m_ObjAABB.m_Center.x - boundingBox.left)
@@ -102,23 +102,23 @@ Component* GameObject::GetComponent(std::wstring name)
 
 void GameObject::RenderAABB()
 {
-	D2DRenderer::getInstance()->m_pBrush->SetColor(m_CullingRectColor);
+	CommonApp::m_pInstance->getBrush()->SetColor(m_CullingRectColor);
 
 	if (this->GetName() == L"CameraObject")
 	{
-		D2DRenderer::m_pD2DRenderTarget->SetTransform(
+		CommonApp::m_pInstance->getRenderTarget()->SetTransform(
 			D2D1::Matrix3x2F::Translation(ScreenWidth / 2.f, ScreenHeight / 2.f));
 	}
 	else
 	{
-		D2DRenderer::m_pD2DRenderTarget->SetTransform(
+		CommonApp::m_pInstance->getRenderTarget()->SetTransform(
 			D2D1::Matrix3x2F::Translation(m_pRootComponent->GetFinalLocation().x, m_pRootComponent->GetFinalLocation().y));
 	}
 
-	D2DRenderer::m_pD2DRenderTarget->DrawRectangle(
+	CommonApp::m_pInstance->getRenderTarget()->DrawRectangle(
 		{ -m_ObjAABB.m_Extend, -m_ObjAABB.m_Extend, m_ObjAABB.m_Extend, m_ObjAABB.m_Extend },
-		D2DRenderer::getInstance()->m_pBrush,
+		CommonApp::m_pInstance->getBrush(),
 		2.f);
 
-	D2DRenderer::m_pD2DRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+	CommonApp::m_pInstance->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 }

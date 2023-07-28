@@ -5,19 +5,19 @@
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
 
-ID2D1HwndRenderTarget* D2DRenderer::m_pD2DRenderTarget = NULL;
-D2DRenderer* D2DRenderer::m_Instance = new D2DRenderer;
-
-D2DRenderer::D2DRenderer()
-{
-    D2DRenderer::m_Instance = this; // 어디서든 렌더러 객체에 접근하기 쉽게 인스턴스를 저장해둔다
-}
 
 D2DRenderer::~D2DRenderer()
 {
-    if (m_pIWICImagingFactory)   m_pIWICImagingFactory->Release();
     if (m_pD2DRenderTarget)  m_pD2DRenderTarget->Release();
     if (m_pD2DFactory)   m_pD2DFactory->Release();
+    if (m_pBrush)       m_pBrush->Release();
+    if (m_pDWriteFactory)   m_pDWriteFactory->Release();
+    if (m_pDWriteTextFormat) m_pDWriteTextFormat->Release();
+    if (m_pIWICImagingFactory)   m_pIWICImagingFactory->Release();
+
+    for (const auto& bitmap : m_SharingD2DBitmaps)
+        delete bitmap.second;
+    m_SharingD2DBitmaps.clear();
 
     CoUninitialize();
 }
@@ -106,11 +106,6 @@ HRESULT D2DRenderer::Initialize()
     }
 
     return true;
-}
-
-void D2DRenderer::Finalize()
-{
-    delete m_Instance;
 }
 
 HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2D1Bitmap)

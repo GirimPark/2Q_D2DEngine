@@ -70,6 +70,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -140,7 +146,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationComponent.h" />
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CommonApp.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="define.h" />
@@ -148,15 +156,18 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="ReferenceCounter.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="SceneComponent.h" />
-    <ClInclude Include="Vector2D.h" />
+    <ClInclude Include="struct.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationComponent.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CommonApp.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -167,6 +178,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ReferenceCounter.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="SceneComponent.cpp" />
     <ClCompile Include="World.cpp" />
