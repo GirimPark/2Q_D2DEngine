@@ -4,7 +4,7 @@ class TestWorld
 	: public World
 {
 public:
-	~TestWorld() { }
+	~TestWorld() {   }
 private:
 
 };

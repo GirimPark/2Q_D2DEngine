@@ -18,6 +18,10 @@ bool World::Initialize()
 
 void World::Update()
 {
+
+
+
+
 }
 
 void World::Render()
