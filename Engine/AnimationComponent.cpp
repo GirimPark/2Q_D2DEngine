@@ -15,7 +15,7 @@ void AnimationComponent::Update()
 	m_ProgressTime += CommonApp::m_deltaTime;
 	std::vector<framework::FRAME_INFO> curAnimation = m_pAnimationAsset->m_Animations.find(m_AnimationName)->second;
 	float renderTime = curAnimation[m_FrameIndex].RenderTime;
-
+	
 	// 마지막 프레임이라면 오브젝트에 애니메이션이 종료됨을 알린다.
 	if (m_FrameIndex == curAnimation.size() - 1 && m_ProgressTime > renderTime)
 	{
