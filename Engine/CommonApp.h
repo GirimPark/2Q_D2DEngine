@@ -10,15 +10,15 @@ class CommonApp
 {
 protected:
 	D2DRenderer* m_pD2DRenderer = nullptr;
-	ID2D1RenderTarget* m_pRenderTarget = nullptr;
+	ID2D1HwndRenderTarget* m_pRenderTarget = nullptr;
 	ID2D1SolidColorBrush* m_pBrush = nullptr;
 	IDWriteTextFormat* m_pTextFormat = nullptr;
 
 public:
-	D2DRenderer*& getRenderer() { return m_pD2DRenderer; }
-	ID2D1RenderTarget*& getRenderTarget() { return m_pRenderTarget; }
-	ID2D1SolidColorBrush*& getBrush() { return m_pBrush; }
-	IDWriteTextFormat*& getTextFormat() { return m_pTextFormat; }
+	D2DRenderer*& GetRenderer() { return m_pD2DRenderer; }
+	ID2D1HwndRenderTarget*& GetRenderTarget() { return m_pRenderTarget; }
+	ID2D1SolidColorBrush*& GetBrush() { return m_pBrush; }
+	IDWriteTextFormat*& GetTextFormat() { return m_pTextFormat; }
 
 protected:
 	CommonApp(HINSTANCE hInstance);

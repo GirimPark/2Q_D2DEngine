@@ -27,9 +27,9 @@ private:
 	std::list<std::pair<std::wstring, ID2D1Bitmap*>> m_SharingD2DBitmaps;
 
 public:
-	ID2D1HwndRenderTarget*& getRenderTarget() { return m_pD2DRenderTarget; }
-	ID2D1SolidColorBrush*& getBrush() { return m_pBrush; }
-	IDWriteTextFormat*& getTextFormat() { return m_pDWriteTextFormat; }
+	ID2D1HwndRenderTarget*& GetRenderTarget() { return m_pD2DRenderTarget; }
+	ID2D1SolidColorBrush*& GetBrush() { return m_pBrush; }
+	IDWriteTextFormat*& GetTextFormat() { return m_pDWriteTextFormat; }
 
 	HRESULT Initialize();
 	HRESULT CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2DBitmap);

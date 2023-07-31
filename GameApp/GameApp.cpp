@@ -62,22 +62,23 @@ void GameApp::Update()
 
 void GameApp::Render()
 {
-    m_pD2DRenderer->getRenderTarget()->BeginDraw();
+    m_pRenderTarget->BeginDraw();
 
     D2D1::ColorF color(D2D1::ColorF::Black);
-    m_pD2DRenderer->getRenderTarget()->Clear(color);
+    m_pRenderTarget->Clear(color);
 
-    // WorldManager -> World -> GameObject -> Component로 renderTarget(m_pRenderer) 내려보내기
     // Test
     m_pTestWorld->Render();
     // WorldManager Render
 
-    m_pD2DRenderer->getRenderTarget()->EndDraw();
+    m_pRenderTarget->EndDraw();
 }
 
 bool GameApp::Initialize()
 {
-    assert(__super::Initialize());
+    PrintLog("1. GameApp Init 드러옴");
+    bool res = __super::Initialize();
+    assert(res);
 
     // Test
     m_pTestWorld = new TestWorld;

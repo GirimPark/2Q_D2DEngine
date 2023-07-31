@@ -64,7 +64,9 @@ public:
 	T* CreateChild()
 	{
 		T* childComponent = new T;
-		assert(dynamic_cast<Component*>(childComponent) != nullptr);
+		// 컴포넌트타입인지 확인
+		assert(dynamic_cast<Component*>(childComponent));
+
 		m_Children.push_back(childComponent);
 
 		return childComponent;

@@ -57,7 +57,7 @@ void AnimationComponent::Render(ID2D1RenderTarget* pRenderTarget)
 	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
-void AnimationComponent::SetAnimationAsset(const WCHAR* szFilePath, std::wstring animationName, std::vector<FRAME_INFO> frameInfo)
+void AnimationComponent::SetAnimationAsset(const WCHAR* szFilePath, std::wstring animationName, std::vector<framework::FRAME_INFO> frameInfo)
 {
 	if (!m_pAnimationAsset)
 		m_pAnimationAsset = new AnimationAsset;
@@ -71,7 +71,6 @@ void AnimationComponent::SetCurAnimation(std::wstring name, bool flip)
 	assert(m_pAnimationAsset != nullptr);
 	assert(m_pAnimationAsset->m_Animations.find(name) != m_pAnimationAsset->m_Animations.end());
 
-	// 첫 애니메이션 재생 후 마지막 프레임에 도달 안해도 연속적으로 호출됨, frameIndex를 계속 0으로 초기화시켜서 다음 애니메이션 재생 불가
 	m_AnimationName = name;
 	m_FrameIndex = 0;
 	m_ProgressTime = 0.f;
@@ -80,11 +79,11 @@ void AnimationComponent::SetCurAnimation(std::wstring name, bool flip)
 
 void AnimationComponent::CalAABB()
 {
-	m_componentAABB.m_Center = m_WorldLocation;
+	m_ComponentAABB.m_Center = m_WorldLocation;
 
 	m_Width = m_SrcRect.right - m_SrcRect.left;
 	m_Height = m_SrcRect.bottom - m_SrcRect.top;
-	(m_Width >= m_Height) ? (m_componentAABB.m_Extend = m_Width / 2.f) : (m_componentAABB.m_Extend = m_Height / 2.f);
+	(m_Width >= m_Height) ? (m_ComponentAABB.m_Extend = m_Width / 2.f) : (m_ComponentAABB.m_Extend = m_Height / 2.f);
 
-	m_componentAABB.CalCullingBox();
+	m_ComponentAABB.CalCullingBox();
 }

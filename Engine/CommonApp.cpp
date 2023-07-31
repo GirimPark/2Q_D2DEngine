@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "CommonApp.h"
 
+#ifdef FRAMEWORK_DEBUG
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+#endif
+
 CommonApp* CommonApp::m_pInstance = nullptr;
 HWND CommonApp::m_hWnd;
 float CommonApp::m_deltaTime = 0.f;
@@ -33,9 +37,6 @@ CommonApp::CommonApp(HINSTANCE hInstance)
 
     // 兄希君 持失
     m_pD2DRenderer = new D2DRenderer;
-    m_pRenderTarget = m_pD2DRenderer->getRenderTarget();
-    m_pBrush = m_pD2DRenderer->getBrush();
-    m_pTextFormat = m_pD2DRenderer->getTextFormat();
 }
 
 CommonApp::~CommonApp()
@@ -77,6 +78,9 @@ bool CommonApp::Initialize()
     {
         MessageBoxComError(hr);
     }
+    m_pRenderTarget = m_pD2DRenderer->GetRenderTarget();
+    m_pBrush = m_pD2DRenderer->GetBrush();
+    m_pTextFormat = m_pD2DRenderer->GetTextFormat();
 
     return true;
 }

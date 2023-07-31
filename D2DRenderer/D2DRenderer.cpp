@@ -105,7 +105,7 @@ HRESULT D2DRenderer::Initialize()
         ::MessageBox(CommonApp::m_hWnd, err.ErrorMessage(), L"FAILED", MB_OK);
     }
 
-    return true;
+    return S_OK;
 }
 
 HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2D1Bitmap)

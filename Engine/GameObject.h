@@ -62,7 +62,7 @@ public:
 		T* component = new T;
 
 		Component* castedComponent = dynamic_cast<Component*>(component);
-		assert(castedComponent != nullptr);
+		assert(castedComponent);
 
 		castedComponent->SetName(name);
 		castedComponent->SetOwner(this);

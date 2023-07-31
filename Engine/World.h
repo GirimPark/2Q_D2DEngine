@@ -35,7 +35,7 @@ public:
 		T* obj = new T;
 
 		GameObject* castedObj = dynamic_cast<GameObject*>(obj);
-		assert(castedObj != nullptr);
+		assert(castedObj);
 		castedObj->SetName(objectName);
 
 		m_GameObjects.push_back(castedObj);

@@ -19,7 +19,8 @@ bool GameObject::Initialize()
 		SceneComponent* sceneComponent = dynamic_cast<SceneComponent*>(component);
 		if (sceneComponent != nullptr)
 		{
-			assert(sceneComponent->Initialize());
+			bool res = sceneComponent->Initialize();
+			assert(res);
 		}
 	}
 
@@ -32,7 +33,7 @@ void GameObject::Update()
 	{
 		component->Update();
 	}
-
+	
 	CalAABB();
 }
 
@@ -44,11 +45,11 @@ void GameObject::Render()
 		RenderComponent* renderComponent = dynamic_cast<RenderComponent*>(component);
 		if (renderComponent != nullptr)
 		{
-			renderComponent->Render(CommonApp::m_pInstance->getRenderTarget());
+			renderComponent->Render(CommonApp::m_pInstance->GetRenderTarget());
 		}
 	}
 
-#ifdef DEBUG
+#ifdef FRAMEWORK_DEBUG
 	RenderAABB();
 #endif
 }
@@ -102,23 +103,23 @@ Component* GameObject::GetComponent(std::wstring name)
 
 void GameObject::RenderAABB()
 {
-	CommonApp::m_pInstance->getBrush()->SetColor(m_CullingRectColor);
+	CommonApp::m_pInstance->GetBrush()->SetColor(m_CullingRectColor);
 
 	if (this->GetName() == L"CameraObject")
 	{
-		CommonApp::m_pInstance->getRenderTarget()->SetTransform(
+		CommonApp::m_pInstance->GetRenderTarget()->SetTransform(
 			D2D1::Matrix3x2F::Translation(ScreenWidth / 2.f, ScreenHeight / 2.f));
 	}
 	else
 	{
-		CommonApp::m_pInstance->getRenderTarget()->SetTransform(
+		CommonApp::m_pInstance->GetRenderTarget()->SetTransform(
 			D2D1::Matrix3x2F::Translation(m_pRootComponent->GetFinalLocation().x, m_pRootComponent->GetFinalLocation().y));
 	}
 
-	CommonApp::m_pInstance->getRenderTarget()->DrawRectangle(
+	CommonApp::m_pInstance->GetRenderTarget()->DrawRectangle(
 		{ -m_ObjAABB.m_Extend, -m_ObjAABB.m_Extend, m_ObjAABB.m_Extend, m_ObjAABB.m_Extend },
-		CommonApp::m_pInstance->getBrush(),
+		CommonApp::m_pInstance->GetBrush(),
 		2.f);
 
-	CommonApp::m_pInstance->getRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+	CommonApp::m_pInstance->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
 }
