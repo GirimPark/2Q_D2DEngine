@@ -14,6 +14,21 @@
     <Filter Include="2. World">
       <UniqueIdentifier>{51f8b8bb-4ac5-4fc3-a787-94ab49d57746}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3. Object">
+      <UniqueIdentifier>{8ea91983-69e5-4091-8b3b-90952846fd77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM">
+      <UniqueIdentifier>{a026f72c-4fae-4a6e-8755-3b0cd860e3e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player">
+      <UniqueIdentifier>{8d9ef91a-3a80-42d8-a96e-c4211c9a3f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player\State">
+      <UniqueIdentifier>{82e7a899-e6fd-466d-a57f-a27c50dc130b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player\Transition">
+      <UniqueIdentifier>{8b54b51a-f46f-4866-a76a-037bcd50031c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -30,6 +45,43 @@
     </ClInclude>
     <ClInclude Include="TestWorld.h">
       <Filter>2. World</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoObject.h">
+      <Filter>3. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject1.h">
+      <Filter>3. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraObject.h">
+      <Filter>3. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerFSM.h">
+      <Filter>4. FSM\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerIdleState.h">
+      <Filter>4. FSM\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMoveState.h">
+      <Filter>4. FSM\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerTransition.h">
+      <Filter>4. FSM\Player\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject.h">
+      <Filter>3. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ChaeWorld.h">
+      <Filter>2. World</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h" />
+    <ClInclude Include="BoxObject.h">
+      <Filter>3. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="JunWorld.h">
+      <Filter>2. World</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject2.h">
+      <Filter>3. Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -52,5 +104,47 @@
     <ClCompile Include="TestWorld.cpp">
       <Filter>2. World</Filter>
     </ClCompile>
+    <ClCompile Include="DemoObject.cpp">
+      <Filter>3. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerObject1.cpp">
+      <Filter>3. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraObject.cpp">
+      <Filter>3. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFSM.cpp">
+      <Filter>4. FSM\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerIdleState.cpp">
+      <Filter>4. FSM\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMoveState.cpp">
+      <Filter>4. FSM\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerTransition.cpp">
+      <Filter>4. FSM\Player\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerObject.cpp">
+      <Filter>3. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ChaeWorld.cpp">
+      <Filter>2. World</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxObject.cpp">
+      <Filter>3. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="JunWorld.cpp">
+      <Filter>2. World</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerObject2.cpp">
+      <Filter>3. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObject.cpp">
+      <Filter>3. Object</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

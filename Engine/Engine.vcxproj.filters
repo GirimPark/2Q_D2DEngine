@@ -41,14 +41,53 @@
     <Filter Include="7. math">
       <UniqueIdentifier>{7ded6040-4dd3-4b15-b2df-b4d6a2870161}</UniqueIdentifier>
     </Filter>
-    <Filter Include="8. Collision">
-      <UniqueIdentifier>{4e27c1da-8aec-4e24-a13d-5cacdc00005c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="6. Resource\ReferenceCounter">
       <UniqueIdentifier>{516bab54-29fc-4112-8d56-ebd6532dfa25}</UniqueIdentifier>
     </Filter>
     <Filter Include="6. Resource\AnimationAsset">
       <UniqueIdentifier>{ae6d63f1-89a5-4397-a326-aa7c8090da0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\AnimationComponent">
+      <UniqueIdentifier>{65a0006f-f459-4259-a99a-299dfa3f83c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\BoxComponent">
+      <UniqueIdentifier>{4b57185f-bb60-45c5-8dbf-eb9d081ad80d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\MovementComponent">
+      <UniqueIdentifier>{2ce7e6ef-eb89-4990-bdc2-9fe6686b6969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="8. Physics">
+      <UniqueIdentifier>{4e27c1da-8aec-4e24-a13d-5cacdc00005c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="9. FSM">
+      <UniqueIdentifier>{b3f684a6-2032-4615-b46c-4c7e5aff758c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\FSMComponent">
+      <UniqueIdentifier>{27425de9-ea4f-4bc2-9650-67b0314a4488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. Interface">
+      <UniqueIdentifier>{74720e4b-92da-4a95-9c6e-a0daf98409b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10. Event">
+      <UniqueIdentifier>{5159521c-964a-4590-93af-ca4779b09fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. Object\GameObject">
+      <UniqueIdentifier>{02ec333f-81f4-4090-83e5-e75db94aa94f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. Object\GameObject\UI">
+      <UniqueIdentifier>{992eadf2-f900-469d-a5d4-8a48f09d856d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. Object\GameObject\UI\ButtonUI">
+      <UniqueIdentifier>{6192bd80-f4f2-42e1-8d53-c86cb3532b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\DirectionComponent">
+      <UniqueIdentifier>{775378ed-d020-46ab-a7a6-359e56d27828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="8. Physics\Collider">
+      <UniqueIdentifier>{34abe5e7-b562-4246-a98a-3c43d18171fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. Object\GameObject\UI\PanelUI">
+      <UniqueIdentifier>{c6ae7bc5-37c6-44cc-be82-35977d1afaa2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,13 +100,7 @@
     <ClInclude Include="CommonApp.h">
       <Filter>1. Core</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>3. World</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>4. Object</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
       <Filter>4. Object</Filter>
     </ClInclude>
     <ClInclude Include="WorldManager.h">
@@ -76,17 +109,11 @@
     <ClInclude Include="Component.h">
       <Filter>5. Component</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>8. Collision</Filter>
-    </ClInclude>
     <ClInclude Include="SceneComponent.h">
       <Filter>5. Component\SceneComponent</Filter>
     </ClInclude>
     <ClInclude Include="RenderComponent.h">
       <Filter>5. Component\SceneComponent\RenderComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="AnimationComponent.h">
-      <Filter>5. Component\SceneComponent\RenderComponent\Renderables</Filter>
     </ClInclude>
     <ClInclude Include="define.h">
       <Filter>0. pch</Filter>
@@ -103,6 +130,76 @@
     <ClInclude Include="AnimationAsset.h">
       <Filter>6. Resource\AnimationAsset</Filter>
     </ClInclude>
+    <ClInclude Include="TimeManager.h">
+      <Filter>2. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>3. World</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\AnimationComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxComponent.h">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\BoxComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>2. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>5. Component\MovementComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="FSMComponent.h">
+      <Filter>5. Component\FSMComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="IAnimationNotify.h">
+      <Filter>10. Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="FSM.h">
+      <Filter>9. FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="FSMState.h">
+      <Filter>9. FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="FSMTransition.h">
+      <Filter>9. FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>2. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>10. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventListener.h">
+      <Filter>10. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>4. Object\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>4. Object\GameObject\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonUI.h">
+      <Filter>4. Object\GameObject\UI\ButtonUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>2. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionComponent.h">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\DirectionComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="EventFunctor.h">
+      <Filter>10. Event</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider2D.h">
+      <Filter>8. Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider2D.h">
+      <Filter>8. Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelUI.h">
+      <Filter>4. Object\GameObject\UI\PanelUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleCollider2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -117,26 +214,17 @@
     <ClCompile Include="Object.cpp">
       <Filter>4. Object</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>4. Object</Filter>
-    </ClCompile>
     <ClCompile Include="WorldManager.cpp">
       <Filter>2. Manager</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>5. Component</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>8. Collision</Filter>
-    </ClCompile>
     <ClCompile Include="SceneComponent.cpp">
       <Filter>5. Component\SceneComponent</Filter>
     </ClCompile>
     <ClCompile Include="RenderComponent.cpp">
       <Filter>5. Component\SceneComponent\RenderComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationComponent.cpp">
-      <Filter>5. Component\SceneComponent\RenderComponent\Renderables</Filter>
     </ClCompile>
     <ClCompile Include="CameraComponent.cpp">
       <Filter>5. Component\SceneComponent\CameraComponent</Filter>
@@ -147,5 +235,63 @@
     <ClCompile Include="AnimationAsset.cpp">
       <Filter>6. Resource\AnimationAsset</Filter>
     </ClCompile>
+    <ClCompile Include="TimeManager.cpp">
+      <Filter>2. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\AnimationComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxComponent.cpp">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\BoxComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>2. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>5. Component\MovementComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="FSMComponent.cpp">
+      <Filter>5. Component\FSMComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="IAnimationNotify.cpp">
+      <Filter>10. Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="FSM.cpp">
+      <Filter>9. FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="FSMState.cpp">
+      <Filter>9. FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="FSMTransition.cpp">
+      <Filter>9. FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>2. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>4. Object\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>4. Object\GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
+      <Filter>4. Object\GameObject\UI\ButtonUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>2. Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionComponent.cpp">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\DirectionComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider2D.cpp">
+      <Filter>8. Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider2D.cpp">
+      <Filter>8. Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelUI.cpp">
+      <Filter>4. Object\GameObject\UI\PanelUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleCollider2D.cpp" />
   </ItemGroup>
 </Project>

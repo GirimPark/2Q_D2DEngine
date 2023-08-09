@@ -1,19 +1,16 @@
 #include "pch.h"
-#include "GameObject.h"
 #include "SceneComponent.h"
+
+#include "GameObject.h"
 
 bool SceneComponent::Initialize()
 {
-	// 렌더컴포넌트를 상속받은 경우 각 컴포넌트의 컬링박스를 지정해주는 Init이 존재한다
-	// 현재 사용 x
-	m_pParentObject = m_pOwner->GetOwnerObj();
-	//this->GetName() == L"CameraComponent"
 	UpdateTransform();
 
 	return true;
 }
 
-void SceneComponent::Update()
+void SceneComponent::Update(float deltaTime)
 {
 	UpdateTransform();
 }

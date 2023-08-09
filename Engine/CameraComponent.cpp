@@ -9,12 +9,9 @@ bool CameraComponent::Initialize()
 	return true;
 }
 
-void CameraComponent::Update()
+void CameraComponent::Update(const float deltaTime)
 {
-	// 카메라 위치정보
-	m_ViewPort.m_Center = m_WorldLocation;
-	m_ViewPort.CalCullingBox();
 	m_CameraTransform = m_WorldTransform * D2D1::Matrix3x2F::Translation(-ScreenWidth / 2.f, -ScreenHeight / 2.f);
 
-	__super::Update();
+	__super::Update(deltaTime);
 }

@@ -1,8 +1,9 @@
 #pragma once
 
+#include "ReferenceCounter.h"
+
 #include <unordered_map>
 #include <vector>
-#include "ReferenceCounter.h"
 
 /*---------------------------------------------------------------------------
 애니메이션에 필요한 데이터
@@ -25,5 +26,7 @@ public:
 	void Build();
 
 	void SetBitmapFilePath(const WCHAR* szFilePath);
+	void Save(const WCHAR* szFilePath);
+	bool Load(const WCHAR* szFilePath);
 };
 

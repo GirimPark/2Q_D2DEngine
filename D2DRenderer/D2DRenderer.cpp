@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "../Engine/CommonApp.h"
 #include "D2DRenderer.h"
+
+#include "../Engine/CommonApp.h"
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "dwrite.lib")
-
 
 D2DRenderer::~D2DRenderer()
 {
@@ -15,18 +15,13 @@ D2DRenderer::~D2DRenderer()
     if (m_pDWriteTextFormat) m_pDWriteTextFormat->Release();
     if (m_pIWICImagingFactory)   m_pIWICImagingFactory->Release();
 
-    for (const auto& bitmap : m_SharingD2DBitmaps)
-        delete bitmap.second;
-    m_SharingD2DBitmaps.clear();
-
     CoUninitialize();
 }
 
 HRESULT D2DRenderer::Initialize()
 {
-    // COM 사용
-    HRESULT hr = S_OK;
-    hr = CoInitialize(NULL);
+	HRESULT hr = CoInitialize(nullptr);
+
     if (SUCCEEDED(hr))
     {
         // 렌더타겟을 만들수있는팩토리객체를 생성하고 인터페이스 포인터를얻어온다.
@@ -44,17 +39,25 @@ HRESULT D2DRenderer::Initialize()
         );
 
         // 팩토리로 윈도우핸들, 사이즈를 넘겨 렌더타겟을 만든다.
+        // 디버그 용은 화면 주사율 영향 없이 프레임 출력, 릴리즈 용은 화면 주사율 영향을 받는 프레임
+#ifdef _DEBUG
         hr = m_pD2DFactory->CreateHwndRenderTarget(
             D2D1::RenderTargetProperties(),
-            D2D1::HwndRenderTargetProperties(CommonApp::m_hWnd, size),
+            D2D1::HwndRenderTargetProperties(CommonApp::m_hWnd, size, D2D1_PRESENT_OPTIONS_IMMEDIATELY),
             &m_pD2DRenderTarget
         );
+#else
+	hr = m_pD2DFactory->CreateHwndRenderTarget(
+			D2D1::RenderTargetProperties(),
+			D2D1::HwndRenderTargetProperties(CommonApp::m_hWnd, size),
+			&m_pD2DRenderTarget
+		);
+#endif
     }
 
     if (SUCCEEDED(hr))
     {
         hr = m_pD2DRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &m_pBrush);
-
     }
 
     // 텍스트
@@ -70,8 +73,8 @@ HRESULT D2DRenderer::Initialize()
     if (SUCCEEDED(hr))
     {
         hr = m_pDWriteFactory->CreateTextFormat(
-            L"Bernard MT Condensed", // 
-            NULL,
+            L"Bernard MT Condensed", //
+            nullptr,
             DWRITE_FONT_WEIGHT_NORMAL,
             DWRITE_FONT_STYLE_NORMAL,
             DWRITE_FONT_STRETCH_NORMAL,
@@ -93,7 +96,7 @@ HRESULT D2DRenderer::Initialize()
         // 비트맵 출력을 위한 팩토리 생성
         hr = CoCreateInstance(
             CLSID_WICImagingFactory,
-            NULL,
+            nullptr,
             CLSCTX_INPROC_SERVER,
             IID_PPV_ARGS(&m_pIWICImagingFactory)
         );
@@ -101,18 +104,18 @@ HRESULT D2DRenderer::Initialize()
 
     if (FAILED(hr))
     {
-        _com_error err(hr);
+	    const _com_error err(hr);
         ::MessageBox(CommonApp::m_hWnd, err.ErrorMessage(), L"FAILED", MB_OK);
     }
 
     return S_OK;
 }
 
-HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2D1Bitmap)
+HRESULT D2DRenderer::CreateD2DBitmapFromFile(const std::wstring& strFilePath, ID2D1Bitmap** pID2D1Bitmap)
 {
     // 문자열과 포인터 쌍에서 문자열만 같으면 해당 원소를 찾는다.
     auto it = std::find_if(m_SharingD2DBitmaps.begin(), m_SharingD2DBitmaps.end(),
-        [strFilePath](std::pair<std::wstring, ID2D1Bitmap*> ContainerData)
+        [strFilePath](const std::pair<std::wstring, ID2D1Bitmap*>& ContainerData)
         {
             return (ContainerData.first == strFilePath);
         }
@@ -127,27 +130,25 @@ HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitm
         return S_OK;
     }
 
-    // 없으면 새로 만든다.
-    HRESULT hr;
     // Create a decoder - 디코더를 생성해서 압축을 해제하고 메모리에 올림
-    IWICBitmapDecoder* pDecoder = NULL;
+    IWICBitmapDecoder* pDecoder = nullptr;
 
-    hr = m_pIWICImagingFactory->CreateDecoderFromFilename(
-        strFilePath.c_str(),                      // Image to be decoded
-        NULL,                            // Do not prefer a particular vendor
-        GENERIC_READ,                    // Desired read access to the file
-        WICDecodeMetadataCacheOnDemand,  // Cache metadata when needed
-        &pDecoder                        // Pointer to the decoder
+    HRESULT hr = m_pIWICImagingFactory->CreateDecoderFromFilename(
+	    strFilePath.c_str(), // Image to be decoded
+	    nullptr, // Do not prefer a particular vendor
+	    GENERIC_READ, // Desired read access to the file
+	    WICDecodeMetadataCacheOnDemand, // Cache metadata when needed
+	    &pDecoder // Pointer to the decoder
     );
 
     // Retrieve the first frame of the image from the decoder
-    IWICBitmapFrameDecode* pFrame = NULL;
+    IWICBitmapFrameDecode* pFrame = nullptr;
     if (SUCCEEDED(hr))
     {
         hr = pDecoder->GetFrame(0, &pFrame);
     }
 
-    IWICFormatConverter* pConverter = NULL;
+    IWICFormatConverter* pConverter = nullptr;
     //Step 3: Format convert the frame to 32bppPBGRA
     if (SUCCEEDED(hr))
     {
@@ -162,7 +163,7 @@ HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitm
             pFrame,                          // Input bitmap to convert
             GUID_WICPixelFormat32bppPBGRA,   // Destination pixel format
             WICBitmapDitherTypeNone,         // Specified dither pattern
-            NULL,                            // Specify a particular palette 
+            nullptr,                         // Specify a particular palette
             0.f,                             // Alpha threshold
             WICBitmapPaletteTypeCustom       // Palette translation type
         );
@@ -170,35 +171,37 @@ HRESULT D2DRenderer::CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitm
 
     if (SUCCEEDED(hr))
     {
-        hr = m_pD2DRenderTarget->CreateBitmapFromWicBitmap(pConverter, NULL, pID2D1Bitmap);
+        hr = m_pD2DRenderTarget->CreateBitmapFromWicBitmap(pConverter, nullptr, pID2D1Bitmap);
     }
 
     // 할당 해제
-    if (pDecoder != NULL)
+    if (pDecoder != nullptr)
         pDecoder->Release();
-    if (pFrame != NULL)
+    if (pFrame != nullptr)
         pFrame->Release();
-    if (pConverter != NULL)
+    if (pConverter != nullptr)
         pConverter->Release();
 
-    m_SharingD2DBitmaps.push_back(std::make_pair(strFilePath, *pID2D1Bitmap));
+    m_SharingD2DBitmaps.emplace_back(strFilePath, *pID2D1Bitmap);
 
     return hr;
 }
 
 void D2DRenderer::ReleaseD2DBitmapFromFile(ID2D1Bitmap* pID2D1Bitmap)
 {
-    ULONG count = pID2D1Bitmap->Release();
+	const ULONG count = pID2D1Bitmap->Release();
     if (count > 0)
         return;
 
     // 문자열과 포인터 쌍에서 문자열만 같으면 해당 원소를 찾는다.
-    auto it = std::find_if(m_SharingD2DBitmaps.begin(), m_SharingD2DBitmaps.end(),
-        [pID2D1Bitmap](std::pair<std::wstring, ID2D1Bitmap*> ContainerData)
-        {
-            return (ContainerData.second == pID2D1Bitmap);
-        }
-    );
+	const auto it = std::find_if
+	(
+        m_SharingD2DBitmaps.begin(), m_SharingD2DBitmaps.end(),
+	     [pID2D1Bitmap](const std::pair<std::wstring, ID2D1Bitmap*>& ContainerData)
+	     {
+		     return (ContainerData.second == pID2D1Bitmap);
+	     }
+	);
 
     // 찾은 경우
     if (it != m_SharingD2DBitmaps.end())

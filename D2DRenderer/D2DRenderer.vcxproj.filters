@@ -31,4 +31,7 @@
       <Filter>1. D2DRenderer</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>

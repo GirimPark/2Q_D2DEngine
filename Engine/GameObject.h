@@ -1,10 +1,12 @@
 #pragma once
-#include <vector>
-#include <cassert>
+
 #include "Object.h"
-#include "AABB.h"
 #include "Component.h"
 
+#include <vector>
+#include <cassert>
+
+class UIObject;
 class SceneComponent;
 
 /*---------------------------------------------------------------------------------
@@ -24,8 +26,7 @@ private:
 	SceneComponent* m_pRootComponent = nullptr;
 
 protected:
-	D2D1::ColorF m_CullingRectColor = D2D1::ColorF::White;
-	AABB m_ObjAABB;
+	D2D1::ColorF m_CullingRectColor = D2D1::ColorF::Green;
 	std::wstring m_name;
 	// 오브젝트 간의 부모/자식 관계
 	GameObject* m_pOwnerObj = nullptr;
@@ -35,24 +36,18 @@ public:
 
 public:
 	void SetRootComponent(SceneComponent* rootComponent) { m_pRootComponent = rootComponent; }
-	SceneComponent*& GetRootComponent() { return m_pRootComponent; }
-	Component* GetComponent(std::wstring name);
+	SceneComponent* GetRootComponent() const { return m_pRootComponent; }
+	Component* GetComponent (const std::wstring name) const;
 
-	AABB& GetAABB() { return m_ObjAABB; }
-
-	std::wstring GetName() { return m_name; }
-	void SetName(std::wstring name) { m_name = name; }
+	std::wstring GetName() const { return m_name; }
+	void SetName(const std::wstring name) { m_name = name; }
 
 	void SetOwnerObj(GameObject* _pOwnerObj) { m_pOwnerObj = _pOwnerObj; }
-	GameObject* GetOwnerObj() { return m_pOwnerObj; }
-
-private:
-	void CalAABB();
-	void RenderAABB();
+	GameObject* GetOwnerObj() const { return m_pOwnerObj; }
 
 public:
 	virtual bool Initialize();
-	virtual void Update();
+	virtual void Update(const float deltaTime);
 	virtual void Render();
 
 public:

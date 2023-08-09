@@ -1,4 +1,5 @@
 #pragma once
+
 /*----------------------------------------------------------------------------
 Resource 사용 빈도를 나타내는 카운터.
 같은 리소스에 대해 참조횟수를 보관하고, RefCnt가 0이 될 경우 리소스를 해제한다.
@@ -34,7 +35,7 @@ public:
 		return m_RefCount;
 	}
 
-	unsigned int GetRefCount()
+	unsigned int GetRefCount() const
 	{
 		return m_RefCount;
 	}

@@ -1,13 +1,14 @@
 #include "pch.h"
 #include "CommonApp.h"
 
+#include "InputManager.h"
+
 #ifdef FRAMEWORK_DEBUG
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #endif
 
 CommonApp* CommonApp::m_pInstance = nullptr;
 HWND CommonApp::m_hWnd;
-float CommonApp::m_deltaTime = 0.f;
 
 LRESULT CALLBACK DefaultWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -69,9 +70,6 @@ bool CommonApp::Initialize()
     ShowWindow(m_hWnd, SW_SHOW);
     UpdateWindow(m_hWnd);
 
-    // Time
-    m_currentTime = m_previousTime = (float)GetTickCount64() / 1000.f;
-
     // 렌더러 등록
     HRESULT hr = m_pD2DRenderer->Initialize();
     if (FAILED(hr))
@@ -81,6 +79,9 @@ bool CommonApp::Initialize()
     m_pRenderTarget = m_pD2DRenderer->GetRenderTarget();
     m_pBrush = m_pD2DRenderer->GetBrush();
     m_pTextFormat = m_pD2DRenderer->GetTextFormat();
+
+    m_pTimeManager.Initialize();
+    InputManager::GetInstance()->Initialize();
 
     return true;
 }
@@ -111,15 +112,15 @@ void CommonApp::Loop()
 
 void CommonApp::Update()
 {
-    m_previousTime = m_currentTime;
-    m_currentTime = (float)GetTickCount64() / 1000.f;
-    m_deltaTime = m_currentTime - m_previousTime;
+    m_pTimeManager.Update();
+    InputManager::GetInstance()->Update();
     CalculateFrameStats();
 }
 
 void CommonApp::Finalize()
 {
     delete m_pD2DRenderer;
+    InputManager::GetInstance()->Finalize();
 }
 
 BOOL CommonApp::GetClientRect(LPRECT lpRect)
@@ -135,34 +136,12 @@ int CommonApp::MessageBoxComError(HRESULT hr)
 
 void CommonApp::CalculateFrameStats()
 {
-    // FPS 계산, 제목표시줄에 출력
-    static int frameCnt = -1;
-    static float timeElapsed = 0.f;
-
-    frameCnt++;
-    if (frameCnt == 0)
-        return;
-
-    timeElapsed += m_deltaTime;
-
-    // FPS의 평균 계산
-    if (timeElapsed >= 1.0f)
-    {
-        float fps = (float)frameCnt;
-        fps = (float)frameCnt;
-        float spf = 1000.f / fps;
-
-        std::wstring windowText;
-        windowText.append(m_szTitle);
-        windowText.append(L"   FPS: ");
-        windowText.append(std::to_wstring(fps));
-        windowText.append(L"   SPF: ");
-        windowText.append(std::to_wstring(spf));
-        SetWindowText(m_hWnd, windowText.c_str());
-
-        frameCnt = 0;
-        timeElapsed -= 1.0f;
-    }
+    float fps = m_pTimeManager.GetFrameRate();
+    std::wstring windowText;
+    windowText.append(m_szTitle);
+    windowText.append(L"   FPS: ");
+    windowText.append(std::to_wstring(fps));
+    SetWindowText(m_hWnd, windowText.c_str());
 }
 
 LRESULT CommonApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

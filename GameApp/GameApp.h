@@ -1,7 +1,8 @@
 #pragma once
 
-#include "resource.h"
 #include "../Engine/CommonApp.h"
+
+class World;
 
 /*-----------------------------------
 실제 구동되는 게임 애플리케이션
@@ -14,7 +15,7 @@ class GameApp
 
 public:
 	GameApp(HINSTANCE hInstance);
-	~GameApp();
+	~GameApp() override;
 
 	void Update() override;
 	void Render() override;

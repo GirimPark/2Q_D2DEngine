@@ -1,7 +1,12 @@
 ﻿#include "framework.h"
-#include "../Engine/World.h"
-#include "TestWorld.h"
 #include "GameApp.h"
+
+#include "Resource.h"
+#include "ChaeWorld.h"
+#include "TestWorld.h"
+#include "JunWorld.h"
+
+#include "../Engine/EventManager.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -13,7 +18,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Debug Memory Leak Check at start point
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(213);
+    //_CrtSetBreakAlloc(424);
 
     // 전역 문자열을 초기화합니다.
     GameApp App(hInstance);
@@ -28,7 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 }
 
 GameApp::GameApp(HINSTANCE hInstance)
-    :CommonApp::CommonApp(hInstance)
+    :CommonApp(hInstance)
 {
     // GameApp에서 리소스를 얻어와 클래스 설정하기
     LoadStringW(hInstance, IDS_APP_TITLE, m_szTitle, MAX_LOADSTRING);
@@ -44,17 +49,16 @@ GameApp::GameApp(HINSTANCE hInstance)
 
 GameApp::~GameApp()
 {
-   
+
 }
 
 void GameApp::Update()
 {
-    // 시간 계산
     __super::Update();
 
-    // Test
-    m_pTestWorld->Update();
-
+    m_pTestWorld->Update(m_pTimeManager.GetDeltaTime());
+    // 월드매니저까지 CommonApp Update로 편입되면 EventManager도 같이 넣을 수 있을듯
+    EventManager::GetInstance()->Update();
     // Manager Update
     // FixedUpdate
     // LateUpdate
@@ -76,13 +80,19 @@ void GameApp::Render()
 
 bool GameApp::Initialize()
 {
-    PrintLog("1. GameApp Init 드러옴");
     bool res = __super::Initialize();
     assert(res);
 
     // Test
-    m_pTestWorld = new TestWorld;
+	//m_pTestWorld = new TestWorld;
+    // m_pTestWorld->Initialize();
+
+    m_pTestWorld = new JunWorld;
+    //m_pTestWorld = new ChaeWorld;
     m_pTestWorld->Initialize();
+
+    EventManager::GetInstance()->Initialize();
+
     // WorldManager Init
 
     return false;
@@ -90,9 +100,9 @@ bool GameApp::Initialize()
 
 void GameApp::Finalize()
 {
-  
     // World Finalize ?
     delete m_pTestWorld;
+    EventManager::GetInstance()->Finalize();
     __super::Finalize();
 }
 

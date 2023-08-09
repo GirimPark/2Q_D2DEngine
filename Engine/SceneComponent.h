@@ -1,7 +1,11 @@
 #pragma once
+
+#include "Component.h"
+
 #include <vector>
 #include <cassert>
-#include "Component.h"
+
+class GameObject;
 
 /*--------------------------------------------------------------------
 위치정보를 갖는 Component
@@ -30,28 +34,26 @@ protected:
 private:
 	// 소속된 오브젝트의 부모오브젝트
 	GameObject* m_pParentObject = nullptr;
-
-
-public:
-	virtual ~SceneComponent() { }
-
+	
 public:
 	//void SetRelativeScale(float x, float y) { m_RelativeScale.x = x; m_RelativeScale.y = y; }
 	//Vector2D GetRelativeScale() { return m_RelativeScale; }
 	//void SetRelativeRotation(float rotation) { m_RelativeRotation = rotation; }
 	//float GetRelativeRotation() { return m_RelativeRotation; }
-	void SetRelativeLocation(float x, float y) { m_RelativeLocation.x = x; m_RelativeLocation.y = y; }
-	framework::Vector2D GetRelativeLocation() { return m_RelativeLocation; }
-	framework::Vector2D GetWorldLocation() { return m_WorldLocation; }
-	framework::Vector2D GetFinalLocation() { return { m_FinalTransform.dx, m_FinalTransform.dy }; }
+	void SetRelativeLocation(const float x, const float y) { m_RelativeLocation.x = x; m_RelativeLocation.y = y; }
+	framework::Vector2D GetRelativeLocation() const { return m_RelativeLocation; }
+	framework::Vector2D GetWorldLocation()	  const	{ return m_WorldLocation; }
+	framework::Vector2D GetFinalLocation()    const	{ return { m_FinalTransform.dx, m_FinalTransform.dy }; }
 	//D2D_MATRIX_3X2_F GetWorldTransform() { return m_WorldTransform; }
 	//D2D_MATRIX_3X2_F GetFinalTransform() { return m_FinalTransform; }
+	std::vector<Component*>& GetChildrenComponent() { return m_Children; }
 
-	void AddRelativeRotation(float rotation) { m_RelativeRotation = m_RelativeRotation + rotation; UpdateTransform(); }
-	void AddRelativeLocation(float x, float y) { m_RelativeLocation.x += x; m_RelativeLocation.y += y; }
+	void AddRelativeRotation(const float rotation) { m_RelativeRotation = m_RelativeRotation + rotation; UpdateTransform(); }
+	void AddRelativeLocation(framework::Vector2D velocity) { m_RelativeLocation += velocity; }
+	// void AddRelativeVelocity()
 
 	virtual bool Initialize();
-	virtual void Update() override;
+	void Update(const float deltaTime) override;
 
 protected:
 	void UpdateTransform();

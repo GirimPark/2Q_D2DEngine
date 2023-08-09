@@ -79,6 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Bin\Debug\</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Bin\Release\</OutDir>
@@ -148,15 +149,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BoxObject.h" />
+    <ClInclude Include="CameraObject.h" />
+    <ClInclude Include="ChaeWorld.h" />
+    <ClInclude Include="DemoObject.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameApp.h" />
+    <ClInclude Include="JunWorld.h" />
+    <ClInclude Include="PlayerFSM.h" />
+    <ClInclude Include="PlayerIdleState.h" />
+    <ClInclude Include="PlayerMoveState.h" />
+    <ClInclude Include="PlayerObject.h" />
+    <ClInclude Include="PlayerObject1.h" />
+    <ClInclude Include="PlayerObject2.h" />
+    <ClInclude Include="PlayerTransition.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TestWorld.h" />
+    <ClInclude Include="UIObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoxObject.cpp" />
+    <ClCompile Include="CameraObject.cpp" />
+    <ClCompile Include="ChaeWorld.cpp" />
+    <ClCompile Include="DemoObject.cpp" />
     <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="JunWorld.cpp" />
+    <ClCompile Include="PlayerFSM.cpp" />
+    <ClCompile Include="PlayerIdleState.cpp" />
+    <ClCompile Include="PlayerMoveState.cpp" />
+    <ClCompile Include="PlayerObject.cpp" />
+    <ClCompile Include="PlayerObject1.cpp" />
+    <ClCompile Include="PlayerObject2.cpp" />
+    <ClCompile Include="PlayerTransition.cpp" />
     <ClCompile Include="TestWorld.cpp" />
+    <ClCompile Include="UIObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameApp.rc" />
@@ -172,6 +199,9 @@
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{68e71fcb-7fb4-4c6e-9d04-baa872f5cf9c}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

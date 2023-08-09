@@ -1,4 +1,5 @@
 #pragma once
+
 #include <list>
 
 /*----------------------------------------------------------------------
@@ -12,27 +13,26 @@ public:
 	~D2DRenderer();
 
 private:
-	ID2D1HwndRenderTarget* m_pD2DRenderTarget;
+	ID2D1HwndRenderTarget* m_pD2DRenderTarget = nullptr;
 
 	// 기본 D2D 사용을 위한 Factory의 인터페이스 포인터
-	ID2D1Factory* m_pD2DFactory = NULL;
-	// 렌더타겟에서생성한 브러시의 인터페이스 포인터
-	ID2D1SolidColorBrush* m_pBrush = NULL;
+	ID2D1Factory* m_pD2DFactory = nullptr;
+	// 렌더타겟에서 생성한 브러시의 인터페이스 포인터
+	ID2D1SolidColorBrush* m_pBrush = nullptr;
 	// 텍스트 출력을 위한 객체 인터페이스 포인터
-	IDWriteFactory* m_pDWriteFactory = NULL;
-	IDWriteTextFormat* m_pDWriteTextFormat = NULL;
+	IDWriteFactory* m_pDWriteFactory = nullptr;
+	IDWriteTextFormat* m_pDWriteTextFormat = nullptr;
 	// WIC 인터페이스
-	IWICImagingFactory* m_pIWICImagingFactory = NULL;
+	IWICImagingFactory* m_pIWICImagingFactory = nullptr;
 
 	std::list<std::pair<std::wstring, ID2D1Bitmap*>> m_SharingD2DBitmaps;
 
 public:
-	ID2D1HwndRenderTarget*& GetRenderTarget() { return m_pD2DRenderTarget; }
-	ID2D1SolidColorBrush*& GetBrush() { return m_pBrush; }
-	IDWriteTextFormat*& GetTextFormat() { return m_pDWriteTextFormat; }
+	ID2D1HwndRenderTarget* GetRenderTarget() const { return m_pD2DRenderTarget; }
+	ID2D1SolidColorBrush* GetBrush() const { return m_pBrush; }
+	IDWriteTextFormat* GetTextFormat() const { return m_pDWriteTextFormat; }
 
 	HRESULT Initialize();
-	HRESULT CreateD2DBitmapFromFile(std::wstring strFilePath, ID2D1Bitmap** pID2DBitmap);
+	HRESULT CreateD2DBitmapFromFile(const std::wstring& strFilePath, ID2D1Bitmap** pID2DBitmap);
 	void ReleaseD2DBitmapFromFile(ID2D1Bitmap* pID2D1Bitmap);
 };
-
