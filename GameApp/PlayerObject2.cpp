@@ -1,12 +1,9 @@
 #include "framework.h"
 #include "PlayerObject2.h"
 
-#include "PlayerFSM.h"
-
 #include "../Engine/BoxComponent.h"
 #include "../Engine/AnimationComponent.h"
 #include "../Engine/MovementComponent.h"
-#include "../Engine/FSMComponent.h"
 #include "../Engine/DirectionComponent.h"
 #include "../Engine/CircleCollider2D.h"
 
@@ -68,7 +65,8 @@ bool PlayerObject2::Initialize()
 	m_pDirectionComponent->AttachToComponent(m_pBoxComponent);
 
 	/// CircleCollider2D
-	m_pCircleCollider2D = CreateComponent<CircleCollider2D>(L"CircleCollider2D");
+	m_pCircleCollider2D = CreateComponent<CircleCollider2D>(L"Collider2D");
+	m_pCircleCollider2D->SetExtend(50.f);
 	m_pCircleCollider2D->SetColor(D2D1::ColorF::SkyBlue);
 	m_pCircleCollider2D->AttachToComponent(m_pBoxComponent);
 

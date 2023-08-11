@@ -5,11 +5,15 @@
 #include <list>
 #include <map>
 
+/// <summary>
+///	이벤트 타입용 enum
+///	이벤트 판별에 사용한다, 타입 별로 인자로 들어오는 정보들이 다르다
+///	</summary>
 enum eEventType
 {
 	// FSMComponent - AnimationComponent
-	AnimationEnd,
-	ChangeCurAnimation,
+	ChangeAnimation,
+	KeepAnimation,
 	SetDefaultAnimation,
 
 	// FSMComponent - MovementComponent
@@ -17,8 +21,14 @@ enum eEventType
 
 };
 
+
 class EventListener;
 
+/// <summary>
+///	1. RegisterListener()로 이벤트타입과 리스너를 등록
+///	2. SendEvent()로 이벤트를 생성하고 EventManager.Update()에서 실행할 m_EventList에 추가
+///	3. Update()에서 이벤트 Execute
+/// </summary>
 class EventManager
 {
 private:

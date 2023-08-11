@@ -1,6 +1,9 @@
 #pragma once
 #include "RenderComponent.h"
 
+/// <summary>
+///	¹Ú½º ÇÏ³ª ¶î·Õ ±×¸®±â
+/// </summary>
 class BoxComponent
 	: public RenderComponent
 {
@@ -18,6 +21,5 @@ public:
 	void SetColor(D2D1::ColorF color) { m_Color = color; }
 
 public:
-	void Update(const float deltaTime) override final;
-	void Render(ID2D1RenderTarget* pRenderTarget) override final; 
+	void Render(ID2D1RenderTarget* pRenderTarget) final; 
 };

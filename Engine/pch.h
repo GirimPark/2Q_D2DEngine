@@ -13,7 +13,7 @@
 
 // Debug Memory Leak
 #ifdef _DEBUG
-// (채원) json.hpp 때문에 주석처리 해둠
+/// (채원) json.hpp 때문에 주석처리 해둠
 //#define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) // new(THIS_FILE, __LINE__)
 #define _CRTDBG_MAP_ALLOC
 #endif

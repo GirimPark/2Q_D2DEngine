@@ -7,8 +7,3 @@ PlayerFSM::PlayerFSM()
 	AddState(L"MOVE", &m_MoveState);
 	SetDefaultState(&m_IdleState);
 }
-
-void PlayerFSM::HandleEvent(Event* event)
-{
-	m_bAnimEnd = true;
-}

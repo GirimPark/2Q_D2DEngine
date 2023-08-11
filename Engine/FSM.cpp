@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "FSM.h"
 
-#include "AnimationComponent.h"
-#include "FSMComponent.h"
 #include "FSMState.h"
 
 void FSM::AddState(const std::wstring name, FSMState* state)
@@ -19,13 +17,16 @@ void FSM::SetDefaultState(FSMState* defaultState)
 
 void FSM::Update(const float deltaTime)
 {
-	// 현재 애니메이션이 종료되는지, 현재 상태에 달린 Transition들을 체크
-	if (m_bAnimEnd && m_pCurState->CheckTransition())
+	// 현재 상태에 달린 Transition들을 체크
+	if (m_pCurState->CheckTransition())
 	{
-		// 현재 애니메이션 재생이 끝났다면
-		m_bAnimEnd = false;
-
+		// 만족하는 Transition이 있으면 상태 전환
 		m_pCurState = m_pNextState;
 		m_pCurState->OnEnter();
+	}
+	else
+	{
+		// 만족하는 Transition이 없으면 상태 지속
+		m_pCurState->OnStay();
 	}
 }

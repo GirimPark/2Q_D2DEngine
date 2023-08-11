@@ -3,11 +3,6 @@
 
 #include "CommonApp.h"
 
-void BoxComponent::Update(const float deltaTime)
-{
-	__super::Update(deltaTime);
-}
-
 void BoxComponent::Render(ID2D1RenderTarget* pRenderTarget)
 {
 	CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);

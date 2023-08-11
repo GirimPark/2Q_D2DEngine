@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "AnimationComponent.h"
 
-#include "CommonApp.h"
 #include "AnimationAsset.h"
 #include "GameObject.h"
 #include "EventManager.h"
@@ -20,14 +19,7 @@ void AnimationComponent::Update(const float deltaTime)
 	std::vector<framework::FRAME_INFO> curAnimation = m_pAnimationAsset->m_Animations.find(m_AnimationName)->second;
 	float renderTime = curAnimation[m_FrameIndex].RenderTime;
 
-	// 마지막 프레임이라면 오브젝트에 애니메이션이 종료됨을 알린다.
-	if (m_FrameIndex == curAnimation.size() - 1 && m_ProgressTime > renderTime)
-	{
-		EventManager::GetInstance()->SendEvent(eEventType::AnimationEnd);
-		m_ProgressTime = 0.f;
-	}
-
-	if (m_ProgressTime > renderTime)
+	if (m_ProgressTime >= renderTime)
 	{
 		m_ProgressTime -= renderTime;
 		m_FrameIndex = (m_FrameIndex + 1) % (curAnimation.size());
@@ -72,22 +64,33 @@ void AnimationComponent::SetAnimationAsset(const WCHAR* szFilePath, const std::w
 	//m_pAnimationAsset->Load(L"../Resource/TestWorld.WorldAsset");
 }
 
-void AnimationComponent::SetCurAnimation(const std::wstring name, const bool flip)
+void AnimationComponent::ChangeAnimation(const std::wstring name, const bool flip)
 {
 	assert(m_pAnimationAsset != nullptr);
 	assert(m_pAnimationAsset->m_Animations.find(name) != m_pAnimationAsset->m_Animations.end());
 
 	m_AnimationName = name;
-	m_FrameIndex = 0;
 	m_ProgressTime = 0.f;
+	m_FrameIndex = 0;
+	m_bMirror = flip;
+}
+
+void AnimationComponent::KeepAnimation(const bool flip)
+{
+	assert(m_pAnimationAsset != nullptr);
+
 	m_bMirror = flip;
 }
 
 void AnimationComponent::HandleEvent(Event* event)
 {
-	if(event->eventID == eEventType::ChangeCurAnimation)
+	if(event->eventID == eEventType::KeepAnimation)
 	{
-		SetCurAnimation(event->animationInfo.animationName, event->animationInfo.flip);
+		KeepAnimation(event->animationInfo.flip);
+	}
+	if(event->eventID == eEventType::ChangeAnimation)
+	{
+		ChangeAnimation(event->animationInfo.animationName, event->animationInfo.flip);
 	}
 	else if(event->eventID == eEventType::SetDefaultAnimation)
 	{

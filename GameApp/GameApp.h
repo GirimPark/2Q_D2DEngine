@@ -4,10 +4,10 @@
 
 class World;
 
-/*-----------------------------------
-실제 구동되는 게임 애플리케이션
-매니저들을 Init, Update, Render한다.
--------------------------------------*/
+/// <summary>
+///	실제 구동되는 게임 애플리케이션
+/// 매니저들을 Init, Update, Render한다.
+/// </summary>
 class GameApp
 	: public CommonApp
 {

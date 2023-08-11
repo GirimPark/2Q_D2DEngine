@@ -219,7 +219,7 @@ framework::Vector2D InputManager::GetPadAxisRightThumb(DWORD controllerIndex)
 		thumbRY = 0.f;
 	}
 
-	return { thumbRX, thumbRY };
+	return framework::Vector2D(thumbRX, thumbRY).Normalize();
 }
 
 float InputManager::GetPadAxisLeftTrigger(DWORD controllerIndex)

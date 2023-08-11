@@ -5,6 +5,10 @@
 class FSM;
 class FSMTransition;
 
+/// <summary>
+///	인스턴스화할 FSMState의 원형
+///	전환 조건들을 가지고 있으며, 가진 전환 조건들을 체크한다.
+/// </summary>
 class FSMState
 {
 protected:
@@ -28,6 +32,7 @@ public:
 public:
 	virtual bool CheckTransition();
 	virtual void OnEnter() abstract;
+	virtual void OnStay() abstract;
 	virtual void OnExit() abstract;
 };
 

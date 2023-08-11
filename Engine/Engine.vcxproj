@@ -154,6 +154,12 @@
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CircleCollider2D.h" />
     <ClInclude Include="Collider2D.h" />
+    <ClInclude Include="CollisionManager.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="CommonApp.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="define.h" />
@@ -168,7 +174,6 @@
     <ClInclude Include="FSMState.h" />
     <ClInclude Include="FSMTransition.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="IAnimationNotify.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="Object.h" />
@@ -193,6 +198,12 @@
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CircleCollider2D.cpp" />
     <ClCompile Include="Collider2D.cpp" />
+    <ClCompile Include="CollisionManager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="CommonApp.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DirectionComponent.cpp" />
@@ -202,7 +213,6 @@
     <ClCompile Include="FSMState.cpp" />
     <ClCompile Include="FSMTransition.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="IAnimationNotify.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="Object.cpp" />

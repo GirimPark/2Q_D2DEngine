@@ -18,6 +18,11 @@ void TimeManager::Update()
 	m_PreviousTime = m_CurrentTime;
 	QueryPerformanceCounter(&m_CurrentTime);
 	m_DeltaTime = (float)(m_CurrentTime.QuadPart - m_PreviousTime.QuadPart) / (float)m_Frequency.QuadPart;
+
+#ifdef _DEBUG
+    if (m_DeltaTime > (1. / 60.))
+        m_DeltaTime = (1. / 60.);
+#endif
 }
 
 const float TimeManager::GetFrameRate() const

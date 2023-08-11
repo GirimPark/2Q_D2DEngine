@@ -3,8 +3,6 @@
 
 #include "PlayerObject1.h"
 #include "PlayerObject2.h"
-#include "BoxObject.h"
-#include "CameraObject.h"
 
 bool JunWorld::Initialize()
 {
@@ -15,7 +13,7 @@ bool JunWorld::Initialize()
 	// m_pCameraObject = CreateGameObject<CameraObject>(L"CameraObject");
 	// m_pCameraObject->SetOwnerObj(m_pPlayerObject1);
 
-	bool res = __super::Initialize();
+	const bool res = World::Initialize();
 	assert(res);
 
 	return true;

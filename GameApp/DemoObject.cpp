@@ -1,8 +1,6 @@
 #include "framework.h"
 #include "DemoObject.h"
 
-#include "GameApp.h"
-
 #include "../Engine/BoxComponent.h"
 
 bool DemoObject::Initialize()

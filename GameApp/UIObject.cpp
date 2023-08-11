@@ -8,26 +8,107 @@ bool UIObject::Initialize()
 {
 	m_StartPanel = CreateComponent<PanelUI>(L"StartPanel");
 	m_StartPanel->SetWidth(150.f);
-	m_StartPanel->SetHeight(300.f);
+	m_StartPanel->SetHeight(500.f);
+	m_StartPanel->SetColor(D2D1::ColorF::White);
+	m_StartPanel->SetRelativeLocation(ScreenWidth / 4.f, ScreenHeight / 2.f);
+	SetRootComponent(m_StartPanel);
+
+	m_pStartButton = CreateComponent<ButtonUI>(L"StartButton");
+	m_pStartButton->SetWidth(50.f);
+	m_pStartButton->SetHeight(50.f);
+	m_pStartButton->SetColor(D2D1::ColorF::Red);
+	m_pStartButton->SetBtnFunction(BTN_FUNC::CHANGE_SCENE);
+	m_pStartButton->SetRelativeLocation(-50.f, -100.f);
+	m_pStartButton->SetYIndex(0);
+	m_pStartButton->SetXIndex(0);
+	m_pStartButton->AttachToComponent(m_StartPanel);
+
+	m_pMethodButton = CreateComponent<ButtonUI>(L"MethodButton");
+	m_pMethodButton->SetWidth(50.f);
+	m_pMethodButton->SetHeight(50.f);
+	m_pMethodButton->SetColor(D2D1::ColorF::Green);
+	m_pMethodButton->SetBtnFunction(BTN_FUNC::PAUSE_UI);
+	m_pMethodButton->SetRelativeLocation(50.f, -100.f);
+	m_pMethodButton->SetYIndex(0);
+	m_pMethodButton->SetXIndex(2);
+	m_pMethodButton->AttachToComponent(m_StartPanel);
+
+	m_pCenterButton = CreateComponent<ButtonUI>(L"CenterButton");
+	m_pCenterButton->SetWidth(50.f);
+	m_pCenterButton->SetHeight(50.f);
+	m_pCenterButton->SetColor(D2D1::ColorF::White);
+	m_pCenterButton->SetBtnFunction(BTN_FUNC::PAUSE_UI);
+	m_pCenterButton->SetRelativeLocation(0.f, 0.f);
+	m_pCenterButton->SetYIndex(1);
+	m_pCenterButton->SetXIndex(1);
+	m_pCenterButton->AttachToComponent(m_StartPanel);
+
+	m_pMadeByButton = CreateComponent<ButtonUI>(L"MadeByButton");
+	m_pMadeByButton->SetWidth(50.f);
+	m_pMadeByButton->SetHeight(50.f);
+	m_pMadeByButton->SetColor(D2D1::ColorF::Aqua);
+	m_pMadeByButton->SetBtnFunction(BTN_FUNC::DELTE_PARENT_UI);
+	m_pMadeByButton->SetRelativeLocation(-50.f, 100.f);
+	m_pMadeByButton->SetYIndex(2);
+	m_pMadeByButton->SetXIndex(0);
+	m_pMadeByButton->AttachToComponent(m_StartPanel);
+
+	m_pExitButton = CreateComponent<ButtonUI>(L"ExitButton");
+	m_pExitButton->SetWidth(50.f);
+	m_pExitButton->SetHeight(50.f);
+	m_pExitButton->SetColor(D2D1::ColorF::Blue);
+	m_pExitButton->SetBtnFunction(BTN_FUNC::DELTE_PARENT_UI);
+	m_pExitButton->SetRelativeLocation(50.f, 100.f);
+	m_pExitButton->SetYIndex(2);
+	m_pExitButton->SetXIndex(2);
+	m_pExitButton->AttachToComponent(m_StartPanel);
+
+	/*m_StartPanel = CreateComponent<PanelUI>(L"StartPanel");
+	m_StartPanel->SetWidth(150.f);
+	m_StartPanel->SetHeight(500.f);
 	m_StartPanel->SetColor(D2D1::ColorF::White);
 	m_StartPanel->SetRelativeLocation(ScreenWidth / 4.f, ScreenHeight / 2.f);
 	SetRootComponent(m_StartPanel);
 
 	m_pStartButton = CreateComponent<ButtonUI>(L"StartButton");
 	m_pStartButton->SetWidth(100.f);
-	m_pStartButton->SetHeight(80.f);
+	m_pStartButton->SetHeight(50.f);
 	m_pStartButton->SetColor(D2D1::ColorF::Red);
 	m_pStartButton->SetBtnFunction(BTN_FUNC::CHANGE_SCENE);
-	m_pStartButton->SetRelativeLocation(0.f, -50.f);
+	m_pStartButton->SetRelativeLocation(0.f, -150.f);
+	m_pStartButton->SetYIndex(0);
+	m_pStartButton->SetXIndex(0);
 	m_pStartButton->AttachToComponent(m_StartPanel);
 
 	m_pMethodButton = CreateComponent<ButtonUI>(L"MethodButton");
 	m_pMethodButton->SetWidth(100.f);
-	m_pMethodButton->SetHeight(80.f);
+	m_pMethodButton->SetHeight(50.f);
 	m_pMethodButton->SetColor(D2D1::ColorF::Green);
 	m_pMethodButton->SetBtnFunction(BTN_FUNC::PAUSE_UI);
-	m_pMethodButton->SetRelativeLocation(0.f, 50.f );
+	m_pMethodButton->SetRelativeLocation(0.f, -50.f);
+	m_pMethodButton->SetYIndex(1);
+	m_pMethodButton->SetXIndex(0);
 	m_pMethodButton->AttachToComponent(m_StartPanel);
+
+	m_pMadeByButton = CreateComponent<ButtonUI>(L"MadeByButton");
+	m_pMadeByButton->SetWidth(100.f);
+	m_pMadeByButton->SetHeight(50.f);
+	m_pMadeByButton->SetColor(D2D1::ColorF::Aqua);
+	m_pMadeByButton->SetBtnFunction(BTN_FUNC::DELTE_PARENT_UI);
+	m_pMadeByButton->SetRelativeLocation(0.f, 50.f);
+	m_pMadeByButton->SetYIndex(2);
+	m_pMadeByButton->SetXIndex(0);
+	m_pMadeByButton->AttachToComponent(m_StartPanel);
+
+	m_pExitButton = CreateComponent<ButtonUI>(L"ExitButton");
+	m_pExitButton->SetWidth(100.f);
+	m_pExitButton->SetHeight(50.f);
+	m_pExitButton->SetColor(D2D1::ColorF::Blue);
+	m_pExitButton->SetBtnFunction(BTN_FUNC::DELTE_PARENT_UI);
+	m_pExitButton->SetRelativeLocation(0.f, 150.f);
+	m_pExitButton->SetYIndex(3);
+	m_pExitButton->SetXIndex(0);
+	m_pExitButton->AttachToComponent(m_StartPanel);*/
 
 	__super::Initialize();
 

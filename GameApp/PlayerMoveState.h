@@ -14,7 +14,8 @@ public:
 	PlayerMoveState();
 
 public:
-	void OnEnter() override;
-	void OnExit() override;
+	void OnEnter() final;
+	void OnStay() final;
+	void OnExit() final;
 };
 

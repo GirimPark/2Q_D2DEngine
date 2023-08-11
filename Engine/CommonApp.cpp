@@ -38,6 +38,7 @@ CommonApp::CommonApp(HINSTANCE hInstance)
 
     // 兄希君 持失
     m_pD2DRenderer = new D2DRenderer;
+    m_pUIManager = new UIManager;
 }
 
 CommonApp::~CommonApp()
@@ -80,7 +81,7 @@ bool CommonApp::Initialize()
     m_pBrush = m_pD2DRenderer->GetBrush();
     m_pTextFormat = m_pD2DRenderer->GetTextFormat();
 
-    m_pTimeManager.Initialize();
+    m_TimeManager.Initialize();
     InputManager::GetInstance()->Initialize();
 
     return true;
@@ -112,7 +113,7 @@ void CommonApp::Loop()
 
 void CommonApp::Update()
 {
-    m_pTimeManager.Update();
+    m_TimeManager.Update();
     InputManager::GetInstance()->Update();
     CalculateFrameStats();
 }
@@ -120,6 +121,7 @@ void CommonApp::Update()
 void CommonApp::Finalize()
 {
     delete m_pD2DRenderer;
+    delete m_pUIManager;
     InputManager::GetInstance()->Finalize();
 }
 
@@ -136,7 +138,7 @@ int CommonApp::MessageBoxComError(HRESULT hr)
 
 void CommonApp::CalculateFrameStats()
 {
-    float fps = m_pTimeManager.GetFrameRate();
+    float fps = m_TimeManager.GetFrameRate();
     std::wstring windowText;
     windowText.append(m_szTitle);
     windowText.append(L"   FPS: ");

@@ -8,7 +8,7 @@ class PlayerTransition
 	, public EventListener
 {
 protected:
-	bool m_bMoving = false;
+	framework::Vector2D m_MoveDirection = { 0.f, 0.f };
 	framework::Vector2D m_LookDirection = { 0.f, 0.f };
 
 public :
@@ -19,21 +19,22 @@ public :
 class IdleToMove : public PlayerTransition
 {
 public:
-	virtual std::pair<std::wstring, bool> operator()() override
+	std::pair<std::wstring, bool> operator()() final
 	{
-		if(m_bMoving)
+		
+		if(m_MoveDirection.Length() > 0.f)
 		{
-			if (m_LookDirection.x >= 0)
+			if (m_LookDirection.x >= 0.f)
 				return { L"MOVE", false };
 			else
 				return { L"MOVE", true };
 		}
 		else
 		{
-			if (m_LookDirection.x >= 0)
-				return { L"IDLE", false };
+			if (m_LookDirection.x >= 0.f)
+				return { L"", false };
 			else
-				return { L"IDLE", true };
+				return { L"", true };
 		}
 	}
 };
@@ -41,21 +42,21 @@ public:
 class MoveToIdle : public PlayerTransition
 {
 public:
-	virtual std::pair<std::wstring, bool> operator()() override
+	std::pair<std::wstring, bool> operator()() final
 	{
-		if(!m_bMoving)
+		if(m_MoveDirection.Length() == 0.f)
 		{
-			if(m_LookDirection.x >= 0)
+			if(m_LookDirection.x >= 0.f)
 				return { L"IDLE", false };
 			else
 				return { L"IDLE", true };
 		}
 		else
 		{
-			if (m_LookDirection.x >= 0)
-				return { L"MOVE", false };
+			if (m_LookDirection.x >= 0.f)
+				return { L"", false };
 			else
-				return { L"MOVE", true };
+				return { L"", true };
 		}
 	}
 };

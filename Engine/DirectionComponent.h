@@ -19,6 +19,5 @@ public:
 	void SetColor(D2D1::ColorF color) { m_Color = color; }
 
 public:
-	void Update(const float deltaTime) final;
 	void Render(ID2D1RenderTarget* pRenderTarget) final;
 };

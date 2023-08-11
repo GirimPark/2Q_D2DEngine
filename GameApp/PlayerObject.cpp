@@ -43,8 +43,9 @@ bool PlayerObject::Initialize()
 	SetRootComponent(m_pAnimComponent);
 	// Default State를 지정해주기 위한 Listener 등록
 	EventManager::GetInstance()->RegisterListener(eEventType::SetDefaultAnimation, dynamic_cast<EventListener*>(m_pAnimComponent));
-	// 이후 애니메이션 change를 위한 Listener 등록
-	EventManager::GetInstance()->RegisterListener(eEventType::ChangeCurAnimation, dynamic_cast<EventListener*>(m_pAnimComponent));
+	// 이후 애니메이션 change, keep을 위한 Listener 등록
+	EventManager::GetInstance()->RegisterListener(eEventType::KeepAnimation, dynamic_cast<EventListener*>(m_pAnimComponent));
+	EventManager::GetInstance()->RegisterListener(eEventType::ChangeAnimation, dynamic_cast<EventListener*>(m_pAnimComponent));
 
 	// MovementComponent
 	m_pMovementComponent = CreateComponent<MovementComponent>(L"MovementComponent");
@@ -53,7 +54,6 @@ bool PlayerObject::Initialize()
 	m_pFSMComponent = CreateComponent<FSMComponent>(L"FSMComponent");
 	m_pPlayerFSM = new PlayerFSM;
 	m_pFSMComponent->AttachFSM(m_pPlayerFSM, m_pAnimComponent);
-	EventManager::GetInstance()->RegisterListener(eEventType::AnimationEnd, dynamic_cast<EventListener*>(m_pPlayerFSM));
 
 	m_pDirectionComponent = CreateComponent<DirectionComponent>(L"DirectionComponent");
 	m_pDirectionComponent->SetColor(D2D1::ColorF::Yellow);

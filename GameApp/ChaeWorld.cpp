@@ -1,12 +1,7 @@
 #include "framework.h"
 #include "ChaeWorld.h"
 
-#include "DemoObject.h"
-#include "PlayerObject1.h"
-#include "CameraObject.h"
 #include "UIObject.h"
-
-#include "../Engine/CommonApp.h"
 
 bool ChaeWorld::Initialize()
 {

@@ -2,7 +2,6 @@
 #include "UI.h"
 
 #include "InputManager.h"
-#include "CommonApp.h"
 
 bool UI::Initialize()
 {
@@ -25,16 +24,10 @@ void UI::Render(ID2D1RenderTarget* pRenderTarget)
 {
 }
 
-void UI::AddChildUI(UI* childUI)
-{
-	m_childUI.push_back(childUI);
-	childUI->m_parentUI = this;
-}
-
 void UI::CheckMouseOn()
 {
-	const float mouseX = InputManager::GetInstance()->GetMousePos().x;
-	const float mouseY = InputManager::GetInstance()->GetMousePos().y;
+	const float mouseX = InputManager::GetInstance()->GetPadAxisLeftThumb(0).x;
+	const float mouseY = InputManager::GetInstance()->GetPadAxisLeftThumb(0).y;
 
 	if (mouseX > m_finalUIPos.x - (m_Width / 2) && mouseX < m_finalUIPos.x + (m_Width / 2)
 		&& mouseY > m_finalUIPos.y - (m_Height / 2) && mouseY < (m_Height / 2) + m_finalUIPos.y)

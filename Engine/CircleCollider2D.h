@@ -12,10 +12,8 @@ public:
 
 public:
 	bool CheckIntersect(Collider2D* other) const final;
-
-public:
 	void SetExtend(float r);
 
 public:
-	MYCC m_collider;
+	CC m_collider;
 };

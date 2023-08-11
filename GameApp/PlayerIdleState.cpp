@@ -15,7 +15,13 @@ PlayerIdleState::PlayerIdleState()
 void PlayerIdleState::OnEnter()
 {
 	framework::EVENT_ANIMATION_INFO animationInfo = { L"IDLE", m_bFlip };
-	EventManager::GetInstance()->SendEvent(eEventType::ChangeCurAnimation, animationInfo);
+	EventManager::GetInstance()->SendEvent(eEventType::ChangeAnimation, animationInfo);
+}
+
+void PlayerIdleState::OnStay()
+{
+	framework::EVENT_ANIMATION_INFO animationInfo = { L"IDLE", m_bFlip };
+	EventManager::GetInstance()->SendEvent(eEventType::KeepAnimation, animationInfo);
 }
 
 void PlayerIdleState::OnExit()

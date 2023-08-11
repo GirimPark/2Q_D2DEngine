@@ -24,13 +24,15 @@ void SceneComponent::UpdateTransform()
 		* D2D1::Matrix3x2F::Rotation(m_RelativeRotation)
 		* D2D1::Matrix3x2F::Translation(m_RelativeLocation.x, m_RelativeLocation.y);
 
-	// worldTransform 계산
+	// 부모 컴포넌트를 가지고	있는 경우 (자식 컴포넌트인 경우)
 	if (m_pParentComponent)
 	{
+		// worldTransform 계산
 		m_WorldTransform = m_RelativeTransform * m_pParentComponent->m_WorldTransform;
 		m_WorldLocation = { m_WorldTransform.dx, m_WorldTransform.dy };
 	}
-	else // root component인 경우
+	// 부모 컴포넌트인 경우
+	else
 	{
 		if (m_pParentObject)
 		{

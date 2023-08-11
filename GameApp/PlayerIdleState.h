@@ -13,7 +13,8 @@ public:
 	PlayerIdleState();
 
 public:
-	virtual void OnEnter() override final;
-	virtual void OnExit() override final;
+	void OnEnter() final;
+	void OnStay() final;
+	void OnExit() final;
 };
 

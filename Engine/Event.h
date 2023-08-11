@@ -3,6 +3,10 @@
 
 enum eEventType;
 
+/// <summary>
+///	Event 정보를 가진 클래스
+///	이벤트타입에 따라 필요한 정보가 달라 생성자 오버로딩으로 구현한다.
+///	</summary>
 class Event
 {
 public:

@@ -1,22 +1,22 @@
 #include "pch.h"
 #include "Collider2D.h"
 
-#include "CommonApp.h"
 #include "GameObject.h"
+#include "MovementComponent.h"
 
-bool MYAABB::Check_AABB_AABB(const MYAABB& other) const
+bool AABB::Check_AABB_AABB(const AABB& other) const
 {
 	// self min,max
-	float minBox1X = center.x - extend.x;
-	float maxBox1X = center.x + extend.x;
-	float minBox1Y = center.y - extend.y;
-	float maxBox1Y = center.y + extend.y;
+	const float minBox1X = center.x - extend.x;
+	const float maxBox1X = center.x + extend.x;
+	const float minBox1Y = center.y - extend.y;
+	const float maxBox1Y = center.y + extend.y;
 
 	// other min,max
-	float minBox2X = other.center.x - other.extend.x;
-	float maxBox2X = other.center.x + other.extend.x;
-	float minBox2Y = other.center.y - other.extend.y;
-	float maxBox2Y = other.center.y + other.extend.y;
+	const float minBox2X = other.center.x - other.extend.x;
+	const float maxBox2X = other.center.x + other.extend.x;
+	const float minBox2Y = other.center.y - other.extend.y;
+	const float maxBox2Y = other.center.y + other.extend.y;
 
 	// Check for no overlap conditions
 	if (maxBox1X < minBox2X || minBox1X > maxBox2X || maxBox1Y < minBox2Y || minBox1Y > maxBox2Y)
@@ -25,7 +25,7 @@ bool MYAABB::Check_AABB_AABB(const MYAABB& other) const
 	return true;
 }
 
-bool MYAABB::Check_AABB_CC(const MYCC& other) const
+bool AABB::Check_AABB_CC(const CC& other) const
 {
 	// Find the point on the AABB closest to the circle center
 	framework::Vector2D closestPoint = other.center;
@@ -37,16 +37,16 @@ bool MYAABB::Check_AABB_CC(const MYCC& other) const
 	if (closestPoint.y > center.y + extend.y) closestPoint.y = center.y + extend.y;
 
 	// Calculate the distance between the closest point and the circle center
-	framework::Vector2D distanceVec = other.center - closestPoint;
+	const framework::Vector2D distanceVec = other.center - closestPoint;
 
 	// If the distance is less than the circle's radius, there is a collision
 	return distanceVec.LengthSqrt() <= other.radius * other.radius;
 }
 
-bool MYCC::Check_CC_CC(const MYCC& other) const
+bool CC::Check_CC_CC(const CC& other) const
 {
 	// 두 점 사이의 거리 구하기
-	float distance = framework::Vector2D::Distance(center, other.center);
+	const float distance = framework::Vector2D::Distance(center, other.center);
 
 	// 두 점 사이의 거리가 두 원의 반지름 합보다 작거나 같으면 충돌
 	if (distance <= radius + other.radius)
@@ -55,7 +55,7 @@ bool MYCC::Check_CC_CC(const MYCC& other) const
 	return false;
 }
 
-bool MYCC::Check_CC_AABB(const MYAABB& other) const
+bool CC::Check_CC_AABB(const AABB& other) const
 {
 	// Find the point on the AABB closest to the circle center
 	framework::Vector2D closestPoint = center;
@@ -67,7 +67,7 @@ bool MYCC::Check_CC_AABB(const MYAABB& other) const
 	if (closestPoint.y > other.center.y + other.extend.y) closestPoint.y = other.center.y + other.extend.y;
 
 	// Calculate the distance between the closest point and the circle center
-	framework::Vector2D distanceVec = center - closestPoint;
+	const framework::Vector2D distanceVec = center - closestPoint;
 
 	// If the distance is less than the circle's radius, there is a collision
 	return distanceVec.LengthSqrt() <= radius * radius;
@@ -75,7 +75,7 @@ bool MYCC::Check_CC_AABB(const MYAABB& other) const
 
 bool Collider2D::Initialize()
 {
-	bool res = SceneComponent::Initialize();
+	const bool res = SceneComponent::Initialize();
 	assert(res);
 
 	return true;
@@ -83,9 +83,17 @@ bool Collider2D::Initialize()
 
 void Collider2D::Update(const float deltaTime)
 {
-	__super::Update(deltaTime);
+	SceneComponent::Update(deltaTime);
 }
 
 void Collider2D::Render(ID2D1RenderTarget* pRenderTarget)
 {
+}
+
+void Collider2D::ProcessBlock(float deltaTime) const
+{
+	const MovementComponent* movementComponent = dynamic_cast<MovementComponent*>(m_pOwner->GetComponent(L"MovementComponent"));
+
+	// deltaTime 만큼 다시 뒤로 돌려보낸다
+	m_pOwner->GetRootComponent()->AddRelativeLocation(movementComponent->GetVelocity() * deltaTime * -1);
 }

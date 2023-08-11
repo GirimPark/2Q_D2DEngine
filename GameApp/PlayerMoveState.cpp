@@ -16,7 +16,13 @@ void PlayerMoveState::OnEnter()
 {
 	// MoveAnimation Àç»ý
 	framework::EVENT_ANIMATION_INFO animationInfo = { L"MOVE", m_bFlip };
-	EventManager::GetInstance()->SendEvent(eEventType::ChangeCurAnimation, animationInfo);
+	EventManager::GetInstance()->SendEvent(eEventType::ChangeAnimation, animationInfo);
+}
+
+void PlayerMoveState::OnStay()
+{
+	framework::EVENT_ANIMATION_INFO animationInfo = { L"MOVE", m_bFlip };
+	EventManager::GetInstance()->SendEvent(eEventType::KeepAnimation, animationInfo);
 }
 
 void PlayerMoveState::OnExit()

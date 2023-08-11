@@ -19,5 +19,6 @@ private:
     ButtonUI* m_pMethodButton = nullptr;
     ButtonUI* m_pMadeByButton = nullptr;
     ButtonUI* m_pExitButton = nullptr;
+    ButtonUI* m_pCenterButton = nullptr;
 };
 

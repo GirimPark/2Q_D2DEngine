@@ -7,11 +7,11 @@
 
 class UIObject;
 
-/*-----------------------------------------------
-World의 원형 클래스
-GameApp은 World 맵을 가지고 월드를 검색, 전환한다.
-World는 GameObject 리스트를 들고 있다.
-------------------------------------------------*/
+/// <summary>
+/// World의 원형 클래스
+/// GameApp은 World 맵을 가지고 월드를 검색, 전환한다.
+/// World는 GameObject 리스트를 들고 있다.
+/// </summary>
 class World
 {
 private:

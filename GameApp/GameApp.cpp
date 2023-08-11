@@ -7,6 +7,7 @@
 #include "JunWorld.h"
 
 #include "../Engine/EventManager.h"
+#include "../Engine/CollisionManager.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -16,9 +17,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    // Debug Memory Leak Check at start point
+	// Debug Memory Leak Check at start point
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(424);
+    //_CrtSetBreakAlloc(349);
 
     // 전역 문자열을 초기화합니다.
     GameApp App(hInstance);
@@ -56,10 +57,20 @@ void GameApp::Update()
 {
     __super::Update();
 
-    m_pTestWorld->Update(m_pTimeManager.GetDeltaTime());
+    m_pTestWorld->Update(m_TimeManager.GetDeltaTime());
+
+    // TODO : FinalUpdate 만들기 (FixedUpdate?)
+    // m_pTestWorld->FinalUpdate(m_TimeManager.GetDeltaTime());
+
+    // TODO : CollisionManager Update
+    // CollisionManager::GetInstance()->Update(m_TimeManager.GetDeltaTime());
+
     // 월드매니저까지 CommonApp Update로 편입되면 EventManager도 같이 넣을 수 있을듯
+    m_pUIManager->Update(m_TimeManager.GetDeltaTime());
     EventManager::GetInstance()->Update();
     // Manager Update
+
+
     // FixedUpdate
     // LateUpdate
 }
@@ -84,14 +95,14 @@ bool GameApp::Initialize()
     assert(res);
 
     // Test
-	//m_pTestWorld = new TestWorld;
-    // m_pTestWorld->Initialize();
-
-    m_pTestWorld = new JunWorld;
+	m_pTestWorld = new TestWorld;
+    //m_pTestWorld = new JunWorld;
     //m_pTestWorld = new ChaeWorld;
     m_pTestWorld->Initialize();
 
-    EventManager::GetInstance()->Initialize();
+    m_pUIManager->Initialize(m_pTestWorld->GetUIObject());
+	EventManager::GetInstance()->Initialize();
+
 
     // WorldManager Init
 

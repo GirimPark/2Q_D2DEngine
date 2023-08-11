@@ -8,7 +8,7 @@ void PlayerTransition::HandleEvent(Event* event)
 {
 	if(event->eventID == eEventType::TransperMovement)
 	{
-		m_bMoving = event->movementInfo.isMoving;
+		m_MoveDirection = event->movementInfo.moveDirection;
 		m_LookDirection = event->movementInfo.lookDirection;
 	}
 }

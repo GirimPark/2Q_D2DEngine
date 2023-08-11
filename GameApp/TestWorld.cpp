@@ -3,7 +3,6 @@
 
 #include "DemoObject.h"
 #include "PlayerObject.h"
-#include "CameraObject.h"
 
 bool TestWorld::Initialize()
 {

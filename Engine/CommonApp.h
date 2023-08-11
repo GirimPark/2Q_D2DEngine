@@ -6,11 +6,10 @@
 
 #include "../D2DRenderer/D2DRenderer.h"
 
-/*---------------------------------------------------------
-게임에서 사용할 공통적인 처리를 하는 class
-실제로 만들 게임은 CommonApp을 상속 받아 부가적인 처리를 한다.
-----------------------------------------------------------*/
-
+/// <summary>
+/// 게임에서 사용할 공통적인 처리를 하는 class
+/// 실제로 만들 게임은 CommonApp을 상속 받아 부가적인 처리를 한다.
+/// </summary>
 class CommonApp
 {
 protected:
@@ -20,9 +19,8 @@ protected:
 	IDWriteTextFormat* m_pTextFormat = nullptr;
 
 protected:
-	// 이거 생각해보니까 바꿔야함
-	TimeManager m_pTimeManager;
-	UIManager m_pUIManager;
+	TimeManager m_TimeManager;
+	UIManager* m_pUIManager;
 
 public:
 	D2DRenderer* GetRenderer() const { return m_pD2DRenderer; }

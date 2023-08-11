@@ -1,24 +1,9 @@
 #pragma once
 
-#include <math.h>
 #include <cassert>
 
 namespace framework
 {
-	struct Rect
-	{
-		float left;
-		float top;
-		float right;
-		float bottom;
-
-		Rect(float left = 0.f, float top = 0.f, float right = 0.f, float bottom = 0.f)
-			: left(left), top(top), right(right), bottom(bottom)
-		{
-
-		}
-	};
-
 	struct Vector2D
 	{
 		/// properties
@@ -102,7 +87,7 @@ namespace framework
 
 		/// member functions
 
-		float Length() const { return sqrt(x * x + y * y); }
+		float Length() const { return static_cast<float>(sqrt(x * x + y * y)); }
 		float LengthSqrt() const { return x * x + y * y; }
 
 		Vector2D& Normalize()
@@ -155,11 +140,11 @@ namespace framework
 		// TODO : 일반적으로 곱셈은 값의 제곱근을 취하는 것보다 훨씬 저렴한 연산이므로 수정하자
 		static float Distance(const Vector2D& vec1, const Vector2D& vec2)
 		{
-			return sqrt
+			return static_cast<float>(sqrt
 			(
 				static_cast<float>(pow(vec1.x - vec2.x, 2))
 				+ static_cast<float>(pow(vec1.y - vec2.y, 2))
-			);
+			));
 		}
 		static float DotProduct(const Vector2D& vec1, const Vector2D& vec2) { return vec1.x * vec2.x + vec1.y * vec2.y; }
 	};
@@ -199,7 +184,7 @@ namespace framework
 
 	struct EVENT_MOVEMENT_INFO
 	{
-		bool isMoving;
+		Vector2D moveDirection;
 		Vector2D lookDirection;
 	};
 }

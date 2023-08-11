@@ -7,11 +7,11 @@
 
 class GameObject;
 
-/*--------------------------------------------------------------------
-위치정보를 갖는 Component
-일반적으로는 인스턴스화하지 않는다.
-위치정보를 필요로 하는 컴포넌트들은 해당 컴포넌트를 상속받아 사용한다.
----------------------------------------------------------------------*/
+/// <summary>
+/// 위치정보를 갖는 Component
+/// 일반적으로는 인스턴스화하지 않는다.
+/// 위치정보를 필요로 하는 컴포넌트들은 해당 컴포넌트를 상속받아 사용한다.
+/// </summary>
 class SceneComponent
 	: public Component
 {
@@ -34,7 +34,7 @@ protected:
 private:
 	// 소속된 오브젝트의 부모오브젝트
 	GameObject* m_pParentObject = nullptr;
-	
+
 public:
 	//void SetRelativeScale(float x, float y) { m_RelativeScale.x = x; m_RelativeScale.y = y; }
 	//Vector2D GetRelativeScale() { return m_RelativeScale; }
@@ -48,9 +48,8 @@ public:
 	//D2D_MATRIX_3X2_F GetFinalTransform() { return m_FinalTransform; }
 	std::vector<Component*>& GetChildrenComponent() { return m_Children; }
 
-	void AddRelativeRotation(const float rotation) { m_RelativeRotation = m_RelativeRotation + rotation; UpdateTransform(); }
-	void AddRelativeLocation(framework::Vector2D velocity) { m_RelativeLocation += velocity; }
-	// void AddRelativeVelocity()
+	void AddRelativeRotation(const float rotation) { m_RelativeRotation += rotation; UpdateTransform(); }
+	void AddRelativeLocation(framework::Vector2D velocity) { m_RelativeLocation += velocity; UpdateTransform(); }
 
 	virtual bool Initialize();
 	void Update(const float deltaTime) override;

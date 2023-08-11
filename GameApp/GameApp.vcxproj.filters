@@ -73,7 +73,6 @@
     <ClInclude Include="ChaeWorld.h">
       <Filter>2. World</Filter>
     </ClInclude>
-    <ClInclude Include="UIObject.h" />
     <ClInclude Include="BoxObject.h">
       <Filter>3. Object</Filter>
     </ClInclude>
@@ -81,6 +80,9 @@
       <Filter>2. World</Filter>
     </ClInclude>
     <ClInclude Include="PlayerObject2.h">
+      <Filter>3. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h">
       <Filter>3. Object</Filter>
     </ClInclude>
   </ItemGroup>

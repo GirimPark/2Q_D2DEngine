@@ -1,18 +1,12 @@
 #include "pch.h"
 #include "MovementComponent.h"
+
 #include "GameObject.h"
 #include "InputManager.h"
 #include "SceneComponent.h"
+#include "EventManager.h"
 
-framework::Vector2D thumbLeft = { 0.f, 0.f };
-framework::Vector2D thumbRight = { 0.f, 0.f };
-
-int rawBX = 0;
-int rawBY = 0;
-
-float triggerL = 0.f;
-float triggerR = 0.f;
-
+/*
 int ConvertToRaw(float& thumbValue)
 {
 	constexpr float threshold = 0.2f; // 임계값을 설정
@@ -22,6 +16,7 @@ int ConvertToRaw(float& thumbValue)
 
 	return 0;
 }
+*/
 
 /// <summary>
 /// 컨트롤러 기능 테스트
@@ -96,27 +91,33 @@ void MovementComponent::XBOXController(int controllerIndex)
 		std::cout << std::to_string(controllerIndex + 1) << "P의 BACK END" << std::endl;
 
 	/// 왼쪽 / 오른쪽 스틱
-	thumbLeft = InputManager::GetPadAxisLeftThumb(controllerIndex);
-	thumbRight = InputManager::GetPadAxisRightThumb(controllerIndex);
+	m_ThumbLeft = InputManager::GetPadAxisLeftThumb(controllerIndex);
+	m_ThumbRight = InputManager::GetPadAxisRightThumb(controllerIndex);
 
 	/// 이동 버튼
 	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::UP) ||
 		InputManager::GetInstance()->IsPadButtonHold(controllerIndex, GamePadButtonCode::UP))
-		rawBY = -1;
+		m_RawBY = -1;
 	else if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::DOWN) ||
 		InputManager::GetInstance()->IsPadButtonHold(controllerIndex, GamePadButtonCode::DOWN))
-		rawBY = 1;
+		m_RawBY = 1;
+	else if (!InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::UP) &&
+		!InputManager::GetInstance()->IsPadButtonHold(controllerIndex, GamePadButtonCode::DOWN))
+		m_RawBY = 0;
 
 	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::LEFT) ||
 		InputManager::GetInstance()->IsPadButtonHold(controllerIndex, GamePadButtonCode::LEFT))
-		rawBX = -1;
+		m_RawBX = -1;
 	else if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::RIGHT) ||
 		InputManager::GetInstance()->IsPadButtonHold(controllerIndex, GamePadButtonCode::RIGHT))
-		rawBX = 1;
+		m_RawBX = 1;
+	else if (!InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::LEFT) &&
+		!InputManager::GetInstance()->IsPadButtonHold(controllerIndex, GamePadButtonCode::RIGHT))
+		m_RawBX = 0;
 
 	/// L2 R2
-	triggerL = InputManager::GetPadAxisLeftTrigger(controllerIndex);
-	triggerR = InputManager::GetPadAxisRightTrigger(controllerIndex);
+	const float triggerL = InputManager::GetPadAxisLeftTrigger(controllerIndex);
+	const float triggerR = InputManager::GetPadAxisRightTrigger(controllerIndex);
 
 	if (triggerL > 0.2f || triggerR > 0.2f)
 	{
@@ -139,34 +140,52 @@ void MovementComponent::Update(const float deltaTime)
 	else if (m_pOwner->GetName() == L"PlayerObject4")
 		XBOXController(3);
 
+	/// Look Direction 설정
+
+	// 오른쪽 스틱의 입력값
+	float rawRX = max(-1, m_ThumbRight.x);
+	float rawRY = max(-1, (-1) * m_ThumbRight.y);	// 값이 -1보다 작아지는 경우 -1을 값으로 한다
+
+	// 오른쪽 스틱에 입력값이 있는 경우에만 방향을 바꿔준다
+	if (rawRX != 0.f || rawRY != 0.f)
+		m_LookDir = { rawRX, rawRY };
+
+	// 바라보는 방향의 단위 벡터를 구한다
+	m_LookDir.Normalize();
+
 	/// Move Direction 설정
 
 	// 왼쪽 스틱의 입력값
-	float rawLX = max(-1, thumbLeft.x);
-	float rawLY = max(-1, (-1) * thumbLeft.y);	// 값이 -1보다 작아지는 경우 -1을 값으로 한다
+	float rawLX = max(-1, m_ThumbLeft.x);
+	float rawLY = max(-1, (-1) * m_ThumbLeft.y);	// 값이 -1보다 작아지는 경우 -1을 값으로 한다
 
-	// 왼쪽 버튼으로 이동하는 경우
-	if (rawBX != 0 || rawBY != 0)
-		m_MoveDir = { rawBX, rawBY };	// 왼쪽 버튼을 이용한 이동
+	// 키보드 입력값
+	// float rawKeyInputX = InputManager::GetInstance()->GetAxisRaw("Horizontal");
+	// float rawKeyInputY = InputManager::GetInstance()->GetAxisRaw("Vertical");
+
+	if (m_RawBX != 0 || m_RawBY != 0)
+		m_MoveDir = { m_RawBX, m_RawBY };	// 왼쪽 버튼으로 이동하는 경우
 	else
-		m_MoveDir = { rawLX, rawLY };	// 스틱을 이용한 이동
+		m_MoveDir = { rawLX, rawLY };		// 스틱으로 이동하는 경우
 
 	// 이동 방향의 단위 벡터를 구한다
 	m_MoveDir.Normalize();
 
-	/// Look Direction 설정
+	// 오른쪽 스틱의 입력값이 없는 경우 이동 방향을 바라보는 방향으로 설정한다
+	if (rawRX == 0.f || rawRY == 0.f)
+	{
+		// 이동 방향이 없는 경우에만 바라보는 방향으로 설정한다 (자동으로 이동방향 없으면 바라보는 방향은 이전 바라보는 방향으로 설정됨)
+		if(m_MoveDir != framework::Vector2D::Zero())
+			m_LookDir = m_MoveDir;
+	}
 
-	// 오른쪽 스틱의 입력값
-	float rawRX = max(-1, thumbRight.x);
-	float rawRY = max(-1, (-1) * thumbRight.y);	// 값이 -1보다 작아지는 경우 -1을 값으로 한다
+	// 속도 설정
+	m_Velocity = m_MoveDir * m_Speed;
 
-	// 오른쪽 스틱에 입력값이 있는 경우에만 방향을 바꿔준다
-	 if(rawRX != 0.f || rawRY != 0.f)
-	 	m_LookDir = { rawRX, rawRY };
+	/// 플레이어 이동
+	m_pOwner->GetRootComponent()->AddRelativeLocation(m_Velocity * deltaTime);
 
-	// 이동 방향의 단위 벡터를 구한다
-	m_LookDir.Normalize();
-
-	// 플레이어 이동
-	m_pOwner->GetRootComponent()->AddRelativeLocation(m_MoveDir * m_Velocity * deltaTime);
+	/// Transition에 정보 전달
+	framework::EVENT_MOVEMENT_INFO movementInfo = { m_MoveDir, m_LookDir };
+	EventManager::GetInstance()->SendEvent(eEventType::TransperMovement, movementInfo);
 }

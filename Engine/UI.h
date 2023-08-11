@@ -1,6 +1,5 @@
 #pragma once
 #include "RenderComponent.h"
-#include <vector>
 
 class UI :
     public RenderComponent
@@ -34,8 +33,11 @@ public:
     void SetLbtnDown(bool isDown) { m_bLbtnDown = isDown; }
     void SetMouseOn(bool isOn) { m_bMouseOn = isOn; }
 
-    void AddChildUI(UI* childUI);
-    const std::vector<UI*>& GetChildUI() { return m_childUI; }
+    void SetYIndex(size_t y) { m_yIndex = y; }
+    size_t GetYIndex() const { return m_yIndex; }
+
+    void SetXIndex(size_t x) { m_xIndex = x; }
+    size_t GetXIndex() const { return m_xIndex; }
 
 public:
     // 마우스가 UI에 있을 때
@@ -45,16 +47,18 @@ public:
     virtual void MouseLbtnClicked() {};
 
 private:
-    std::vector<UI*> m_childUI;
-    UI* m_parentUI;
     D2D1::ColorF m_changeColor = D2D1::ColorF::Black;
 
 protected:
 	framework::Vector2D m_finalUIPos = {0,0};
+
     float m_Width = 0.f;
     float m_Height = 0.f;
     D2D1::ColorF m_Color = D2D1::ColorF::Black;
 
     bool m_bLbtnDown = false;
     bool m_bMouseOn = false;
+
+    size_t m_xIndex = 0;
+    size_t m_yIndex = 0;
 };
