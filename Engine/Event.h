@@ -1,7 +1,9 @@
 #pragma once
 #include "struct.h"
+#include "GameObject.h"
 
 enum eEventType;
+class GameObject;
 
 /// <summary>
 ///	Event 정보를 가진 클래스
@@ -13,6 +15,8 @@ public:
 	eEventType eventID;
 	framework::EVENT_ANIMATION_INFO animationInfo;
 	framework::EVENT_MOVEMENT_INFO movementInfo;
+	GROUP_TYPE objGroup;
+	GameObject* obj;
 
 	Event(eEventType eventId)
 	{
@@ -29,5 +33,12 @@ public:
 	{
 		this->eventID = eventId;
 		this->movementInfo = movementInfo;
+	}
+
+	Event(eEventType eventId, GROUP_TYPE objGroup, GameObject* obj)
+	{
+		this->eventID = eventId;
+		this->objGroup = objGroup;
+		this->obj = obj;
 	}
 };

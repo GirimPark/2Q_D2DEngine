@@ -1,76 +1,49 @@
 #include "framework.h"
 #include "PlayerObject2.h"
 
-#include "../Engine/BoxComponent.h"
-#include "../Engine/AnimationComponent.h"
-#include "../Engine/MovementComponent.h"
+#include "../Engine/TextureComponent.h"
+#include "../Engine/PlayerMovement.h"
 #include "../Engine/DirectionComponent.h"
-#include "../Engine/CircleCollider2D.h"
+#include "../Engine/BoxCollider2D.h"
+
+#include "ProjectileObject.h"
+
+#include "../Engine/World.h"
 
 #include <vector>
 
 PlayerObject2::~PlayerObject2()
 {
-	// delete m_pPlayerFSM;
 }
 
 bool PlayerObject2::Initialize()
 {
-	/*
-	// AnimationComponent
-	m_pAnimComponent = CreateComponent<AnimationComponent>(L"AnimationComponent");
-	std::vector<framework::FRAME_INFO> playerFrame;
-	// Idle
-	playerFrame.push_back(framework::FRAME_INFO({ 3, 698, 61, 787 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 73, 696, 130, 787 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 143, 695, 197, 787 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 279, 698, 337, 787 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 347, 699, 406, 787 }, 0.1f));
-	m_pAnimComponent->SetAnimationAsset(L"../Resource/ken.png", L"IDLE", playerFrame);
-	// Move
-	playerFrame.clear();
-	playerFrame.push_back(framework::FRAME_INFO({ 9,883,61,965 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 71,878,130,965 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 141,877,204,966 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 216,876,278,964 }, 0.1f));
-	playerFrame.push_back(framework::FRAME_INFO({ 358,878,407,966 }, 0.1f));
-	m_pAnimComponent->SetAnimationAsset(L"../Resource/ken.png", L"MOVE", playerFrame);
+	/// TextrueComponent
+	m_pTextureComponent = CreateComponent<TextureComponent>(L"TextureComponent");
+	m_pTextureComponent->SetTextureAsset(L"../Resource/racoon.png", L"racoonTexture");
+	m_pTextureComponent->SetRelativeLocation(ScreenWidth / 2.f + 400.f, ScreenHeight / 2.f);
+	SetRootComponent(m_pTextureComponent);
 
-	m_pAnimComponent->SetCurAnimation(L"IDLE", false);
-	m_pAnimComponent->SetRelativeLocation(512.f, 384.f);
-	SetRootComponent(m_pAnimComponent);
-	*/
-
-	/// BoxComponent
-	m_pBoxComponent = CreateComponent<BoxComponent>(L"Player2");
-	m_pBoxComponent->SetWidth(50.f);
-	m_pBoxComponent->SetHeight(50.f);
-	m_pBoxComponent->SetColor(D2D1::ColorF::White);
-	m_pBoxComponent->SetRelativeLocation(ScreenWidth / 2.f + 400.f, ScreenHeight / 2.f);
-	SetRootComponent(m_pBoxComponent);
-
-	/// MovementComponent
-	m_pMovementComponent = CreateComponent<MovementComponent>(L"MovementComponent");
-
-	/*
-	// FSMComponent
-	m_pFSMComponent = CreateComponent<FSMComponent>(L"FSMComponent");
-	m_pPlayerFSM = new PlayerFSM;
-	m_pFSMComponent->AttachFSM(m_pPlayerFSM, m_pAnimComponent);
-	*/
+	/// PlayerMovement
+	m_pMovementComponent = CreateComponent<PlayerMovement>(L"PlayerMovement");
 
 	/// DirectionComponent
 	m_pDirectionComponent = CreateComponent<DirectionComponent>(L"DirectionComponent");
 	m_pDirectionComponent->SetColor(D2D1::ColorF::Yellow);
-	m_pDirectionComponent->AttachToComponent(m_pBoxComponent);
+	m_pDirectionComponent->AttachToComponent(m_pTextureComponent);
 
-	/// CircleCollider2D
-	m_pCircleCollider2D = CreateComponent<CircleCollider2D>(L"Collider2D");
-	m_pCircleCollider2D->SetExtend(50.f);
-	m_pCircleCollider2D->SetColor(D2D1::ColorF::SkyBlue);
-	m_pCircleCollider2D->AttachToComponent(m_pBoxComponent);
+	/// BoxCollider2D
+	m_pBoxCollider2D = CreateComponent<BoxCollider2D>(L"BoxCollider2D");
+	m_pBoxCollider2D->SetRelativeLocation(0.f, 25.f);
+	m_pBoxCollider2D->SetExtend(30.f, 25.f);
+	m_pBoxCollider2D->AttachToComponent(m_pTextureComponent);
 
-	bool res = GameObject::Initialize();
+	m_pBoxCollider2DPart = CreateComponent<BoxCollider2D>(L"BoxCollider2D_Part");
+	m_pBoxCollider2DPart->SetRelativeLocation(0.f, 30.f);
+	m_pBoxCollider2DPart->SetExtend(10.f, 15.f);
+	m_pBoxCollider2DPart->AttachToComponent(m_pTextureComponent);
+
+	const bool res = GameObject::Initialize();
 	assert(res);
 
 	return true;
@@ -78,5 +51,71 @@ bool PlayerObject2::Initialize()
 
 void PlayerObject2::Update(const float deltaTime)
 {
+	// Test Code
+	if (this->GetRootComponent()->GetWorldLocation().x > ScreenWidth || this->GetRootComponent()->GetWorldLocation().x < 0 ||
+		this->GetRootComponent()->GetWorldLocation().y > ScreenHeight || this->GetRootComponent()->GetWorldLocation().y < 0)
+	{
+		this->SetLocation(ScreenWidth / 2.f, ScreenHeight / 2.f);
+	}
+
 	GameObject::Update(deltaTime);
+
+	// 아이템 투척
+	if (InputManager::GetInstance()->IsRightTriggerPush(1) ||
+		InputManager::GetInstance()->IsLeftTriggerPush(1) ||
+		InputManager::GetInstance()->IsPadButtonPush(1, GamePadButtonCode::X))
+	{
+		auto* projectile = GetOwnerWorld()->CreateGameObject<ProjectileObject>(L"Projectile_Clone", GROUP_TYPE::ITEM);
+
+		// 아이템의 소유자 설정
+		projectile->SetOwnerPlayer(this);
+
+		// 속도 변경
+		projectile->SetSpeed(500.f);
+
+		// 방향 설정
+		const framework::Vector2D tempLookDir = dynamic_cast<PlayerMovement*>(GetComponent(L"PlayerMovement"))->GetLookDir();
+		projectile->SetDirection(tempLookDir);
+
+		// 위치 설정
+		const framework::Vector2D pos = GetRootComponent()->GetRelativeLocation();
+		constexpr float distance = 65.f;
+		const framework::Vector2D distVec = tempLookDir * distance;
+		projectile->SetPosition(pos + distVec);
+
+		projectile->Initialize();
+	}
+}
+
+void PlayerObject2::OnCollisionEnter(Collider2D* otherCollision)
+{
+	if (otherCollision->GetOwner()->GetName() == L"TrainObstacle_Clone")
+		InputManager::SetControllerVib(1, 65535, 65535);
+}
+
+void PlayerObject2::OnCollisionStay(Collider2D* otherCollision)
+{
+	if (otherCollision->GetOwner()->GetName() == L"TrainObstacle_Clone")
+		InputManager::SetControllerVib(1, 65535, 65535);
+}
+
+void PlayerObject2::OnCollisionExit(Collider2D* otherCollision)
+{
+	if (otherCollision->GetOwner()->GetName() == L"TrainObstacle_Clone")
+		InputManager::SetControllerVib(1, 0, 0);
+}
+
+void PlayerObject2::OnTriggerEnter(Collider2D* otherCollision)
+{
+	InputManager::SetControllerVib(1, 65535, 65535);
+}
+
+void PlayerObject2::OnTriggerStay(Collider2D* otherCollision)
+{
+	InputManager::SetControllerVib(1, 65535, 65535);
+}
+
+void PlayerObject2::OnTriggerExit(Collider2D* otherCollision)
+{
+	InputManager::SetControllerVib(1, 0, 0);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <iostream>
 
 namespace framework
 {
@@ -53,10 +54,26 @@ namespace framework
 			return *this;
 		}
 
+		Vector2D operator += (const float value)
+		{
+			this->x += value;
+			this->y += value;
+
+			return *this;
+		}
+
 		Vector2D& operator -= (const Vector2D& vec)
 		{
 			this->x -= vec.x;
 			this->y -= vec.y;
+
+			return *this;
+		}
+
+		Vector2D operator -= (const float value)
+		{
+			this->x -= value;
+			this->y -= value;
 
 			return *this;
 		}
@@ -69,7 +86,7 @@ namespace framework
 			return *this;
 		}
 
-		Vector2D& operator *= (float value)
+		Vector2D& operator *= (const float value)
 		{
 			this->x *= value;
 			this->y *= value;
@@ -81,6 +98,14 @@ namespace framework
 		{
 			this->x /= vec.x;
 			this->y /= vec.y;
+
+			return *this;
+		}
+
+		Vector2D& operator /= (const float value)
+		{
+			this->x /= value;
+			this->y /= value;
 
 			return *this;
 		}
@@ -111,7 +136,7 @@ namespace framework
 
 		Vector2D& LimitX(float value)
 		{
-			if (this->x > value)
+			if (this->x >= value)
 				this->x = value;
 			else if (this->x < -value)
 				this->x = -value;
@@ -120,10 +145,21 @@ namespace framework
 		}
 		Vector2D& LimitY(float value)
 		{
-			if (this->y > value)
+			if (this->y >= value)
 				this->y = value;
 			else if (this->y < -value)
 				this->y = -value;
+
+			return *this;
+		}
+		Vector2D& Limit(float value)
+		{
+			if(this->Length() >= value)
+			{
+				// 벡터를 정규화하고 원하는 길이만큼 곱해줌
+				const float length = this->Length();
+				*this = (*this / length) * value;
+			}
 
 			return *this;
 		}
@@ -149,9 +185,16 @@ namespace framework
 		static float DotProduct(const Vector2D& vec1, const Vector2D& vec2) { return vec1.x * vec2.x + vec1.y * vec2.y; }
 	};
 
+	inline std::ostream& operator << (std::ostream& os, const Vector2D& vec)
+	{
+		os << "X : " << vec.x << " Y : " << vec.y << std::endl;
+		return os;
+	}
+
 	/*---------------------------------------
 	애니메이션 프레임 정보
 	---------------------------------------*/
+
 	struct FRAME_INFO
 	{
 		D2D1_RECT_F Source;		// 이미지 파일에서 어느 영역 Rect가 실제 프레임인지 저장한다.

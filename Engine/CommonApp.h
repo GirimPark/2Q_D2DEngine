@@ -1,10 +1,12 @@
 #pragma once
-#define MAX_LOADSTRING 100
+#define MAX_LOADSTRING (100)
 
 #include "TimeManager.h"
-#include "UIManager.h"
+#include "WorldManager.h"
 
 #include "../D2DRenderer/D2DRenderer.h"
+
+class SoundManager;
 
 /// <summary>
 /// 게임에서 사용할 공통적인 처리를 하는 class
@@ -20,7 +22,8 @@ protected:
 
 protected:
 	TimeManager m_TimeManager;
-	UIManager* m_pUIManager;
+	WorldManager* m_pWorldManager;
+	SoundManager* m_pSoundManager;
 
 public:
 	D2DRenderer* GetRenderer() const { return m_pD2DRenderer; }
@@ -59,4 +62,3 @@ public:
 
 	virtual LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
-

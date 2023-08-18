@@ -2,7 +2,6 @@
 #include "../Engine/GameObject.h"
 
 enum class BTN_FUNC;
-class BoxComponent;
 class ButtonUI;
 class PanelUI;
 
@@ -14,7 +13,7 @@ public:
     void Update(const float deltaTime) final;
 
 private:
-    PanelUI* m_StartPanel = nullptr;
+    PanelUI* m_pStartPanel = nullptr;
     ButtonUI* m_pStartButton = nullptr;
     ButtonUI* m_pMethodButton = nullptr;
     ButtonUI* m_pMadeByButton = nullptr;

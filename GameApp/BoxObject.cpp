@@ -2,24 +2,26 @@
 #include "BoxObject.h"
 
 #include "../Engine/BoxComponent.h"
+#include "../Engine/BoxCollider2D.h"
+
+#include "../Engine/CommonApp.h"
 
 bool BoxObject::Initialize()
 {
+	/// BoxComponent
 	 m_pBoxComponent = CreateComponent<BoxComponent>(L"BoxComponent");
-	 m_pBoxComponent->SetWidth(50.f);
-	 m_pBoxComponent->SetHeight(50.f);
-	 m_pBoxComponent->SetColor(D2D1::ColorF::LightPink);
-	 m_pBoxComponent->SetRelativeLocation(ScreenWidth / 2.f + 200.f, ScreenHeight / 2.f + 200.f);
 	 SetRootComponent(m_pBoxComponent);
 
-	__super::Initialize();
+	 /// BoxCollider2D
+	 m_pBoxCollider2D = CreateComponent<BoxCollider2D>(L"BoxCollider2D");
+	 m_pBoxCollider2D->AttachToComponent(m_pBoxComponent);
+
+	GameObject::Initialize();
 
 	return true;
 }
 
 void BoxObject::Update(const float deltaTime)
 {
-
-
-	__super::Update(deltaTime);
+	GameObject::Update(deltaTime);
 }

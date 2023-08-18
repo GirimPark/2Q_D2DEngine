@@ -3,6 +3,7 @@
 
 #include "Event.h"
 #include "EventListener.h"
+#include "../GameApp/ItemObject.h"
 
 EventManager* EventManager::m_pInstance = nullptr;
 
@@ -58,8 +59,9 @@ void EventManager::UnregisterAll(EventListener* listener)
 	}
 }
 
-void EventManager::ClearEventList()
+void EventManager::ClearEvents()
 {
+	m_WholeEvents.clear();
 	m_EventList.clear();
 }
 
@@ -77,6 +79,11 @@ void EventManager::Update()
 	while(!m_EventList.empty())
 	{
 		ExecuteEvent(&m_EventList.front());
+		if(m_bChangingWorld)
+		{
+			m_bChangingWorld = false;
+			return;
+		}
 		m_EventList.pop_front();
 	}
 }
@@ -107,6 +114,12 @@ void EventManager::SendEvent(eEventType eventId, framework::EVENT_MOVEMENT_INFO 
 	m_EventList.emplace_back(newEvent);
 }
 
+void EventManager::SendEvent(eEventType eventId, GROUP_TYPE group, GameObject* obj)
+{
+	Event newEvent(eventId, group, obj);
+	m_EventList.emplace_back(newEvent);
+}
+
 bool EventManager::IsRegistered(eEventType eventType, EventListener* listener)
 {
 	bool alreadyRegistered = false;
@@ -115,12 +128,11 @@ bool EventManager::IsRegistered(eEventType eventType, EventListener* listener)
 	// 탐색 범위 축소
 	std::pair<std::multimap<eEventType, EventListener*>::iterator,
 			  std::multimap<eEventType, EventListener*>::iterator> range;
-	range = m_WholeEvents.equal_range(eventType);	
+	range = m_WholeEvents.equal_range(eventType);
 
 	// 이미 등록된 이벤트인지 확인
 	for(auto& iter = range.first; iter!=range.second; ++iter)
 	{
-		
 		if(iter->second == listener)
 		{
 			alreadyRegistered = true;
@@ -139,7 +151,18 @@ void EventManager::ExecuteEvent(Event* event)
 
 	for(auto& iter = range.first; iter!=range.second; ++iter)
 	{
+		if(ChangeWorld_Start < (event->eventID) 
+			&& ChangeWorld_End > (event->eventID))
+		{
+			m_bChangingWorld = true;
+		}
+
 		// 해당 객체의 HandleEvent 함수 실행
 		iter->second->HandleEvent(event);
+
+		if(m_bChangingWorld)
+		{
+			return;
+		}
 	}
 }

@@ -1,75 +1,65 @@
 #include "pch.h"
 #include "World.h"
-#include "nlohmann/json.hpp"
+//#include "nlohmann/json.hpp"
 
-#include "BoxCollider2D.h"
-#include "CircleCollider2D.h"
+#include "CollisionManager.h"
+#include "InputManager.h"
+
+#include "../GameApp/UIObject.h"
+#include "../GameApp/PopUpUIObject.h"
+
+World::World()
+{
+	m_pCollisionManager = new CollisionManager;
+}
 
 World::~World()
 {
-	for (const auto& obj : m_GameObjects)
-	{
-		delete obj;
-	}
-	m_GameObjects.clear();
+	delete m_pCollisionManager;
+
+	World::Finalize();
 }
 
 bool World::Initialize()
 {
-	for (const auto& obj : m_GameObjects)
+	for (auto& gameObjectGroup : m_GameObjects)
 	{
-		bool res = obj->Initialize();
-		assert(res);
+		for (const auto& gameObject : gameObjectGroup)
+		{
+			const bool res = gameObject->Initialize();
+			assert(res);
+		}
 	}
+
+	m_pCollisionManager->Initialize();
 
 	return true;
 }
 
 void World::Update(const float deltaTime)
 {
-	bool trigger = false;
-	for (const auto& obj : m_GameObjects)
+	// 일시 정지 상태에는 UI만 업데이트 되게 하기
+	if(m_bPauseState)
 	{
-		const auto Collider = dynamic_cast<Collider2D*>(obj->GetComponent(L"Collider2D"));
-
-		if (Collider)
-			trigger = true;
-	}
-
-	if (trigger)
-	{
-		for (const auto& thisObj : m_GameObjects)
+		for(auto& gameObjectGroup : m_GameObjects[static_cast<UINT>(GROUP_TYPE::UI)])
 		{
-			// Object to Object
-			for (const auto& otherObj : m_GameObjects)
-			{
-				// 같은 오브젝트끼리는 검사할 필요가 없다
-				if (thisObj == otherObj)
-					continue;
-
-				const auto thisCollider = dynamic_cast<Collider2D*>(thisObj->GetComponent(L"Collider2D"));
-				const auto otherCollider = dynamic_cast<Collider2D*>(otherObj->GetComponent(L"Collider2D"));
-
-				// 충돌 박스가 겹치는지 확인
-				if (thisCollider->CheckIntersect(otherCollider))
-				{
-					// 충돌 박스가 겹친다면 이 오브젝트는 더이상 다른 오브젝트와 검사할 필요가 없다
-					thisCollider->m_isCollision = true;
-
-					// thisCollider를 Block() 해준다
-					thisCollider->ProcessBlock(deltaTime);
-					break;
-				}
-
-				thisCollider->m_isCollision = false;
-			}
+			gameObjectGroup->Update(deltaTime);
 		}
 	}
 
-	// Object Update
-	for (const auto& obj : m_GameObjects)
+	else
 	{
-		obj->Update(deltaTime);
+		// Object Update
+		for (auto& gameObjectGroup : m_GameObjects)
+		{
+			for (const auto& gameObject : gameObjectGroup)
+				if (gameObject->IsObjActive())
+					gameObject->Update(deltaTime);
+		}
+
+		// 이걸 밖에다가 둘까 else 안에다가 둘까 -> UI만 활성화 되어있을 때는 콜리전 필요없으니까.. else 안에다가 둡니다.
+		// Object Collision Update
+		m_pCollisionManager->Update(deltaTime, m_GameObjects);
 	}
 }
 
@@ -77,13 +67,44 @@ void World::Render()
 {
 	// Only Won의 경우 카메라가 고정이기 때문에 렌더링 최적화가 필요 없음
 	// AABB 있는 버전은 230809 오후 커밋 전 리비전에 있음
-	for (const auto& obj : m_GameObjects)
+	for (auto& gameObjectGroup : m_GameObjects)
 	{
-		obj->Render();
+		for (const auto& gameObject : gameObjectGroup)
+		{
+			if(gameObject->IsObjActive())
+				gameObject->Render();
+		}
 	}
 }
 
-void World::Save(const wchar_t* FilePath)
+void World::Finalize()
 {
-	nlohmann::ordered_json obj;
+	// 씬이 바뀔 때마다 씬에 있는 오브젝트들을 삭제해준다
+	for (auto& gameObjectGroup : m_GameObjects)
+	{
+		for (const auto& gameObject : gameObjectGroup)
+			delete gameObject;
+
+		gameObjectGroup.clear();
+	}
 }
+
+void World::DeleteGameObject(GROUP_TYPE group, const GameObject* gameObject)
+{
+	for(auto iter = m_GameObjects[static_cast<UINT>(group)].begin(); iter!= m_GameObjects[static_cast<UINT>(group)].end(); ++iter)
+	{
+		if(*iter == gameObject)
+		{
+			delete *iter;
+			iter = m_GameObjects[static_cast<UINT>(group)].erase(iter);
+
+			if(iter == m_GameObjects[static_cast<UINT>(group)].end())
+				break; // for문 자체를 탈출
+		}
+	}
+}
+
+//void World::Save(const wchar_t* FilePath)
+//{
+//	nlohmann::ordered_json obj;
+//}

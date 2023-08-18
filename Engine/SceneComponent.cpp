@@ -20,7 +20,7 @@ void SceneComponent::UpdateTransform()
 	// 복합 변환 - SRT
 	if (m_RelativeRotation >= 360.f)	m_RelativeRotation -= 360.f;
 
-	m_RelativeTransform = D2D1::Matrix3x2F::Scale(D2D1::SizeF(m_RelativeScale.x, m_RelativeScale.y))
+	m_RelativeTransform = D2D1::Matrix3x2F::Scale(m_RelativeScale.x, m_RelativeScale.y)
 		* D2D1::Matrix3x2F::Rotation(m_RelativeRotation)
 		* D2D1::Matrix3x2F::Translation(m_RelativeLocation.x, m_RelativeLocation.y);
 

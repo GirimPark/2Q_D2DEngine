@@ -2,24 +2,30 @@
 #include "GameApp.h"
 
 #include "Resource.h"
-#include "ChaeWorld.h"
 #include "TestWorld.h"
 #include "JunWorld.h"
+#include "ChaeWorld.h"
+#include "GameSettingWorld.h"
+#include "InGameWorld.h"
+#include "InstructionWorld.h"
+#include "MadeByWorld.h"
+#include "MainWorld.h"
 
 #include "../Engine/EventManager.h"
-#include "../Engine/CollisionManager.h"
+#include "../engine/InputManager.h"
+#include "../Engine/SoundManager.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-    _In_opt_ HINSTANCE hPrevInstance,
-    _In_ LPWSTR    lpCmdLine,
-    _In_ int       nCmdShow)
+                      _In_opt_ HINSTANCE hPrevInstance,
+                      _In_ LPWSTR    lpCmdLine,
+                      _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
 	// Debug Memory Leak Check at start point
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(349);
+    //_CrtSetBreakAlloc(2214);
 
     // 전역 문자열을 초기화합니다.
     GameApp App(hInstance);
@@ -55,21 +61,37 @@ GameApp::~GameApp()
 
 void GameApp::Update()
 {
-    __super::Update();
+    CommonApp::Update();
 
-    m_pTestWorld->Update(m_TimeManager.GetDeltaTime());
-
-    // TODO : FinalUpdate 만들기 (FixedUpdate?)
-    // m_pTestWorld->FinalUpdate(m_TimeManager.GetDeltaTime());
-
-    // TODO : CollisionManager Update
-    // CollisionManager::GetInstance()->Update(m_TimeManager.GetDeltaTime());
+    // WorldManager Update
+    m_pWorldManager->Update(m_TimeManager.GetDeltaTime());
 
     // 월드매니저까지 CommonApp Update로 편입되면 EventManager도 같이 넣을 수 있을듯
-    m_pUIManager->Update(m_TimeManager.GetDeltaTime());
     EventManager::GetInstance()->Update();
-    // Manager Update
 
+    /// test : 월드 전환 테스트 코드
+    if (InputManager::GetInstance()->IsKeyPush(eKeyCode::Q))
+    {
+        m_pSoundManager->PlayMusic(eSoundList::PageEffect, eSoundChannel::Effect, 0.f);
+        //m_pSoundManager->SetVolume(1.f, eSoundChannel::Effect);
+        m_pWorldManager->ChangeWorld(WORLD_TYPE::TEST);
+    }
+    else if (InputManager::GetInstance()->IsKeyPush(eKeyCode::W))
+    {
+        m_pSoundManager->PlayMusic(eSoundList::PageEffect, eSoundChannel::Effect, 1.f);
+        //m_pSoundManager->SetVolume(1.f, eSoundChannel::Effect);
+        m_pWorldManager->ChangeWorld(WORLD_TYPE::JUN);
+    }
+    else if (InputManager::GetInstance()->IsKeyPush(eKeyCode::E))
+    {
+        m_pSoundManager->PlayMusic(eSoundList::PageEffect, eSoundChannel::Effect, 0.3f);
+        //m_pSoundManager->SetVolume(1.f, eSoundChannel::Effect);
+        m_pWorldManager->ChangeWorld(WORLD_TYPE::CHAE);
+    }
+
+    /// test : 경과 시간 관리 테스트 코드
+    if (InputManager::GetInstance()->IsKeyPush(eKeyCode::T))
+        TimeManager::SwitchPause();
 
     // FixedUpdate
     // LateUpdate
@@ -79,41 +101,71 @@ void GameApp::Render()
 {
     m_pRenderTarget->BeginDraw();
 
-    D2D1::ColorF color(D2D1::ColorF::Black);
+    const D2D1::ColorF color(D2D1::ColorF::DarkGray);
     m_pRenderTarget->Clear(color);
 
-    // Test
-    m_pTestWorld->Render();
+    /*
+    // Time Render
+    m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+    m_pD2DRenderer->GetRenderTarget()->DrawTextW(
+        std::to_wstring(TimeManager::GetElapsedTime()).c_str(),
+        static_cast<UINT32>(std::to_wstring(TimeManager::GetElapsedTime()).length()),
+        m_pTextFormat,
+        D2D1::RectF(0, 0, 100, 100),
+        m_pBrush
+    );
+    */
+
     // WorldManager Render
+    m_pWorldManager->Render();
 
     m_pRenderTarget->EndDraw();
 }
 
 bool GameApp::Initialize()
 {
-    bool res = __super::Initialize();
+	const bool res = CommonApp::Initialize();
     assert(res);
 
-    // Test
-	m_pTestWorld = new TestWorld;
-    //m_pTestWorld = new JunWorld;
-    //m_pTestWorld = new ChaeWorld;
-    m_pTestWorld->Initialize();
+    // 모든 월드 인스턴스 생성
+    World* pTestWorld = new TestWorld;
+    World* pJunWorld = new JunWorld;
+    World* pChaeWorld = new ChaeWorld;
+    World* pMainWorld = new MainWorld;
+    World* pInstructionWorld = new InstructionWorld;
+    World* pMadeByWorld = new MadeByWorld;
+    World* pGameSettingWorld = new GameSettingWorld;
+    World* pInGameWorld = new InGameWorld;
 
-    m_pUIManager->Initialize(m_pTestWorld->GetUIObject());
+    // 월드 등록
+    m_pWorldManager->RegisterWorld(pJunWorld, WORLD_TYPE::JUN);
+    m_pWorldManager->RegisterWorld(pChaeWorld, WORLD_TYPE::CHAE);
+    m_pWorldManager->RegisterWorld(pTestWorld, WORLD_TYPE::TEST);
+    m_pWorldManager->RegisterWorld(pMainWorld, WORLD_TYPE::MAIN);
+    m_pWorldManager->RegisterWorld(pInstructionWorld, WORLD_TYPE::INSTRUCTION);
+    m_pWorldManager->RegisterWorld(pMadeByWorld, WORLD_TYPE::MADEBY);
+    m_pWorldManager->RegisterWorld(pGameSettingWorld, WORLD_TYPE::GAMESETTING);
+    m_pWorldManager->RegisterWorld(pInGameWorld, WORLD_TYPE::INGAME);
+
+    // 기본 월드 설정 ** 여기서 자신의 월드 변경 **
+    m_pWorldManager->SetDefaultWorld(pTestWorld);
+
+    // 월드 매니저 초기화
+    m_pWorldManager->Initialize();
+
+    // 이벤트 매니저 초기화
 	EventManager::GetInstance()->Initialize();
 
+    m_pSoundManager->LoadMusic(eSoundList::StartBGM, true, "../Resource/Sound/TestBGM.mp3");
+    m_pSoundManager->LoadMusic(eSoundList::PageEffect, false, "../Resource/Sound/TestEffect.mp3");
 
-    // WorldManager Init
-
+    m_pSoundManager->PlayMusic(eSoundList::StartBGM, eSoundChannel::BGM, 0.5f);
     return false;
 }
 
 void GameApp::Finalize()
 {
-    // World Finalize ?
-    delete m_pTestWorld;
     EventManager::GetInstance()->Finalize();
-    __super::Finalize();
-}
 
+    CommonApp::Finalize();
+}

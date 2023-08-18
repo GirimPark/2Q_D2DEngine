@@ -26,7 +26,7 @@ void CircleCollider2D::Render(ID2D1RenderTarget* pRenderTarget)
 	pRenderTarget->SetTransform(m_FinalTransform);
 
 	// 충돌 여부에 따른 콜라이더 색상 변화
-	if (m_isCollision)
+	if (m_IsCollision)
 	{
 		SetColor(D2D1::ColorF::Red);
 		CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);

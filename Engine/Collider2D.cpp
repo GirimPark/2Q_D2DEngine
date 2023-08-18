@@ -2,7 +2,8 @@
 #include "Collider2D.h"
 
 #include "GameObject.h"
-#include "MovementComponent.h"
+
+UINT Collider2D::m_NextID = 0;
 
 bool AABB::Check_AABB_AABB(const AABB& other) const
 {
@@ -73,6 +74,15 @@ bool CC::Check_CC_AABB(const AABB& other) const
 	return distanceVec.LengthSqrt() <= radius * radius;
 }
 
+Collider2D::Collider2D()
+{
+	m_ID = m_NextID++;
+}
+
+Collider2D::~Collider2D()
+{
+}
+
 bool Collider2D::Initialize()
 {
 	const bool res = SceneComponent::Initialize();
@@ -88,12 +98,4 @@ void Collider2D::Update(const float deltaTime)
 
 void Collider2D::Render(ID2D1RenderTarget* pRenderTarget)
 {
-}
-
-void Collider2D::ProcessBlock(float deltaTime) const
-{
-	const MovementComponent* movementComponent = dynamic_cast<MovementComponent*>(m_pOwner->GetComponent(L"MovementComponent"));
-
-	// deltaTime 만큼 다시 뒤로 돌려보낸다
-	m_pOwner->GetRootComponent()->AddRelativeLocation(movementComponent->GetVelocity() * deltaTime * -1);
 }

@@ -2,10 +2,30 @@
 
 #include "GameObject.h"
 
-#include <list>
+#include <utility>
+#include <vector>
 #include <cassert>
+#include <list>
+
+enum class WORLD_TYPE
+{
+	TEST = 0,
+	JUN,
+	CHAE,
+	MAIN,
+	INSTRUCTION,
+	MADEBY,
+	GAMESETTING,
+	INGAME,
+
+
+	END
+};
 
 class UIObject;
+class PopUpUIObject;
+class CollisionManager;
+class WorldManager;
 
 /// <summary>
 /// World의 원형 클래스
@@ -14,39 +34,67 @@ class UIObject;
 /// </summary>
 class World
 {
+protected:
+	UINT m_ID = 0;
+	std::wstring m_WorldName = {};
+
+	// 월드가 일시 정지 되었는지
+	bool m_bPauseState = false;
+
 private:
-	std::list<GameObject*> m_GameObjects;
-	std::list<GameObject*> m_RenderGameObjects;
+	std::vector<GameObject*> m_GameObjects[static_cast<UINT>(GROUP_TYPE::END)];
+	std::vector<GameObject*> m_RenderGameObjects;
 
 protected:
-	UIObject* m_pUIObject = nullptr;
+	CollisionManager* m_pCollisionManager = nullptr;
+	WorldManager* m_pWorldManager = nullptr;
 
 public:
+	World();
 	virtual ~World();
 
 public:
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime);
 	virtual void Render();
+	virtual void Finalize();
 
+	virtual void Enter() abstract;
+	virtual void Exit() abstract;
+
+public:
 	void Save(const wchar_t* FilePath);
 
-	UIObject* GetUIObject() { return m_pUIObject; }
-	void SetUIObject(UIObject* UIObject) { m_pUIObject = UIObject; }
+	void SetWorldManager(WorldManager* worldManager) { m_pWorldManager = worldManager; }
+
+	void SetWorldPauseState(bool pauseState) { m_bPauseState = pauseState; }
+	bool GetWorldPauseState() { return m_bPauseState; }
+
+	//std::list<GameObject*>& GetGameObjectGroup(GROUP_TYPE type)	{return m_GameObjects[static_cast<UINT>(type)];}
+	std::vector<GameObject*>& GetGameObjectGroup(GROUP_TYPE type)	{return m_GameObjects[static_cast<UINT>(type)];}
+
+	UINT GetID() const { return m_ID; }
+	void SetID(UINT id) { m_ID = id; }
+
+	std::wstring GetWorldName() const { return m_WorldName; }
+	void SetWorldName(std::wstring worldName) { m_WorldName = std::move(worldName); }
+
+protected:
+	void DeleteGameObject(GROUP_TYPE group, const GameObject* gameObject);
 
 public:
 	template <typename T>
-	T* CreateGameObject(std::wstring objectName)
+	T* CreateGameObject(std::wstring objectName, GROUP_TYPE objectType)
 	{
 		T* obj = new T;
 
 		GameObject* castedObj = dynamic_cast<GameObject*>(obj);
 		assert(castedObj);
-		castedObj->SetName(objectName);
+		castedObj->SetName(objectName);	// 자신의 이름 설정
+		castedObj->SetOwnerWorld(this);		// 자신이 속한 월드 설정
 
-		m_GameObjects.push_back(castedObj);
+		m_GameObjects[static_cast<UINT>(objectType)].push_back(castedObj);
 
 		return obj;
 	}
 };
-

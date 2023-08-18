@@ -5,7 +5,7 @@
 #include "FSM.h"
 #include "FSMState.h"
 
-void FSMComponent::AttachFSM(FSM* _FSM, AnimationComponent* AnimComponent)
+void FSMComponent::AttachFSM(FSM* _FSM)
 {
 	m_FSM = _FSM;
 	m_FSM->GetCurState()->SetDefaultAnimationName();

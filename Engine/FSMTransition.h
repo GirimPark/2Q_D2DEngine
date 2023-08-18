@@ -7,5 +7,5 @@
 class FSMTransition
 {
 public:
-	virtual std::pair<std::wstring, bool> operator()() abstract;
+	virtual std::pair<std::wstring, framework::Vector2D> operator()() abstract;
 };

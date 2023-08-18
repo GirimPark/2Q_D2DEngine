@@ -3,19 +3,19 @@
 
 #include "CommonApp.h"
 #include "GameObject.h"
-#include "MovementComponent.h"
+#include "PlayerMovement.h"
 
 void DirectionComponent::Render(ID2D1RenderTarget* pRenderTarget)
 {
 	m_FinalTransform = m_WorldTransform * GetCameraTransform();
 	pRenderTarget->SetTransform(m_FinalTransform);
 
+	const framework::Vector2D moveDir = dynamic_cast<PlayerMovement*>(m_pOwner->GetComponent(L"PlayerMovement"))->GetMoveDir();
+	const framework::Vector2D lookDir = dynamic_cast<PlayerMovement*>(m_pOwner->GetComponent(L"PlayerMovement"))->GetLookDir();
+	const framework::Vector2D velocity = dynamic_cast<PlayerMovement*>(m_pOwner->GetComponent(L"PlayerMovement"))->GetVelocity();
+
 	SetColor(D2D1::ColorF::Yellow);
 	CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);
-
-	const framework::Vector2D moveDir = dynamic_cast<MovementComponent*>(m_pOwner->GetComponent(L"MovementComponent"))->GetMoveDir();
-	const framework::Vector2D lookDir = dynamic_cast<MovementComponent*>(m_pOwner->GetComponent(L"MovementComponent"))->GetLookDir();
-	const framework::Vector2D velocity = dynamic_cast<MovementComponent*>(m_pOwner->GetComponent(L"MovementComponent"))->GetVelocity();
 
 	// Draw Move Direction
 	pRenderTarget->DrawLine(
@@ -39,12 +39,6 @@ void DirectionComponent::Render(ID2D1RenderTarget* pRenderTarget)
 		),
 		CommonApp::m_pInstance->GetBrush(),
 		3.f);
-
-	// std::cout << moveDir.x << " " << moveDir.y << std::endl;
-	// std::cout << lookDir.x << " " << lookDir.y << std::endl;
-	// std::cout << velocity.x << " " << velocity.y << std::endl;
-
-	// std::cout << SceneComponent::GetRelativeLocation().x << " " << SceneComponent::GetRelativeLocation().y << std::endl;
 
 	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }

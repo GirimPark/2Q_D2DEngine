@@ -134,6 +134,8 @@ public:
 	static framework::Vector2D GetPadAxisRightThumb(DWORD controllerIndex);
 	static float GetPadAxisLeftTrigger(DWORD controllerIndex);
 	static float GetPadAxisRightTrigger(DWORD controllerIndex);
+	static bool IsTriggerLeft(DWORD controllerIndex);
+	static bool IsTriggerRight(DWORD controllerIndex);
 
 private:
 	static InputManager* m_pInputInstance;
@@ -144,14 +146,25 @@ private:
 	std::vector<int> m_PadButtonList;
 	GamePadButtonInfo m_PadState[4][static_cast<int>(GamePadButtonCode::XINPUT_BUTTON_COUNT)];
 
+	GamePadButtonInfo m_LeftTriggerState[4];
+	GamePadButtonInfo m_RightTriggerState[4];
+
 	/// <summary>
-	/// XBOX XBOXController Function
+	/// XBOX XInputTestFunc Function
 	/// </summary>
 public:
 	inline bool IsPadButtonNone(DWORD controllerIndex, GamePadButtonCode buttonCode) const;
 	inline bool IsPadButtonPush(DWORD controllerIndex, GamePadButtonCode buttonCode) const;
 	inline bool IsPadButtonHold(DWORD controllerIndex, GamePadButtonCode buttonCode) const;
 	inline bool IsPadButtonEnd(DWORD controllerIndex, GamePadButtonCode buttonCode) const;
+	inline bool IsLeftTriggerNone(DWORD controllerIndex) const;
+	inline bool IsLeftTriggerPush(DWORD controllerIndex) const;
+	inline bool IsLeftTriggerHold(DWORD controllerIndex) const;
+	inline bool IsLeftTriggerEnd(DWORD controllerIndex) const;
+	inline bool IsRightTriggerNone(DWORD controllerIndex) const;
+	inline bool IsRightTriggerPush(DWORD controllerIndex) const;
+	inline bool IsRightTriggerHold(DWORD controllerIndex) const;
+	inline bool IsRightTriggerEnd(DWORD controllerIndex) const;
 
 	// 컨트롤러 버튼 상태
 	static XINPUT_STATE GetControllerState(DWORD controllerIndex)
@@ -232,6 +245,46 @@ bool InputManager::IsPadButtonHold(DWORD controllerIndex, GamePadButtonCode butt
 bool InputManager::IsPadButtonEnd(DWORD controllerIndex, GamePadButtonCode buttonCode) const
 {
 	return m_PadState[controllerIndex][static_cast<int>(buttonCode)].padState == eKeyState::END;
+}
+
+bool InputManager::IsLeftTriggerNone(DWORD controllerIndex) const
+{
+	return m_LeftTriggerState[controllerIndex].padState == eKeyState::NONE;
+}
+
+bool InputManager::IsLeftTriggerPush(DWORD controllerIndex) const
+{
+	return m_LeftTriggerState[controllerIndex].padState == eKeyState::PUSH;
+}
+
+bool InputManager::IsLeftTriggerHold(DWORD controllerIndex) const
+{
+	return m_LeftTriggerState[controllerIndex].padState == eKeyState::HOLD;
+}
+
+bool InputManager::IsLeftTriggerEnd(DWORD controllerIndex) const
+{
+	return m_LeftTriggerState[controllerIndex].padState == eKeyState::END;
+}
+
+bool InputManager::IsRightTriggerNone(DWORD controllerIndex) const
+{
+	return m_RightTriggerState[controllerIndex].padState == eKeyState::NONE;
+}
+
+bool InputManager::IsRightTriggerPush(DWORD controllerIndex) const
+{
+	return m_RightTriggerState[controllerIndex].padState == eKeyState::PUSH;
+}
+
+bool InputManager::IsRightTriggerHold(DWORD controllerIndex) const
+{
+	return m_RightTriggerState[controllerIndex].padState == eKeyState::HOLD;
+}
+
+bool InputManager::IsRightTriggerEnd(DWORD controllerIndex) const
+{
+	return m_RightTriggerState[controllerIndex].padState == eKeyState::END;
 }
 
 const POINT& InputManager::GetMousePos() const

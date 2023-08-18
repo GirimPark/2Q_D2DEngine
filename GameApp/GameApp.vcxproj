@@ -90,6 +90,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,6 +108,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,6 +126,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,6 +144,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,41 +157,113 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BottleItem.h" />
     <ClInclude Include="BoxObject.h" />
     <ClInclude Include="CameraObject.h" />
     <ClInclude Include="ChaeWorld.h" />
     <ClInclude Include="DemoObject.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameApp.h" />
+    <ClInclude Include="GameSettingUIObject.h" />
+    <ClInclude Include="GameSettingWorld.h" />
+    <ClInclude Include="InGameUIObject.h" />
+    <ClInclude Include="InGameWorld.h" />
+    <ClInclude Include="InstructionUIObject.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="InstructionWorld.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="ItemBoxObject.h" />
+    <ClInclude Include="ItemObject.h" />
+    <ClInclude Include="ItemSpawner.h" />
     <ClInclude Include="JunWorld.h" />
-    <ClInclude Include="PlayerFSM.h" />
-    <ClInclude Include="PlayerIdleState.h" />
-    <ClInclude Include="PlayerMoveState.h" />
+    <ClInclude Include="MadeByUIObject.h" />
+    <ClInclude Include="MadeByWorld.h" />
+    <ClInclude Include="MainUIObject.h" />
+    <ClInclude Include="MainWorld.h" />
+    <ClInclude Include="MoneyObject.h" />
+    <ClInclude Include="MoneySpawner.h" />
+    <ClInclude Include="PlayerFSM1.h" />
+    <ClInclude Include="PlayerFSM2.h" />
+    <ClInclude Include="PlayerIdleState1.h" />
+    <ClInclude Include="PlayerIdleState2.h" />
+    <ClInclude Include="PlayerMoveState1.h" />
+    <ClInclude Include="PlayerMoveState2.h" />
     <ClInclude Include="PlayerObject.h" />
+    <ClInclude Include="PlayerObject0.h" />
     <ClInclude Include="PlayerObject1.h" />
     <ClInclude Include="PlayerObject2.h" />
-    <ClInclude Include="PlayerTransition.h" />
+    <ClInclude Include="PlayerTransition1.h" />
+    <ClInclude Include="PlayerTransition2.h" />
+    <ClInclude Include="PopUpUIObject.h" />
+    <ClInclude Include="PopUpUIObject2.h" />
+    <ClInclude Include="ProjectileObject.h" />
+    <ClInclude Include="PunchItem.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ShoeItem.h" />
+    <ClInclude Include="SnowItem.h" />
+    <ClInclude Include="Spawner.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TestWorld.h" />
+    <ClInclude Include="TrainObstacle.h" />
+    <ClInclude Include="TrainSpawner.h" />
+    <ClInclude Include="TrapItem.h" />
     <ClInclude Include="UIObject.h" />
+    <ClInclude Include="WaveItem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BottleItem.cpp" />
     <ClCompile Include="BoxObject.cpp" />
     <ClCompile Include="CameraObject.cpp" />
     <ClCompile Include="ChaeWorld.cpp" />
     <ClCompile Include="DemoObject.cpp" />
     <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="GameSettingUIObject.cpp" />
+    <ClCompile Include="GameSettingWorld.cpp" />
+    <ClCompile Include="InGameUIObject.cpp" />
+    <ClCompile Include="InGameWorld.cpp" />
+    <ClCompile Include="InstructionUIObject.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="InstructionWorld.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="ItemBoxObject.cpp" />
+    <ClCompile Include="ItemObject.cpp" />
+    <ClCompile Include="ItemSpawner.cpp" />
     <ClCompile Include="JunWorld.cpp" />
-    <ClCompile Include="PlayerFSM.cpp" />
-    <ClCompile Include="PlayerIdleState.cpp" />
-    <ClCompile Include="PlayerMoveState.cpp" />
+    <ClCompile Include="MadeByUIObject.cpp" />
+    <ClCompile Include="MadeByWorld.cpp" />
+    <ClCompile Include="MainUIObject.cpp" />
+    <ClCompile Include="MainWorld.cpp" />
+    <ClCompile Include="MoneyObject.cpp" />
+    <ClCompile Include="MoneySpawner.cpp" />
+    <ClCompile Include="PlayerFSM1.cpp" />
+    <ClCompile Include="PlayerFSM2.cpp" />
+    <ClCompile Include="PlayerIdleState1.cpp" />
+    <ClCompile Include="PlayerIdleState2.cpp" />
+    <ClCompile Include="PlayerMoveState1.cpp" />
+    <ClCompile Include="PlayerMoveState2.cpp" />
     <ClCompile Include="PlayerObject.cpp" />
+    <ClCompile Include="PlayerObject0.cpp" />
     <ClCompile Include="PlayerObject1.cpp" />
     <ClCompile Include="PlayerObject2.cpp" />
-    <ClCompile Include="PlayerTransition.cpp" />
+    <ClCompile Include="PlayerTransition1.cpp" />
+    <ClCompile Include="PlayerTransition2.cpp" />
+    <ClCompile Include="PopUpUIObject.cpp" />
+    <ClCompile Include="PopUpUIObject2.cpp" />
+    <ClCompile Include="ProjectileObject.cpp" />
+    <ClCompile Include="PunchItem.cpp" />
+    <ClCompile Include="ShoeItem.cpp" />
+    <ClCompile Include="SnowItem.cpp" />
+    <ClCompile Include="Spawner.cpp" />
     <ClCompile Include="TestWorld.cpp" />
+    <ClCompile Include="TrainObstacle.cpp" />
+    <ClCompile Include="TrainSpawner.cpp" />
+    <ClCompile Include="TrapItem.cpp" />
     <ClCompile Include="UIObject.cpp" />
+    <ClCompile Include="WaveItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameApp.rc" />

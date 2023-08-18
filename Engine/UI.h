@@ -1,8 +1,9 @@
 #pragma once
+#include "EventListener.h"
 #include "RenderComponent.h"
 
-class UI :
-    public RenderComponent
+class UI
+	: public RenderComponent
 {
 public:
     bool Initialize() override;
@@ -10,7 +11,7 @@ public:
     void Render(ID2D1RenderTarget* pRenderTarget) override;
 
 public:
-    framework::Vector2D  GetFinalPos() { return m_finalUIPos; }
+    //framework::Vector2D  GetFinalPos() { return m_finalUIPos; }
 
     // UI들 정보 setting
     void SetColor(D2D1::ColorF color) { m_Color = color; }
@@ -39,6 +40,9 @@ public:
     void SetXIndex(size_t x) { m_xIndex = x; }
     size_t GetXIndex() const { return m_xIndex; }
 
+    void SetActiveUI(bool activeUI) { m_bActiveUI = activeUI; }
+    bool IsActiveUI() const { return m_bActiveUI; }
+
 public:
     // 마우스가 UI에 있을 때
     virtual void CheckMouseOn();
@@ -50,6 +54,7 @@ private:
     D2D1::ColorF m_changeColor = D2D1::ColorF::Black;
 
 protected:
+    // 마우스로 했을 때 내가 마지막으로 선택한 UI의 Location(Position)
 	framework::Vector2D m_finalUIPos = {0,0};
 
     float m_Width = 0.f;
@@ -58,6 +63,8 @@ protected:
 
     bool m_bLbtnDown = false;
     bool m_bMouseOn = false;
+    // Focus 할 수 있는 UI인지 아닌지
+    bool m_bActiveUI = true;
 
     size_t m_xIndex = 0;
     size_t m_yIndex = 0;

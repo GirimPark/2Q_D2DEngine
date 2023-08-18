@@ -38,9 +38,6 @@
     <Filter Include="6. Resource">
       <UniqueIdentifier>{d2792b97-1776-4812-94e9-e17614d54498}</UniqueIdentifier>
     </Filter>
-    <Filter Include="7. math">
-      <UniqueIdentifier>{7ded6040-4dd3-4b15-b2df-b4d6a2870161}</UniqueIdentifier>
-    </Filter>
     <Filter Include="6. Resource\ReferenceCounter">
       <UniqueIdentifier>{516bab54-29fc-4112-8d56-ebd6532dfa25}</UniqueIdentifier>
     </Filter>
@@ -71,20 +68,11 @@
     <Filter Include="4. Object\GameObject">
       <UniqueIdentifier>{02ec333f-81f4-4090-83e5-e75db94aa94f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="4. Object\GameObject\UI">
-      <UniqueIdentifier>{992eadf2-f900-469d-a5d4-8a48f09d856d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="4. Object\GameObject\UI\ButtonUI">
-      <UniqueIdentifier>{6192bd80-f4f2-42e1-8d53-c86cb3532b67}</UniqueIdentifier>
-    </Filter>
     <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\DirectionComponent">
       <UniqueIdentifier>{775378ed-d020-46ab-a7a6-359e56d27828}</UniqueIdentifier>
     </Filter>
     <Filter Include="8. Physics\Collider">
       <UniqueIdentifier>{34abe5e7-b562-4246-a98a-3c43d18171fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="4. Object\GameObject\UI\PanelUI">
-      <UniqueIdentifier>{c6ae7bc5-37c6-44cc-be82-35977d1afaa2}</UniqueIdentifier>
     </Filter>
     <Filter Include="8. Physics\Collider\BoxCollider2D">
       <UniqueIdentifier>{894ac550-b50a-467a-b73a-ad3517c508fd}</UniqueIdentifier>
@@ -116,6 +104,27 @@
     <Filter Include="2. Manager\CollisionManager">
       <UniqueIdentifier>{dfce42b3-e7d1-4f93-951a-73c8cfcd1577}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2. Manager\SoundManager">
+      <UniqueIdentifier>{b0fcf1b7-4029-4856-87e2-3089cb04955e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\TextureComponent">
+      <UniqueIdentifier>{fe91d0fa-e139-4655-8fd9-54537eaf8569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. Resource\TextureAsset">
+      <UniqueIdentifier>{82229afa-fc8f-4f09-873c-9f481c71c416}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="7. Math">
+      <UniqueIdentifier>{7ded6040-4dd3-4b15-b2df-b4d6a2870161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\UIComponent">
+      <UniqueIdentifier>{992eadf2-f900-469d-a5d4-8a48f09d856d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\UIComponent\ButtonUI">
+      <UniqueIdentifier>{6192bd80-f4f2-42e1-8d53-c86cb3532b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. Component\SceneComponent\RenderComponent\Renderables\UIComponent\PanelUI">
+      <UniqueIdentifier>{c6ae7bc5-37c6-44cc-be82-35977d1afaa2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -146,7 +155,7 @@
       <Filter>5. Component\SceneComponent\CameraComponent</Filter>
     </ClInclude>
     <ClInclude Include="struct.h">
-      <Filter>7. math</Filter>
+      <Filter>7. Math</Filter>
     </ClInclude>
     <ClInclude Include="ReferenceCounter.h">
       <Filter>6. Resource\ReferenceCounter</Filter>
@@ -163,7 +172,7 @@
     <ClInclude Include="BoxComponent.h">
       <Filter>5. Component\SceneComponent\RenderComponent\Renderables\BoxComponent</Filter>
     </ClInclude>
-    <ClInclude Include="MovementComponent.h">
+    <ClInclude Include="PlayerMovement.h">
       <Filter>5. Component\MovementComponent</Filter>
     </ClInclude>
     <ClInclude Include="FSMComponent.h">
@@ -182,10 +191,10 @@
       <Filter>4. Object\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>4. Object\GameObject\UI</Filter>
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\UIComponent</Filter>
     </ClInclude>
     <ClInclude Include="ButtonUI.h">
-      <Filter>4. Object\GameObject\UI\ButtonUI</Filter>
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\UIComponent\ButtonUI</Filter>
     </ClInclude>
     <ClInclude Include="DirectionComponent.h">
       <Filter>5. Component\SceneComponent\RenderComponent\Renderables\DirectionComponent</Filter>
@@ -197,7 +206,7 @@
       <Filter>8. Physics\Collider</Filter>
     </ClInclude>
     <ClInclude Include="PanelUI.h">
-      <Filter>4. Object\GameObject\UI\PanelUI</Filter>
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\UIComponent\PanelUI</Filter>
     </ClInclude>
     <ClInclude Include="CircleCollider2D.h">
       <Filter>8. Physics\Collider\CircleCollider2D</Filter>
@@ -229,6 +238,17 @@
     <ClInclude Include="CollisionManager.h">
       <Filter>2. Manager\CollisionManager</Filter>
     </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>2. Manager\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureComponent.h">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\TextureComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureAsset.h">
+      <Filter>6. Resource\TextureAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="PopUpUI.h" />
+    <ClInclude Include="Rigidbody2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -267,7 +287,7 @@
     <ClCompile Include="BoxComponent.cpp">
       <Filter>5. Component\SceneComponent\RenderComponent\Renderables\BoxComponent</Filter>
     </ClCompile>
-    <ClCompile Include="MovementComponent.cpp">
+    <ClCompile Include="PlayerMovement.cpp">
       <Filter>5. Component\MovementComponent</Filter>
     </ClCompile>
     <ClCompile Include="FSMComponent.cpp">
@@ -280,10 +300,10 @@
       <Filter>4. Object\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
-      <Filter>4. Object\GameObject\UI</Filter>
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\UIComponent</Filter>
     </ClCompile>
     <ClCompile Include="ButtonUI.cpp">
-      <Filter>4. Object\GameObject\UI\ButtonUI</Filter>
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\UIComponent\ButtonUI</Filter>
     </ClCompile>
     <ClCompile Include="DirectionComponent.cpp">
       <Filter>5. Component\SceneComponent\RenderComponent\Renderables\DirectionComponent</Filter>
@@ -292,7 +312,7 @@
       <Filter>8. Physics\Collider</Filter>
     </ClCompile>
     <ClCompile Include="PanelUI.cpp">
-      <Filter>4. Object\GameObject\UI\PanelUI</Filter>
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\UIComponent\PanelUI</Filter>
     </ClCompile>
     <ClCompile Include="CircleCollider2D.cpp">
       <Filter>8. Physics\Collider\CircleCollider2D</Filter>
@@ -324,5 +344,16 @@
     <ClCompile Include="CollisionManager.cpp">
       <Filter>2. Manager\CollisionManager</Filter>
     </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>2. Manager\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureComponent.cpp">
+      <Filter>5. Component\SceneComponent\RenderComponent\Renderables\TextureComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureAsset.cpp">
+      <Filter>6. Resource\TextureAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="PopUpUI.cpp" />
+    <ClCompile Include="Rigidbody2D.cpp" />
   </ItemGroup>
 </Project>

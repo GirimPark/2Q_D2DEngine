@@ -2,7 +2,6 @@
 #include "FSMState.h"
 
 #include "AnimationComponent.h"
-#include "EventManager.h"
 #include "FSM.h"
 #include "FSMTransition.h"
 
@@ -11,18 +10,16 @@ void FSMState::SetParentFSM(FSM* parentFSM)
 	m_pParentFSM = parentFSM;
 }
 
-void FSMState::SetDefaultAnimationName()
-{
-	framework::EVENT_ANIMATION_INFO animationInfo = { m_StateName, false };
-	EventManager::GetInstance()->SendEvent(eEventType::SetDefaultAnimation, animationInfo);
-}
-
 bool FSMState::CheckTransition()
 {
 	for (auto transition : m_Transitions)
 	{
 		std::wstring nextStateName = (*transition)().first;
-		m_bFlip = (*transition)().second;
+		m_Direction = (*transition)().second;
+
+		// Move->Move 예외처리...
+
+
 		if (!nextStateName.empty())
 		{
 			// state 목록에서 find

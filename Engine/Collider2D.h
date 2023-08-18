@@ -2,6 +2,15 @@
 
 #include "RenderComponent.h"
 
+enum class COLLISION_TPYE
+{
+	COLLISION = 0,
+	TRIGGER,
+	NONE,
+
+	END
+};
+
 struct AABB;
 struct CC;
 
@@ -45,7 +54,17 @@ protected:
 	D2D1::ColorF m_Color = D2D1::ColorF::Green;
 
 public:
-	bool m_isCollision = false;
+	COLLISION_TPYE m_CollisionType = COLLISION_TPYE::COLLISION;
+	bool m_IsCollision = false;
+	bool m_IsTrigger = false;
+
+	static UINT m_NextID;			// 다음 Collider2D의 ID
+	UINT m_CollisionCount = 0;		// 충돌중인 다른 충돌체 갯수
+	UINT m_ID = 0;					// Collider2D의 ID
+
+public:
+	Collider2D();
+	~Collider2D() override;
 
 public:
 	void SetWidth(const float width) { m_Width = width; }
@@ -53,11 +72,34 @@ public:
 	void SetColor(D2D1::ColorF color) { m_Color = color; }
 
 public:
+	COLLISION_TPYE GetCollisionType() const { return m_CollisionType; }
+	void SetCollisionType(COLLISION_TPYE type) { m_CollisionType = type; }
+
+	void TurnOn_IsCollision(Collider2D* otherCollision) { m_IsCollision = true; otherCollision->m_IsCollision = true; }
+	void TurnOff_IsCollision(Collider2D* otherCollision) { m_IsCollision = false; otherCollision->m_IsCollision = false; }
+
+	void TurnOn_IsTrigger(Collider2D* otherCollision) { m_IsTrigger = true; otherCollision->m_IsTrigger = true; }
+	void TurnOff_IsTrigger(Collider2D* otherCollision) { m_IsTrigger = false; otherCollision->m_IsTrigger = false; }
+public:
 	bool Initialize() override;
 	void Update(const float deltaTime) override;
 	void Render(ID2D1RenderTarget* pRenderTarget) override;
 
 public:
 	virtual bool CheckIntersect(Collider2D* other) const abstract;
-	void ProcessBlock(float deltaTime) const;
+
+public:
+	UINT GetID() const { return m_ID; }
+
+public:
+	virtual void OnCollisionEnter(Collider2D* otherCollision) abstract;
+	virtual void OnCollisionStay(Collider2D* otherCollision) abstract;
+	virtual void OnCollisionExit(Collider2D* otherCollision) abstract;
+
+	virtual void OnTriggerEnter(Collider2D* otherCollision) abstract;
+	virtual void OnTriggerStay(Collider2D* otherCollision) abstract;
+	virtual void OnTriggerExit(Collider2D* otherCollision) abstract;
+
+public:
+	virtual void ProcessBlock(Collider2D* otherCollision) abstract;
 };

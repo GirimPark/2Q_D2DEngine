@@ -12,38 +12,39 @@ class AnimationAsset;
 /// </summary>
 class AnimationComponent
 	: public RenderComponent
-	, public EventListener
+	//, public EventListener
 {
 protected:
 	AnimationAsset* m_pAnimationAsset = nullptr;									// 애니메이션을 위한 기본 데이터 자산 (내부에 D2D1Bitmap)
+
 	std::wstring m_AnimationName;													// 현재 애니메이션 이름
 	size_t m_FrameIndex = 0;														// 현재 프레임 인덱스
-	float m_ProgressTime;														// 애니메이션 진행시간
+	float m_ProgressTime = 0.f;														// 애니메이션 진행시간
 	D2D1_RECT_F m_SrcRect = { 0.f, 0.f, 0.f, 0.f };			// 시간에 따른 D2D1Bitmap의 Source 영역
 	D2D1_RECT_F m_DstRect = { 0.f, 0.f, 0.f, 0.f };			// 시간에 따른 D2D1Bitmap의 Source 영역
 	bool m_bMirror = false;
 	float m_Speed = 1.f;
 
-private:
-	float m_Width = 0.f;
-	float m_Height = 0.f;
-
 public:
+	AnimationComponent();
 	virtual ~AnimationComponent();
 
 public:
-	void SetProgressTime(const float val) { m_ProgressTime = val; }
 	void SetSpeed(const float val) { m_Speed = val; }
+	void SetAnimationName(std::wstring name) { m_AnimationName = name; }
 
 public:
 	void Update(const float deltaTime) final;
 	void Render(ID2D1RenderTarget* pRenderTarget) final;
 
 public:
-	void SetAnimationAsset(const WCHAR* szFilePath, const std::wstring animationName, std::vector<framework::FRAME_INFO>& frameInfo);
+	void SetAnimationBitmapFilePath(const WCHAR* szFilePath);
+	void SetAnimationAsset(const WCHAR* szFilePath, const WCHAR* animationName, std::vector<framework::FRAME_INFO> frameInfo);
+	void LoadAnimationAsset(const WCHAR* szFilePath, const WCHAR* assetName);
+
 	void ChangeAnimation(const std::wstring name, const bool flip);
 	void KeepAnimation(const bool flip);
 
 public:
-	void HandleEvent(Event* event) final;
+	//void HandleEvent(Event* event) final;
 };

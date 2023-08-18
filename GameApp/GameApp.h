@@ -11,14 +11,12 @@ class World;
 class GameApp
 	: public CommonApp
 {
-	World* m_pTestWorld = nullptr;
-
 public:
 	GameApp(HINSTANCE hInstance);
-	~GameApp() override;
+	~GameApp() final;
 
-	void Update() override;
-	void Render() override;
-	bool Initialize() override;
-	void Finalize() override;
+	void Update() final;
+	void Render() final;
+	bool Initialize() final;
+	void Finalize() final;
 };

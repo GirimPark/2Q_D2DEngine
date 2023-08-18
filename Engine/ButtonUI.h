@@ -1,24 +1,18 @@
 #pragma once
 #include "UI.h"
 
-enum  class BTN_FUNC
-{
-    NONE,
-    CHANGE_SCENE,
-    PAUSE_UI,
-    DELTE_PARENT_UI,
-};
-
+#include "EventManager.h"
 class ButtonUI
     : public UI
 {
 public:
-    void SetBtnFunction(BTN_FUNC _func);
-
     //void CheckMouseOn() override {};
     //void MouseLbtnDown() override {};
     //void MouseLbtnUp() override {};
-    void MouseLbtnClicked() override;
+    //void MouseLbtnClicked() override;
+
+    void SetButtonEventType(eEventType _func);
+    eEventType GetButtonEventType() { return m_buttonEventType; }
 
 public:
     bool Initialize() override final;
@@ -26,7 +20,7 @@ public:
     void Render(ID2D1RenderTarget* pRenderTarget) override final;
 
 private:
-    BTN_FUNC m_function = {};
+    eEventType m_buttonEventType;
 
 };
 

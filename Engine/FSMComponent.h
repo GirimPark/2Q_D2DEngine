@@ -3,7 +3,6 @@
 #include "Component.h"
 
 class FSM;
-class AnimationComponent;
 
 /// <summary>
 /// FSM을 오브젝트에 붙이기 위한 Component
@@ -23,7 +22,7 @@ private:
 	FSM* m_FSM = nullptr;
 
 public:
-    void AttachFSM(FSM* _FSM, AnimationComponent* AnimComponent);
+    void AttachFSM(FSM* _FSM);
 
 public:
     void Update(const float deltaTime) final;

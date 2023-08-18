@@ -73,12 +73,12 @@ HRESULT D2DRenderer::Initialize()
     if (SUCCEEDED(hr))
     {
         hr = m_pDWriteFactory->CreateTextFormat(
-            L"Bernard MT Condensed", //
+            L"Arial",
             nullptr,
             DWRITE_FONT_WEIGHT_NORMAL,
             DWRITE_FONT_STYLE_NORMAL,
             DWRITE_FONT_STRETCH_NORMAL,
-            15.0f,
+            20.f,
             L"", //locale
             &m_pDWriteTextFormat
         );
@@ -87,8 +87,11 @@ HRESULT D2DRenderer::Initialize()
     if (SUCCEEDED(hr))
     {
         // Center the text horizontally and vertically.
-        m_pDWriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-        //m_pDWriteTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+        // m_pDWriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+
+        /// 완전 가운데 정렬
+        m_pDWriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+        m_pDWriteTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
     }
 
     if (SUCCEEDED(hr))

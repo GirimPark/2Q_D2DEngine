@@ -12,17 +12,60 @@
 enum eEventType
 {
 	// FSMComponent - AnimationComponent
-	ChangeAnimation,
-	KeepAnimation,
-	SetDefaultAnimation,
+	P1SetDefaultAnimation,
+	P2SetDefaultAnimation,
+	P3SetDefaultAnimation,
+	P4SetDefaultAnimation,
 
-	// FSMComponent - MovementComponent
-	TransperMovement,
+	P1ChangeAnimation,
+	P2ChangeAnimation,
+	P3ChangeAnimation,
+	P4ChangeAnimation,
 
+	P1KeepAnimation,
+	P2KeepAnimation,
+	P3KeepAnimation,
+	P4KeepAnimation,
+
+	// FSMComponent - PlayerMovement
+	P1TransperMovement,
+	P2TransperMovement,
+	P3TransperMovement,
+	P4TransperMovement,
+
+	// UIComponent - ButtonUIComponent
+	// 월드 변환
+	ChangeWorld_Start,
+	ChangeWorld,
+	ChangeWorldToMain,				// MainWorld로 변환(메인화면)
+	ChangeWorldToInstruction,		// GameMethonWorld로 변환(게임방법)
+	ChangeWorldToMadeBy,			// MadeByWorld로 변환(제작)
+	ChangeWorldToGameSetting,		// GameSettingWorld로 변환(게임설정)
+	ChangeWorldToInGame,			// InGameWorld로 변환(인게임)
+	ChangeWorld_End,
+
+	// 게임 종료할건지 안 할건지
+	CheckQuitGame,
+	QuitGame,
+	ResumeGame,
+
+	// 스폰된 아이템 먹고 지워질 때
+	DeleteThrow,
+	DeleteInstallation,
+	DeleteReinforced,
+	DeleteMoney,
+
+	// World Pause 월드 퍼즈 ON OFF
+	PauseOn,
+	PauseOff,
+
+	// DeleteObject
+	DeleteGameObject,
 };
 
 
 class EventListener;
+class GameObject;
 
 /// <summary>
 ///	1. RegisterListener()로 이벤트타입과 리스너를 등록
@@ -37,6 +80,10 @@ private:
 	// 처리되어야 하는 이벤트 큐
 	std::list<Event> m_EventList;
 
+	/// ChagneWorld Event의 경우 WorldManager::ChangeWorld()를 수행하면서 이벤트매니저를 초기화한다.
+	///	이 경우 발생하는 문제를 위한 예외처리용 멤버변수
+	bool m_bChangingWorld = false;
+
 private:
 	static EventManager* m_pInstance;
 
@@ -49,8 +96,8 @@ public:
 
 	// 해당 listener에 등록된 모든 이벤트 해제
 	void UnregisterAll(EventListener* listener);
-	// 처리되어야 하는 이벤트 큐 초기화
-	void ClearEventList();
+	// 이벤트 목록, 이벤트 리스트 초기화
+	void ClearEvents();
 
 	void Initialize();	// 각종 Initialize에서 등록된 Event 실행
 	void Update();	// 이벤트 큐 실행
@@ -60,6 +107,7 @@ public:
 	void SendEvent(eEventType eventId);
 	void SendEvent(eEventType eventId, framework::EVENT_ANIMATION_INFO animationInfo);
 	void SendEvent(eEventType eventId, framework::EVENT_MOVEMENT_INFO movementInfo);
+	void SendEvent(eEventType eventId, GROUP_TYPE group, GameObject* obj);
 
 private:
 	// 이미 등록된 이벤트인지 확인

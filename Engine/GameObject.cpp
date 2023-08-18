@@ -13,6 +13,11 @@ GameObject::~GameObject()
 	m_OwnedComponent.clear();
 }
 
+void GameObject::SetLocation(const float x, const float y) const
+{
+	m_pRootComponent->SetRelativeLocation(x, y);
+}
+
 bool GameObject::Initialize()
 {
 	// 게임 오브젝트가 가지고 있는 모든 컴포넌트를 순회
@@ -54,12 +59,25 @@ void GameObject::Render()
 	}
 }
 
-Component* GameObject::GetComponent(const std::wstring name) const
+Component* GameObject::GetComponent(const std::wstring& name) const
 {
 	for (const auto& component : m_OwnedComponent)
 	{
 		if (component->GetName() == name)
 			return component;
 	}
+
 	return nullptr;
+}
+
+std::vector<Component*> GameObject::GetComponents(const std::wstring& name) const
+{
+	std::vector<Component*> components;
+	for (const auto& component : m_OwnedComponent)
+	{
+		if (component->GetName() == name)
+			components.push_back(component);
+	}
+
+	return components;
 }

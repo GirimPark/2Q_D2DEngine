@@ -2,11 +2,8 @@
 
 #include "../Engine/GameObject.h"
 
-class BoxComponent;
-//class AnimationComponent;
-class MovementComponent;
-//class FSMComponent;
-//class FSM;
+class TextureComponent;
+class PlayerMovement;
 class DirectionComponent;
 class BoxCollider2D;
 
@@ -14,18 +11,24 @@ class PlayerObject1
 	: public GameObject
 {
 private:
-	BoxComponent* m_pBoxComponent = nullptr;
-	//AnimationComponent* m_pAnimComponent = nullptr;
-	MovementComponent* m_pMovementComponent = nullptr;
-	//FSMComponent* m_pFSMComponent = nullptr;
-	//FSM* m_pPlayerFSM = nullptr;
+	TextureComponent* m_pTextureComponent = nullptr;
+	PlayerMovement* m_pMovementComponent = nullptr;
 	DirectionComponent* m_pDirectionComponent = nullptr;
 	BoxCollider2D* m_pBoxCollider2D = nullptr;
+	BoxCollider2D* m_pBoxCollider2DPart = nullptr;
 
 public:
-	~PlayerObject1() override;
+	~PlayerObject1() final;
 
 public:
-	bool Initialize() override;
-	void Update(const float deltaTime) override;
+	bool Initialize() final;
+	void Update(const float deltaTime) final;
+
+	void OnCollisionEnter(Collider2D* otherCollision) override;
+	void OnCollisionStay(Collider2D* otherCollision) override;
+	void OnCollisionExit(Collider2D* otherCollision) override;
+
+	void OnTriggerEnter(Collider2D* otherCollision) override;
+	void OnTriggerStay(Collider2D* otherCollision) override;
+	void OnTriggerExit(Collider2D* otherCollision) override;
 };

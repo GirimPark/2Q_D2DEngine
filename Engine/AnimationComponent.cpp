@@ -5,12 +5,14 @@
 #include "GameObject.h"
 #include "EventManager.h"
 
+AnimationComponent::AnimationComponent()
+{
+	m_pAnimationAsset = new AnimationAsset;
+}
+
 AnimationComponent::~AnimationComponent()
 {
-	if (m_pAnimationAsset)
-	{
-		delete m_pAnimationAsset;
-	}
+	delete m_pAnimationAsset;
 }
 
 void AnimationComponent::Update(const float deltaTime)
@@ -51,17 +53,27 @@ void AnimationComponent::Render(ID2D1RenderTarget* pRenderTarget)
 	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
-void AnimationComponent::SetAnimationAsset(const WCHAR* szFilePath, const std::wstring animationName, std::vector<framework::FRAME_INFO>& frameInfo)
+void AnimationComponent::SetAnimationBitmapFilePath(const WCHAR* szFilePath)
 {
-	if (!m_pAnimationAsset)
-		m_pAnimationAsset = new AnimationAsset;
 	m_pAnimationAsset->SetBitmapFilePath(szFilePath);
 	m_pAnimationAsset->Build();
-	// todo(채원) : 이미 저장되어 있어서 save를 주석처리 해놨음
-	// 나중에 에셋 더 들어오면 다시 Save 해줘야함. 그리고 Asset 이름 바꾸자
+	//m_pAnimationAsset->m_Animations.insert(std::pair<std::wstring, std::vector<framework::FRAME_INFO>>(animationName, frameInfo));
+	//m_pAnimationAsset->Save(L"../Resource/TestWorld.WorldAsset");
+}
+
+void AnimationComponent::SetAnimationAsset(const WCHAR* szFilePath, const WCHAR* animationName, std::vector<framework::FRAME_INFO> frameInfo)
+{
+	m_pAnimationAsset->SetBitmapFilePath(szFilePath);
+	m_pAnimationAsset->Build();
 	m_pAnimationAsset->m_Animations.insert(std::pair<std::wstring, std::vector<framework::FRAME_INFO>>(animationName, frameInfo));
-	m_pAnimationAsset->Save(L"../Resource/TestWorld.WorldAsset");
-	//m_pAnimationAsset->Load(L"../Resource/TestWorld.WorldAsset");
+}
+
+
+void AnimationComponent::LoadAnimationAsset(const WCHAR* szFilePath, const WCHAR* assetName)
+{
+	m_pAnimationAsset->SetBitmapFilePath(szFilePath);
+	m_pAnimationAsset->Build();
+	m_pAnimationAsset->Load(assetName);
 }
 
 void AnimationComponent::ChangeAnimation(const std::wstring name, const bool flip)
@@ -80,20 +92,4 @@ void AnimationComponent::KeepAnimation(const bool flip)
 	assert(m_pAnimationAsset != nullptr);
 
 	m_bMirror = flip;
-}
-
-void AnimationComponent::HandleEvent(Event* event)
-{
-	if(event->eventID == eEventType::KeepAnimation)
-	{
-		KeepAnimation(event->animationInfo.flip);
-	}
-	if(event->eventID == eEventType::ChangeAnimation)
-	{
-		ChangeAnimation(event->animationInfo.animationName, event->animationInfo.flip);
-	}
-	else if(event->eventID == eEventType::SetDefaultAnimation)
-	{
-		m_AnimationName = event->animationInfo.animationName;
-	}
 }

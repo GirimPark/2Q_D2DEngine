@@ -2,6 +2,8 @@
 
 #include "Component.h"
 
+#include "struct.h"
+
 #include <vector>
 #include <cassert>
 
@@ -27,29 +29,25 @@ protected:
 	framework::Vector2D m_WorldLocation = { 0.f, 0.f };	// 실시간 위치값
 
 	// RelativeScale, Rotation, Location에 대한 변환연산 결과값
-	D2D_MATRIX_3X2_F m_RelativeTransform;
-	D2D_MATRIX_3X2_F m_WorldTransform;
-	D2D_MATRIX_3X2_F m_FinalTransform;
+	D2D_MATRIX_3X2_F m_RelativeTransform = {};
+	D2D_MATRIX_3X2_F m_WorldTransform = {};
+	D2D_MATRIX_3X2_F m_FinalTransform = {};
 
 private:
 	// 소속된 오브젝트의 부모오브젝트
 	GameObject* m_pParentObject = nullptr;
 
 public:
-	//void SetRelativeScale(float x, float y) { m_RelativeScale.x = x; m_RelativeScale.y = y; }
-	//Vector2D GetRelativeScale() { return m_RelativeScale; }
-	//void SetRelativeRotation(float rotation) { m_RelativeRotation = rotation; }
-	//float GetRelativeRotation() { return m_RelativeRotation; }
 	void SetRelativeLocation(const float x, const float y) { m_RelativeLocation.x = x; m_RelativeLocation.y = y; }
 	framework::Vector2D GetRelativeLocation() const { return m_RelativeLocation; }
-	framework::Vector2D GetWorldLocation()	  const	{ return m_WorldLocation; }
-	framework::Vector2D GetFinalLocation()    const	{ return { m_FinalTransform.dx, m_FinalTransform.dy }; }
-	//D2D_MATRIX_3X2_F GetWorldTransform() { return m_WorldTransform; }
-	//D2D_MATRIX_3X2_F GetFinalTransform() { return m_FinalTransform; }
+	framework::Vector2D GetWorldLocation() const { return m_WorldLocation; }
+	framework::Vector2D GetFinalLocation() const { return { m_FinalTransform.dx, m_FinalTransform.dy }; }
+	D2D_MATRIX_3X2_F GetFinalTransform() const { return m_FinalTransform; }
 	std::vector<Component*>& GetChildrenComponent() { return m_Children; }
 
 	void AddRelativeRotation(const float rotation) { m_RelativeRotation += rotation; UpdateTransform(); }
 	void AddRelativeLocation(framework::Vector2D velocity) { m_RelativeLocation += velocity; UpdateTransform(); }
+	void AddRelativeLocation(float x, float y) { m_RelativeLocation += {x, y}; UpdateTransform(); }
 
 	virtual bool Initialize();
 	void Update(const float deltaTime) override;

@@ -2,6 +2,7 @@
 #include "CommonApp.h"
 
 #include "InputManager.h"
+#include "SoundManager.h"
 
 #ifdef FRAMEWORK_DEBUG
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
@@ -38,7 +39,6 @@ CommonApp::CommonApp(HINSTANCE hInstance)
 
     // 렌더러 생성
     m_pD2DRenderer = new D2DRenderer;
-    m_pUIManager = new UIManager;
 }
 
 CommonApp::~CommonApp()
@@ -58,14 +58,19 @@ bool CommonApp::Initialize()
     AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true);
     // 생성
     m_hWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW,
-        100, 100,               // 시작 위치
-        rt.right - rt.left, rt.bottom - rt.top,    // 가로, 세로
+        100, 100,                                   // 시작 위치
+        rt.right - rt.left, rt.bottom - rt.top,     // 가로, 세로
         nullptr, nullptr, m_hInstance, nullptr);
 
     if (!m_hWnd)
     {
         return false;
     }
+
+    // 새롭게 추가된 WinAPI 함수들 (별거 아님)
+    SetForegroundWindow(m_hWnd);    // 윈도우를 최상위로
+    SetFocus(m_hWnd);               // 윈도우에 포커스를 준다
+    ShowCursor(TRUE);	            // 커서 보이기
 
     // 윈도우 보이기
     ShowWindow(m_hWnd, SW_SHOW);
@@ -80,6 +85,12 @@ bool CommonApp::Initialize()
     m_pRenderTarget = m_pD2DRenderer->GetRenderTarget();
     m_pBrush = m_pD2DRenderer->GetBrush();
     m_pTextFormat = m_pD2DRenderer->GetTextFormat();
+
+    // 월드 매니저 생성
+    m_pWorldManager = new WorldManager;
+
+    // 사운드 매니저 생성
+    m_pSoundManager = new SoundManager;
 
     m_TimeManager.Initialize();
     InputManager::GetInstance()->Initialize();
@@ -108,6 +119,7 @@ void CommonApp::Loop()
             Render();
         }
     }
+
     Finalize();
 }
 
@@ -120,9 +132,15 @@ void CommonApp::Update()
 
 void CommonApp::Finalize()
 {
-    delete m_pD2DRenderer;
-    delete m_pUIManager;
+    delete m_pSoundManager;
+
+    // 모든 월드 인스턴스 제거
+    m_pWorldManager->Finalize();
+
     InputManager::GetInstance()->Finalize();
+
+    // 월드매니저에서 Asset Release를 하기 때문에 D2DRenderer를 월드 이후에 Finalize 해야한다
+    delete m_pD2DRenderer;
 }
 
 BOOL CommonApp::GetClientRect(LPRECT lpRect)

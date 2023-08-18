@@ -8,7 +8,7 @@ bool PanelUI::Initialize()
 	bool res = __super::Initialize();
 	assert(res);
 
-    return true;
+	return true;
 }
 
 void PanelUI::Update(const float deltaTime)
@@ -31,4 +31,6 @@ void PanelUI::Render(ID2D1RenderTarget* pRenderTarget)
 		D2D1::RectF(-m_Width / 2, -m_Height / 2, m_Width / 2, m_Height / 2),
 		CommonApp::m_pInstance->GetBrush(),
 		2.f);
+
+	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }

@@ -21,12 +21,12 @@ public:
 	ID2D1Bitmap* m_pBitmap;
 	std::wstring m_BitmapFilePath;
 
-	std::unordered_map<std::wstring, std::vector<framework::FRAME_INFO>> m_Animations;	// 애니메이션 이름, 프레임정보 맵
-
-	void Build();
+	std::unordered_map<std::wstring, std::vector<framework::FRAME_INFO>> m_Animations = {};	// 애니메이션 이름, 프레임정보 맵
 
 	void SetBitmapFilePath(const WCHAR* szFilePath);
-	void Save(const WCHAR* szFilePath);
+	void Build();
+
+	void Save(const WCHAR* szFilePath) const;
 	bool Load(const WCHAR* szFilePath);
 };
 

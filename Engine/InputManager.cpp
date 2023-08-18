@@ -38,6 +38,11 @@ void InputManager::Initialize()
 
 void InputManager::Update()
 {
+	// 윈도우가 포커스되어있지 않으면 입력을 처리하지 않는다
+	const HWND hWnd = GetFocus();
+	if (hWnd == nullptr)
+		return;
+
 	POINT curMousePos;
 	GetCursorPos(&curMousePos); // temp
 
@@ -112,6 +117,62 @@ void InputManager::Update()
 				else
 					m_PadState[i][j].padState = eKeyState::NONE;
 			}
+		}
+
+		/// 컨트롤러의 Left, Right Trigger를 버튼화
+
+		// 왼쪽 트리거가 눌렸다
+		if (IsTriggerLeft(i))
+		{
+			// 이미 눌려있었다면
+			if(m_LeftTriggerState[i].prevPushed)
+				m_LeftTriggerState[i].padState = eKeyState::HOLD;
+			// 눌려있지 않았다
+			else
+			{
+				m_LeftTriggerState[i].padState = eKeyState::PUSH;
+				m_LeftTriggerState[i].prevPushed = true;
+			}
+		}
+		// 왼쪽 트리거가 눌리지 않았다
+		else
+		{
+			// 이미 눌려있었다
+			if (m_LeftTriggerState[i].prevPushed)
+			{
+				m_LeftTriggerState[i].padState = eKeyState::END;
+				m_LeftTriggerState[i].prevPushed = false;
+			}
+			// 눌려있지 않았다
+			else
+				m_LeftTriggerState[i].padState = eKeyState::NONE;
+		}
+
+		// 오른쪽 트리거가 눌렸다
+		if (IsTriggerRight(i))
+		{
+			// 이미 눌려있었다면
+			if (m_RightTriggerState[i].prevPushed)
+				m_RightTriggerState[i].padState = eKeyState::HOLD;
+			// 눌려있지 않았다
+			else
+			{
+				m_RightTriggerState[i].padState = eKeyState::PUSH;
+				m_RightTriggerState[i].prevPushed = true;
+			}
+		}
+		// 오른쪽 트리거가 눌리지 않았다
+		else
+		{
+			// 이미 눌려있었다
+			if (m_RightTriggerState[i].prevPushed)
+			{
+				m_RightTriggerState[i].padState = eKeyState::END;
+				m_RightTriggerState[i].prevPushed = false;
+			}
+			// 눌려있지 않았다
+			else
+				m_RightTriggerState[i].padState = eKeyState::NONE;
 		}
 	}
 }
@@ -240,4 +301,24 @@ float InputManager::GetPadAxisRightTrigger(DWORD controllerIndex)
 		return static_cast<float>(state.Gamepad.bRightTrigger) / 255.f;
 
 	return 0.f;
+}
+
+bool InputManager::IsTriggerLeft(DWORD controllerIndex)
+{
+	const XINPUT_STATE state = GetControllerState(controllerIndex);
+
+	if (state.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		return true;
+
+	return false;
+}
+
+bool InputManager::IsTriggerRight(DWORD controllerIndex)
+{
+	const XINPUT_STATE state = GetControllerState(controllerIndex);
+
+	if (state.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		return true;
+
+	return false;
 }

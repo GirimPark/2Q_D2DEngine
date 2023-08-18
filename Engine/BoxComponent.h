@@ -8,18 +8,14 @@ class BoxComponent
 	: public RenderComponent
 {
 private:
-	float m_Width = 0.f;
-	float m_Height = 0.f;
+	framework::Vector2D m_Extend = { 0.f, 0.f };
 	D2D1::ColorF m_Color = D2D1::ColorF::Black;
 
 public:
-	void SetWidth(const float width) { m_Width = width; }
-	void SetHeight(const float height) { m_Height = height; }
-	float GetWidth() const { return m_Width; }
-	float GetHeight()const { return m_Height; }
-
+	framework::Vector2D GetExtend() const { return m_Extend; }
+	void SetExtend(float x, float y) { m_Extend = { x,y }; }
 	void SetColor(D2D1::ColorF color) { m_Color = color; }
 
 public:
-	void Render(ID2D1RenderTarget* pRenderTarget) final; 
+	void Render(ID2D1RenderTarget* pRenderTarget) final;
 };

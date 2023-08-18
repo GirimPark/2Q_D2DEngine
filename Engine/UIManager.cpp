@@ -2,91 +2,260 @@
 #include "UIManager.h"
 
 #include "Component.h"
+#include "EventManager.h"
 #include "InputManager.h"
 #include "SceneComponent.h"
 #include "UI.h"
+#include "World.h"
+#include "ButtonUI.h"
+#include "GameObject.h"
+#include "../GameApp/PopUpUIObject.h"
 
 #include "../GameApp/UIObject.h"
 
+#include <algorithm>
 
 UIManager::~UIManager()
 {
-	m_UILocation.clear();
 }
 
-void UIManager::Initialize(const UIObject* curUI)
+// world ui 처음 세팅할 때는 팝업 안 뜨니까
+void UIManager::SetWorldUIObject(std::vector<GameObject*>& curObject)
 {
-	if(curUI == nullptr)
+	if (curObject.size() == 0)
 	{
 		return;
 	}
 
-	m_pCurUI = curUI->GetRootComponent();
-	std::vector<Component*>& m_pChildUI = m_pCurUI->GetChildrenComponent();
-	dynamic_cast<UI*>(m_pChildUI[m_childIndex])->FocusOn(D2D1::ColorF::Yellow);
+	std::vector<GameObject*>::iterator targetIter = curObject.end();
+	std::vector<GameObject*>::iterator iter = curObject.begin();
 
-	// 첫번째 UI focus 해주기
-	SetFocusedUI(dynamic_cast<UI*>(m_pChildUI[m_childIndex]));
+	// 기본 ui오브젝트를 현재 오브젝트로 설정
+	for (; iter != curObject.end(); ++iter)
+	{
+		m_pUIObject = (*iter);
+		m_pCurGameObject = (*iter);
+		wprintf(L"%s", (*iter)->GetName().c_str());
+
+	}
+
+	std::vector<Component*>& childComponent =
+		m_pUIObject->GetRootComponent()->GetChildrenComponent();
+
+	if (childComponent.size() == 0)
+		return;
 
 	// UI 배치를 이중벡터로 옮겨주기
-	size_t capacity = dynamic_cast<UI*>(m_pChildUI[m_pChildUI.size() - 1])->GetYIndex();
+	size_t capacity = dynamic_cast<UI*>(childComponent[childComponent.size() - 1])->GetYIndex();
 
 	size_t max = 0;
 
-	for (size_t i = 0; i < m_pChildUI.size(); i++)
+	for (size_t i = 0; i < childComponent.size(); i++)
 	{
-		if (max < dynamic_cast<UI*>(m_pChildUI[i])->GetXIndex())
+		if (max < dynamic_cast<UI*>(childComponent[i])->GetXIndex())
 		{
-			max = dynamic_cast<UI*>(m_pChildUI[i])->GetXIndex();
+			max = dynamic_cast<UI*>(childComponent[i])->GetXIndex();
 		}
 	}
 
-	m_UILocation.resize(capacity + 1, std::vector<UI*>(max + 1, nullptr));
+	m_UIObjectLocation.resize(capacity + 1, std::vector<UI*>(max + 1, nullptr));
 
-	for (size_t i = 0; i < m_pChildUI.size(); i++)
+	for (size_t i = 0; i < childComponent.size(); i++)
 	{
-		size_t y = dynamic_cast<UI*>(m_pChildUI[i])->GetYIndex();
-		size_t x = dynamic_cast<UI*>(m_pChildUI[i])->GetXIndex();
+		if (!(dynamic_cast<UI*>(childComponent[i])->IsActiveUI()))
+		{
+			continue;
+		}
+		size_t y = dynamic_cast<UI*>(childComponent[i])->GetYIndex();
+		size_t x = dynamic_cast<UI*>(childComponent[i])->GetXIndex();
 
-		m_UILocation[y][x] = dynamic_cast<UI*>(m_pChildUI[i]);
+		m_UIObjectLocation[y][x] = dynamic_cast<UI*>(childComponent[i]);
 	}
+
+	std::vector<std::vector<UI*>>& uiLocation = m_UIObjectLocation;
+	for (auto& curUIList : uiLocation)
+	{
+		// 처음에 Focus 가능한 UI를 focus해주기
+		for (auto& focusUI : curUIList)
+		{
+			if (m_pFocusedUI != nullptr)
+			{
+				break;
+			}
+			if (focusUI != nullptr)
+			{
+				m_curX = focusUI->GetXIndex();
+				m_curY = focusUI->GetYIndex();
+				m_pFocusedUI = focusUI;
+				m_pFocusedUI->FocusOn(D2D1::ColorF::Yellow);
+				break;
+			}
+		}
+	}
+
 	m_finalControllerPos = { 0.f,0.f };
 	m_curControllerPos = { 0.f, 0.f };
 }
 
-void UIManager::Update(float deltaTime)
+void UIManager::SetWorldPopUpUIObject(std::vector<GameObject*>& curObject)
 {
-	if(m_pCurUI == nullptr)
+	if (curObject.size() == 0)
 	{
 		return;
 	}
-	static float timeElapsed = 0.f;
-	m_curControllerPos = InputManager::GetInstance()->GetPadAxisLeftThumb(0);
 
-	if (m_finalControllerPos != m_curControllerPos)
-	{
-		timeElapsed += deltaTime;
-	}
+	std::vector<GameObject*>::iterator targetIter = curObject.end();
+	std::vector<GameObject*>::iterator iter = curObject.begin();
 
-	if (timeElapsed >= 0.2f)
+	// popupui들 저장해두기
+	for (; iter != curObject.end(); ++iter)
 	{
-		timeElapsed = 0.f;
-		m_bChangeFocusState = false;
-	}
-	else
-	{
-		if (!m_bChangeFocusState)
+		std::vector<Component*>& childComponent =
+			(*iter)->GetRootComponent()->GetChildrenComponent();
+
+		if (childComponent.size() == 0)
+			return;
+
+		// UI 배치를 이중벡터로 옮겨주기
+		size_t capacity = dynamic_cast<UI*>(childComponent[childComponent.size() - 1])->GetYIndex();
+
+		size_t max = 0;
+
+		for (size_t i = 0; i < childComponent.size(); i++)
 		{
-			if (m_pFocusedUI != nullptr) // 컨트롤러 버전
+			if (max < dynamic_cast<UI*>(childComponent[i])->GetXIndex())
 			{
-				if (m_finalControllerPos == m_curControllerPos)
-				{
-					m_bChangeFocusState = false;
-					return;
-				}
-				m_pFocusedUI = GetFocusedUI();
+				max = dynamic_cast<UI*>(childComponent[i])->GetXIndex();
 			}
-			m_bChangeFocusState = true;
+		}
+
+		m_PopUpUIObjectLocation.resize(capacity + 1, std::vector<UI*>(max + 1, nullptr));
+
+		for (size_t i = 0; i < childComponent.size(); i++)
+		{
+			size_t y = dynamic_cast<UI*>(childComponent[i])->GetYIndex();
+			size_t x = dynamic_cast<UI*>(childComponent[i])->GetXIndex();
+
+			m_PopUpUIObjectLocation[y][x] = dynamic_cast<UI*>(childComponent[i]);
+		}
+
+		m_pPopUpUIObject.push_back(*iter);
+	}
+}
+
+void UIManager::Update(float deltaTime)
+{
+	if (m_pUIObject == nullptr && m_pPopUpUIObject.size() == 0)
+	{
+		return;
+	}
+
+	std::vector<GameObject*>::iterator targetIter = m_pPopUpUIObject.end();
+	std::vector<GameObject*>::iterator iter = m_pPopUpUIObject.begin();
+
+	/// todo : 아직 둘다 떴을 때를 해결 안 함
+
+	for (; iter != m_pPopUpUIObject.end(); ++iter)
+	{
+		// popui중 활성화 된 것이 있다면
+		if ((*iter)->GetPopUpState())
+		{
+			targetIter = iter;
+
+			m_pCurGameObject = *iter;
+
+			// 아직 활성화가 안 되어있으면
+			if (!m_bCurPopUpState)
+			{
+				m_curX = 0;
+				m_curY = 0;
+
+				if (m_pFocusedUI != nullptr)
+					m_pFocusedUI->FocusOut();
+
+				m_pFocusedUI = dynamic_cast<UI*>(m_pCurGameObject->GetRootComponent()->GetChildrenComponent()[0]);
+				m_pFocusedUI->FocusOn(D2D1::ColorF::Yellow);
+			}
+			m_bCurPopUpState = true;
+			break;
+		}
+	}
+	// 활성화된 팝업이 없을 때 기본 UI로 포커스 바꿔주기
+	if (targetIter == m_pPopUpUIObject.end())
+	{
+		m_pCurGameObject = m_pUIObject;
+
+		std::vector<std::vector<UI*>>& uiLocation = m_UIObjectLocation;
+		for (auto& curUIList : uiLocation)
+		{
+			// 처음에 Focus 가능한 UI를 focus해주기
+			for (auto& focusUI : curUIList)
+			{
+				if (m_pFocusedUI != nullptr)
+				{
+					break;
+				}
+				if (focusUI != nullptr)
+				{
+					m_pFocusedUI = focusUI;
+					m_pFocusedUI->FocusOn(D2D1::ColorF::Yellow);
+					break;
+				}
+			}
+		}
+		m_bCurPopUpState = false;
+	}
+
+	if (InputManager::GetInstance()->IsPadButtonPush(0, GamePadButtonCode::A))
+	{
+		if (m_pFocusedUI != nullptr)
+			EventManager::GetInstance()->SendEvent(static_cast<ButtonUI*>(m_pFocusedUI)->GetButtonEventType());
+	}
+	// B누르면 테스트용 팝업 뜸(왼쪽 누르면 콘솔에 okay뜨고 오른쪽 누르면 no 뜸)
+	else if (InputManager::GetInstance()->IsPadButtonPush(0, GamePadButtonCode::B))
+	{
+		//EventManager::GetInstance()->SendEvent(eEventType::RUOkay);
+	}
+	// X누르면 일시정지(게임종료) 팝업 뜸(왼쪽 누르면 다른 월드로 가고 오른쪽 누르면 취소)
+	// startbox는 지금 게임 멈추는거라 이거도 고쳐야함
+	// todo(채원) : startbox로 바꿔놓기. 만약에 pause된 상태면  이거 sendevent 하기
+	else if (InputManager::GetInstance()->IsPadButtonPush(0, GamePadButtonCode::X))
+	{
+		EventManager::GetInstance()->SendEvent(eEventType::CheckQuitGame);
+	}
+
+	/// todo(채원) :한번 더 버튼을 눌렀을 때 안 걸리게 해야함
+
+	if (m_pCurGameObject != nullptr)
+	{
+		static float timeElapsed = 0.f;
+		m_curControllerPos = InputManager::GetInstance()->GetPadAxisLeftThumb(0);
+
+		if (m_finalControllerPos != m_curControllerPos)
+		{
+			timeElapsed += deltaTime;
+		}
+
+		if (timeElapsed >= 0.2f)
+		{
+			timeElapsed = 0.f;
+			m_bChangeFocusState = false;
+		}
+		else
+		{
+			if (!m_bChangeFocusState)
+			{
+				if (m_pFocusedUI != nullptr) // 컨트롤러 버전
+				{
+					if (m_finalControllerPos == m_curControllerPos)
+					{
+						m_bChangeFocusState = false;
+						return;
+					}
+					m_pFocusedUI = GetFocusedUI();
+				}
+				m_bChangeFocusState = true;
+			}
 		}
 	}
 	return;
@@ -128,11 +297,6 @@ void UIManager::Update(float deltaTime)
 	}
 }
 
-void UIManager::SetFocusedUI(UI* pFocusedUI)
-{
-	std::vector<Component*>& m_pChildUI = m_pCurUI->GetChildrenComponent();
-	m_pFocusedUI = pFocusedUI;
-}
 
 UI* UIManager::GetFocusedUI()
 {
@@ -170,11 +334,25 @@ UI* UIManager::GetFocusedUI()
 	// 컨트롤러
 	UI* pFocusedUI = m_pFocusedUI;
 
-	std::vector<Component*>& m_pChildUI = m_pCurUI->GetChildrenComponent();
+	/*float focusedY = m_pFocusedUI->GetFinalPos().y;
+	float focusedX = m_pFocusedUI->GetFinalPos().x;*/
 
-	float focusedY = m_pFocusedUI->GetFinalPos().y;
-	float focusedX = m_pFocusedUI->GetFinalPos().x;
+	/// todo : 팝업 유아이가 옆으로 안 가짐
 
+	std::vector<std::vector<UI*>>& uiLocation = m_PopUpUIObjectLocation;
+
+	if(m_bCurPopUpState)
+	{
+		uiLocation = m_PopUpUIObjectLocation;
+	}
+	else
+	{
+		uiLocation = m_UIObjectLocation;
+	}
+
+	// 아래에서 값이 변경돼서 저장해놔야함
+	const size_t storageX = m_curX;
+	const size_t storageY = m_curY;
 
 	// y값 변화량이 x값 변화량보다 높을 때
 	if (abs(m_curControllerPos.x) < abs(m_curControllerPos.y))
@@ -192,11 +370,33 @@ UI* UIManager::GetFocusedUI()
 		// 아래로
 		else if (m_curControllerPos.y < m_finalControllerPos.y)
 		{
-			if (m_curY == m_UILocation.size() - 1)
+			if (m_curY == uiLocation.size() - 1)
 			{
 				return m_pFocusedUI;
 			}
 			m_curY += 1;
+		}
+
+		//// 위 아래로 움직이기
+		if (uiLocation[m_curY][m_curX] == nullptr)
+		{
+			size_t i = 0;
+			while (i < uiLocation[m_curY].size())
+			{
+				if (i == m_pFocusedUI->GetXIndex())
+				{
+					i++;
+					continue;
+				}
+
+				if (uiLocation[m_curY][i] != nullptr)
+				{
+					m_curX = i;
+					pFocusedUI = uiLocation[m_curY][m_curX];
+					break;
+				}
+				i++;
+			}
 		}
 	}
 
@@ -216,57 +416,62 @@ UI* UIManager::GetFocusedUI()
 		// 오른쪽으로
 		else if (m_curControllerPos.x > m_finalControllerPos.x)
 		{
-			if (m_curX == m_UILocation[0].size() - 1)
+			if (m_curX == uiLocation[0].size() - 1)
 			{
 				return m_pFocusedUI;
 			}
 			m_curX += 1;
-		}		
+		}
+
+		//// 양옆으로 움직이기
+		if (uiLocation[m_curY][m_curX] == nullptr)
+		{
+			size_t i = 0;
+			while (i < uiLocation.size())
+			{
+				if (m_curX == uiLocation[m_curY].size())
+				{
+					break;
+				}
+				if (uiLocation[i][m_curX] != nullptr)
+				{
+					m_curY = i;
+					pFocusedUI = uiLocation[m_curY][m_curX];
+					break;
+				}
+				i++;
+			}
+		}
 	}
 
-	// 위 아래로 움직이기
-	if (m_UILocation[m_curY][m_curX] == nullptr)
+	if (uiLocation[m_curY][m_curX] != nullptr)
 	{
-		size_t i = 0;
-		while (i < m_UILocation[m_curY].size())
-		{
-			if (i == m_pFocusedUI->GetXIndex())
-			{
-				i++;
-				continue;
-			}
-
-			if(m_UILocation[m_curY][i] != nullptr)
-			{
-				m_curX = i;
-				pFocusedUI = m_UILocation[m_curY][m_curX];
-				break;
-			}
-			i++;
-		}
+		pFocusedUI = uiLocation[m_curY][m_curX];
+		m_pFocusedUI->FocusOut();
+		m_curControllerPos = { 0.f, 0.f };
+		pFocusedUI->FocusOn(D2D1::ColorF::Yellow);
+		return pFocusedUI;
 	}
 	else
 	{
-		pFocusedUI = m_UILocation[m_curY][m_curX];
+		m_curX = storageX;
+		m_curY = storageY;
+		return m_pFocusedUI;
 	}
-
-	m_pFocusedUI->FocusOut();
-	m_curControllerPos = { 0.f, 0.f };
-	pFocusedUI->FocusOn(D2D1::ColorF::Yellow);
-
-	return pFocusedUI;
 }
 
-// 채원: 안 쓰지만 일단 냅둬봄
-UI* UIManager::GetTargetedUI(UI* parentUI) const
+void UIManager::ClearUIObject()
 {
-	UI* pTargetUI = nullptr;
-	bool isLbtnEnd = InputManager::GetInstance()->IsKeyEnd(eKeyCode::LBUTTON);
-
-
-
-
-	return nullptr;
+	m_curX = 0;
+	m_curY = 0;
+	m_pFocusedUI = nullptr;
+	m_pCurGameObject = nullptr;
+	m_bCurPopUpState = false;
+	m_bChangeFocusState = false;
+	m_pUIObject = nullptr;
+	m_UIObjectLocation.clear();
+	m_PopUpUIObjectLocation.clear();
+	m_pPopUpUIObject.clear();
 }
 
 // InputManager에서 마지막으로 받은 인풋을 통해 관리
