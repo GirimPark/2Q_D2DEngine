@@ -23,7 +23,6 @@ protected:
 protected:
 	TimeManager m_TimeManager;
 	WorldManager* m_pWorldManager;
-	SoundManager* m_pSoundManager;
 
 public:
 	D2DRenderer* GetRenderer() const { return m_pD2DRenderer; }

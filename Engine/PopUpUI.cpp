@@ -17,7 +17,6 @@ void PopUpUI::Update(const float deltaTime)
 
 void PopUpUI::Render(ID2D1RenderTarget* pRenderTarget)
 {
-
 	CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);
 	m_FinalTransform = m_WorldTransform * GetCameraTransform();
 	pRenderTarget->SetTransform(m_FinalTransform);

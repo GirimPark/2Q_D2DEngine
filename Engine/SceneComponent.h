@@ -40,7 +40,20 @@ private:
 public:
 	void SetRelativeLocation(const float x, const float y) { m_RelativeLocation.x = x; m_RelativeLocation.y = y; }
 	framework::Vector2D GetRelativeLocation() const { return m_RelativeLocation; }
+
+	void SetRelativeScale(const float x, const float y) { m_RelativeScale.x = x; m_RelativeScale.y = y; }
+	void SetRelativeScale(framework::Vector2D vec) { m_RelativeScale = vec; }
+	framework::Vector2D GetRelativeScale() const { return m_RelativeScale; }
+
+	void SetRelativeRotation(const float rotation) { m_RelativeRotation = rotation; }
+	float GetRelativeRotation() const { return m_RelativeRotation; }
+
+	void SetWorldLocation(framework::Vector2D worldLocation) { m_WorldLocation = worldLocation; }
 	framework::Vector2D GetWorldLocation() const { return m_WorldLocation; }
+
+	void SetWorldTransform(D2D_MATRIX_3X2_F transform) { m_WorldTransform = transform; }
+	D2D_MATRIX_3X2_F GetWorldTransform() { return m_WorldTransform; }
+
 	framework::Vector2D GetFinalLocation() const { return { m_FinalTransform.dx, m_FinalTransform.dy }; }
 	D2D_MATRIX_3X2_F GetFinalTransform() const { return m_FinalTransform; }
 	std::vector<Component*>& GetChildrenComponent() { return m_Children; }

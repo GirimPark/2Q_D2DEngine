@@ -4,7 +4,9 @@
 
 #include "../Engine/InputManager.h"
 
+class PlayerObject;
 class TextureComponent;
+
 enum class eItemBoxType;
 
 enum class eItemType
@@ -15,11 +17,13 @@ enum class eItemType
 	THROW_START,
 	PunchItem,
 	SnowItem,
+	StungunItem,
 	BottleItem,
 	THROW_END,
 
 	// INSTALLATION
 	INSTALLATION_START,
+	SnareItem,
 	TrapItem,
 	INSTALLATION_END,
 
@@ -27,7 +31,10 @@ enum class eItemType
 	REINFORCED_START,
 	ShoeItem,
 	WaveItem,
+	TransparencyItem,
 	REINFORCED_END,
+
+	END
 };
 
 /// <summary>
@@ -44,7 +51,6 @@ protected:
 	eItemType m_ItemType;								// 아이템 종류(이름)
 
 	float m_Range = 0.f;								// 투척형 아이템 유효 범위
-	int m_UsageCount = 0;								// 사용횟수
 	int m_Damage = 0;									// 데미지
 	int m_DropedMoney = 0;								// 피격시 드랍하는 돈 개수
 	float m_Duration = 0.f;								// 설치형, 강화형 아이템 지속 시간
@@ -58,6 +64,9 @@ public:
 
 	eItemType GetItemType() { return m_ItemType; }
 	void SetItemType(eItemType itemType) { m_ItemType = itemType; }
+
+	eItemBoxType GetItemBoxType() { return m_ItemBoxType; }
+	void SetItemBoxType(eItemBoxType itemBoxType) { m_ItemBoxType = itemBoxType; }
 
 	int GetDamage() { return m_Damage; }
 	eKeyState GetUsedTiming() { return m_UsedTiming; }

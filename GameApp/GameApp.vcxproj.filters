@@ -137,6 +137,72 @@
     <Filter Include="4. FSM\Player1\State\STUN">
       <UniqueIdentifier>{f994d3f0-8d79-421f-bda9-294f3ac2b644}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3. Object\Spawner\ItemSpawner">
+      <UniqueIdentifier>{cf6624cc-3c18-4122-9300-a859bf7d8f66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player2\State\IDLE">
+      <UniqueIdentifier>{a420e14c-ab85-4bda-9395-e22cd33f9b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player2\State\MOVE">
+      <UniqueIdentifier>{9e7a0645-0a49-46de-8375-bf7a92429c14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player2\State\STUN">
+      <UniqueIdentifier>{3bf136a0-4c79-46d3-85a4-fdca7f70875c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Object\ItemObject\REINFORCED TYPE\TransparencyItem">
+      <UniqueIdentifier>{309d2b2f-99c0-407b-9696-8fa10cbf0e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Object\ItemObject\INSTALLATION TYPE\SnareItem">
+      <UniqueIdentifier>{5d3e89e6-5c3d-4849-b758-1340b8ebae80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Object\ItemObject\THROW TYPE\StungunItem">
+      <UniqueIdentifier>{8009ba12-cf6e-4acf-91aa-12091f6186ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Object\BackgroundObject">
+      <UniqueIdentifier>{0636daf9-521d-42df-b225-8ea46ed4525a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. UI\InGameUI\BarUI">
+      <UniqueIdentifier>{0a955e87-18a0-446f-ac86-ebb8c5439d70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. UI\InGameUI\PopUpUI">
+      <UniqueIdentifier>{cabf979a-dafe-4e71-97d2-16e4fd6ab56c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player3">
+      <UniqueIdentifier>{acebd733-4928-40a2-a066-f6ecbe9dc42e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player4">
+      <UniqueIdentifier>{7b315bae-b7fd-4e0c-baf0-484411d6b350}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player3\State">
+      <UniqueIdentifier>{62659ff2-6009-4eff-8d1b-927333d6b03f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player3\Transition">
+      <UniqueIdentifier>{4284c10f-e867-4d89-9aa1-baead54be115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player4\State">
+      <UniqueIdentifier>{b60abc04-d032-41e4-a8ee-8fc5ad025c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player4\Transition">
+      <UniqueIdentifier>{4ca43e6c-2c87-4d13-83e8-95f2ea19f470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player3\State\IDLE">
+      <UniqueIdentifier>{2e837f74-866e-48c8-b951-fe75b1ac73c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player3\State\MOVE">
+      <UniqueIdentifier>{fa447492-2778-4e3c-ae01-74277ab35cd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player3\State\STUN">
+      <UniqueIdentifier>{93a36653-72e8-46ce-b82d-f77cd5ad156f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player4\State\IDLE">
+      <UniqueIdentifier>{79db4a0d-5183-4929-819b-883b7d30121f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player4\State\MOVE">
+      <UniqueIdentifier>{1f104b07-2ee4-4f04-9eea-a37dc9b5f36b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. FSM\Player4\State\STUN">
+      <UniqueIdentifier>{eae57023-6155-4e13-a5c9-37de7673adaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -187,12 +253,6 @@
     <ClInclude Include="PlayerFSM2.h">
       <Filter>4. FSM\Player2</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerIdleState2.h">
-      <Filter>4. FSM\Player2\State</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerMoveState2.h">
-      <Filter>4. FSM\Player2\State</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerTransition2.h">
       <Filter>4. FSM\Player2\Transition</Filter>
     </ClInclude>
@@ -226,7 +286,7 @@
     <ClInclude Include="ProjectileObject.h">
       <Filter>3. Object\TestObjects</Filter>
     </ClInclude>
-    <ClInclude Include="TrainObstacle.h">
+    <ClInclude Include="Train.h">
       <Filter>3. Object\TrainObject</Filter>
     </ClInclude>
     <ClInclude Include="MoneySpawner.h">
@@ -280,12 +340,99 @@
     <ClInclude Include="TrapItem.h">
       <Filter>3. Object\ItemObject\INSTALLATION TYPE\TrapItem</Filter>
     </ClInclude>
-    <ClInclude Include="ItemSpawner.h" />
     <ClInclude Include="PlayerIdleState1.h">
       <Filter>4. FSM\Player1\State\IDLE</Filter>
     </ClInclude>
     <ClInclude Include="PlayerMoveState1.h">
       <Filter>4. FSM\Player1\State\MOVE</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainPattern.h" />
+    <ClInclude Include="PlayerStunState1.h">
+      <Filter>4. FSM\Player1\State\STUN</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemSpawner.h">
+      <Filter>3. Object\Spawner\ItemSpawner</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerIdleState2.h">
+      <Filter>4. FSM\Player2\State\IDLE</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMoveState2.h">
+      <Filter>4. FSM\Player2\State\MOVE</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStunState2.h">
+      <Filter>4. FSM\Player2\State\STUN</Filter>
+    </ClInclude>
+    <ClInclude Include="TransparencyItem.h">
+      <Filter>3. Object\ItemObject\REINFORCED TYPE\TransparencyItem</Filter>
+    </ClInclude>
+    <ClInclude Include="SnareItem.h">
+      <Filter>3. Object\ItemObject\INSTALLATION TYPE\SnareItem</Filter>
+    </ClInclude>
+    <ClInclude Include="StungunItem.h">
+      <Filter>3. Object\ItemObject\THROW TYPE\StungunItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>3. Object\BackgroundObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Bar1Object.h">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Bar2Object.h">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Bar3Object.h">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Bar4Object.h">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ObstacleObject.h">
+      <Filter>3. Object\BackgroundObject</Filter>
+    </ClInclude>
+    <ClInclude Include="EnviromentObject.h">
+      <Filter>3. Object\BackgroundObject</Filter>
+    </ClInclude>
+    <ClInclude Include="InGamePopUpUI1.h">
+      <Filter>5. UI\InGameUI\PopUpUI</Filter>
+    </ClInclude>
+    <ClInclude Include="InGamePopUpUI2.h">
+      <Filter>5. UI\InGameUI\PopUpUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerFSM3.h">
+      <Filter>4. FSM\Player3</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerTransition3.h">
+      <Filter>4. FSM\Player3\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStunState3.h">
+      <Filter>4. FSM\Player3\State\STUN</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMoveState3.h">
+      <Filter>4. FSM\Player3\State\MOVE</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerIdleState3.h">
+      <Filter>4. FSM\Player3\State\IDLE</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerFSM4.h">
+      <Filter>4. FSM\Player4</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerIdleState4.h">
+      <Filter>4. FSM\Player4\State\IDLE</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMoveState4.h">
+      <Filter>4. FSM\Player4\State\MOVE</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStunState4.h">
+      <Filter>4. FSM\Player4\State\STUN</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerTransition4.h">
+      <Filter>4. FSM\Player4\Transition</Filter>
+    </ClInclude>
+    <ClInclude Include="TrafficObject.h">
+      <Filter>3. Object\TrainObject</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameResultPopUp.h">
+      <Filter>5. UI\InGameUI\PopUpUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -341,12 +488,6 @@
     <ClCompile Include="PlayerFSM2.cpp">
       <Filter>4. FSM\Player2</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerIdleState2.cpp">
-      <Filter>4. FSM\Player2\State</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerMoveState2.cpp">
-      <Filter>4. FSM\Player2\State</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerTransition2.cpp">
       <Filter>4. FSM\Player2\Transition</Filter>
     </ClCompile>
@@ -380,7 +521,7 @@
     <ClCompile Include="ProjectileObject.cpp">
       <Filter>3. Object\TestObjects</Filter>
     </ClCompile>
-    <ClCompile Include="TrainObstacle.cpp">
+    <ClCompile Include="Train.cpp">
       <Filter>3. Object\TrainObject</Filter>
     </ClCompile>
     <ClCompile Include="TrainSpawner.cpp">
@@ -434,12 +575,99 @@
     <ClCompile Include="TrapItem.cpp">
       <Filter>3. Object\ItemObject\INSTALLATION TYPE\TrapItem</Filter>
     </ClCompile>
-    <ClCompile Include="ItemSpawner.cpp" />
     <ClCompile Include="PlayerIdleState1.cpp">
       <Filter>4. FSM\Player1\State\IDLE</Filter>
     </ClCompile>
     <ClCompile Include="PlayerMoveState1.cpp">
       <Filter>4. FSM\Player1\State\MOVE</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainPattern.cpp" />
+    <ClCompile Include="PlayerStunState1.cpp">
+      <Filter>4. FSM\Player1\State\STUN</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemSpawner.cpp">
+      <Filter>3. Object\Spawner\ItemSpawner</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerIdleState2.cpp">
+      <Filter>4. FSM\Player2\State\IDLE</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMoveState2.cpp">
+      <Filter>4. FSM\Player2\State\MOVE</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStunState2.cpp">
+      <Filter>4. FSM\Player2\State\STUN</Filter>
+    </ClCompile>
+    <ClCompile Include="TransparencyItem.cpp">
+      <Filter>3. Object\ItemObject\REINFORCED TYPE\TransparencyItem</Filter>
+    </ClCompile>
+    <ClCompile Include="SnareItem.cpp">
+      <Filter>3. Object\ItemObject\INSTALLATION TYPE\SnareItem</Filter>
+    </ClCompile>
+    <ClCompile Include="StungunItem.cpp">
+      <Filter>3. Object\ItemObject\THROW TYPE\StungunItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>3. Object\BackgroundObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Bar1Object.cpp">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Bar2Object.cpp">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Bar3Object.cpp">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Bar4Object.cpp">
+      <Filter>5. UI\InGameUI\BarUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ObstacleObject.cpp">
+      <Filter>3. Object\BackgroundObject</Filter>
+    </ClCompile>
+    <ClCompile Include="EnviromentObject.cpp">
+      <Filter>3. Object\BackgroundObject</Filter>
+    </ClCompile>
+    <ClCompile Include="InGamePopUpUI1.cpp">
+      <Filter>5. UI\InGameUI\PopUpUI</Filter>
+    </ClCompile>
+    <ClCompile Include="InGamePopUpUI2.cpp">
+      <Filter>5. UI\InGameUI\PopUpUI</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFSM3.cpp">
+      <Filter>4. FSM\Player3</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerTransition3.cpp">
+      <Filter>4. FSM\Player3\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStunState3.cpp">
+      <Filter>4. FSM\Player3\State\STUN</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMoveState3.cpp">
+      <Filter>4. FSM\Player3\State\MOVE</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerIdleState3.cpp">
+      <Filter>4. FSM\Player3\State\IDLE</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFSM4.cpp">
+      <Filter>4. FSM\Player4</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerIdleState4.cpp">
+      <Filter>4. FSM\Player4\State\IDLE</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMoveState4.cpp">
+      <Filter>4. FSM\Player4\State\MOVE</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStunState4.cpp">
+      <Filter>4. FSM\Player4\State\STUN</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerTransition4.cpp">
+      <Filter>4. FSM\Player4\Transition</Filter>
+    </ClCompile>
+    <ClCompile Include="TrafficObject.cpp">
+      <Filter>3. Object\TrainObject</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameResultPopUp.cpp">
+      <Filter>5. UI\InGameUI\PopUpUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

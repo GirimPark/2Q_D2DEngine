@@ -17,9 +17,6 @@ bool FSMState::CheckTransition()
 		std::wstring nextStateName = (*transition)().first;
 		m_Direction = (*transition)().second;
 
-		// Move->Move 예외처리...
-
-
 		if (!nextStateName.empty())
 		{
 			// state 목록에서 find

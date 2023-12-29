@@ -51,15 +51,26 @@ CommonApp::~CommonApp()
 // 윈도우 정보는 게임마다 다르기 때문에 윈도우 등록, 생성, 보이기만 한다.
 bool CommonApp::Initialize()
 {
-    // 등록
+    /// 윈도우 설정
+
+	// 등록
     RegisterClassExW(&m_wcex);
 
-    RECT rt = { 0, 0, ScreenWidth, ScreenHeight };
-    AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true);
-    // 생성
-    m_hWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_OVERLAPPEDWINDOW,
-        100, 100,                                   // 시작 위치
-        rt.right - rt.left, rt.bottom - rt.top,     // 가로, 세로
+    const RECT rt = { 0, 0, ScreenWidth, ScreenHeight };
+    // AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true);
+
+    // 화면 크기를 기준으로 윈도우를 가운데에 띄운다
+    const int screenCenterX = GetSystemMetrics(SM_CXSCREEN) / 2;
+    const int screenCenterY = GetSystemMetrics(SM_CYSCREEN) / 2;
+    const int windowWidth = rt.right - rt.left;
+    const int windowHeight = rt.bottom - rt.top;
+    const int startX = screenCenterX - windowWidth / 2;
+    const int startY = screenCenterY - windowHeight / 2;
+
+    // 윈도우 생성
+    m_hWnd = CreateWindowW(m_szWindowClass, m_szTitle, WS_POPUP,
+        startX, startY,                       // 시작 위치
+        rt.right - rt.left, rt.bottom - rt.top,                     // 가로, 세로
         nullptr, nullptr, m_hInstance, nullptr);
 
     if (!m_hWnd)
@@ -76,6 +87,36 @@ bool CommonApp::Initialize()
     ShowWindow(m_hWnd, SW_SHOW);
     UpdateWindow(m_hWnd);
 
+    /// 콘솔창 설정
+
+    /*
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(hConsole, &csbi);
+    COORD bufferSize;
+    bufferSize.X = 80; // 너가 원하는 너비
+    bufferSize.Y = 40; // 너가 원하는 높이
+    SetConsoleScreenBufferSize(hConsole, bufferSize);
+    SMALL_RECT windowSize;
+    windowSize.Left = 0;
+    windowSize.Top = 0;
+    windowSize.Right = bufferSize.X - 1;
+    windowSize.Bottom = bufferSize.Y - 1;
+    SetConsoleWindowInfo(hConsole, TRUE, &windowSize);
+
+    HWND consoleWindow = GetConsoleWindow();
+
+    RECT consoleRect;
+    GetWindowRect(consoleWindow, &consoleRect);
+
+    int consoleWidth = consoleRect.right - consoleRect.left;
+    int consoleHeight = consoleRect.bottom - consoleRect.top;
+
+    int startX_2 = screenCenterX - consoleWidth / 2;
+    int startY_2 = screenCenterY - consoleHeight / 2;
+    SetWindowPos(consoleWindow, NULL, startX_2, startY_2, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
+    */
+
     // 렌더러 등록
     HRESULT hr = m_pD2DRenderer->Initialize();
     if (FAILED(hr))
@@ -89,11 +130,9 @@ bool CommonApp::Initialize()
     // 월드 매니저 생성
     m_pWorldManager = new WorldManager;
 
-    // 사운드 매니저 생성
-    m_pSoundManager = new SoundManager;
-
     m_TimeManager.Initialize();
     InputManager::GetInstance()->Initialize();
+    SoundManager::GetInstance()->Initialize();
 
     return true;
 }
@@ -132,10 +171,10 @@ void CommonApp::Update()
 
 void CommonApp::Finalize()
 {
-    delete m_pSoundManager;
-
     // 모든 월드 인스턴스 제거
     m_pWorldManager->Finalize();
+
+    SoundManager::GetInstance()->Finalize();
 
     InputManager::GetInstance()->Finalize();
 
@@ -145,7 +184,7 @@ void CommonApp::Finalize()
 
 BOOL CommonApp::GetClientRect(LPRECT lpRect)
 {
-    return ::GetClientRect(m_hWnd, lpRect);
+    return ::GetWindowRect(m_hWnd, lpRect);
 }
 
 int CommonApp::MessageBoxComError(HRESULT hr)
@@ -177,4 +216,3 @@ LRESULT CommonApp::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 
     return 0;
 }
-

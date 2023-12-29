@@ -2,6 +2,9 @@
 #include "PanelUI.h"
 
 #include "CommonApp.h"
+#include "Event.h"
+#include "EventManager.h"
+#include "TextureComponent.h"
 
 bool PanelUI::Initialize()
 {
@@ -23,14 +26,15 @@ void PanelUI::Update(const float deltaTime)
 
 void PanelUI::Render(ID2D1RenderTarget* pRenderTarget)
 {
-	CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);
-	m_FinalTransform = m_WorldTransform * GetCameraTransform();
-	pRenderTarget->SetTransform(m_FinalTransform);
+	//CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);
+	//m_FinalTransform = m_WorldTransform * GetCameraTransform();
+	//pRenderTarget->SetTransform(m_FinalTransform);
 
-	pRenderTarget->DrawRectangle(
-		D2D1::RectF(-m_Width / 2, -m_Height / 2, m_Width / 2, m_Height / 2),
-		CommonApp::m_pInstance->GetBrush(),
-		2.f);
+	//pRenderTarget->DrawRectangle(
+	//	D2D1::RectF(-m_Width / 2, -m_Height / 2, m_Width / 2, m_Height / 2),
+	//	CommonApp::m_pInstance->GetBrush(),
+	//	2.f);
 
-	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+	//pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }
+

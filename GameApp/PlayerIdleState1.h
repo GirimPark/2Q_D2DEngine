@@ -9,6 +9,7 @@ class PlayerIdleState1
 {
 private:
 	IdleToMove1 m_IdleToMove;
+	StateToStun1 m_IdleToStun;
 
 public:
 	PlayerIdleState1();

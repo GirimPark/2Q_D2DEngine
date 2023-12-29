@@ -53,9 +53,11 @@ void CollisionManager::CollisionGroupUpdate(const std::vector<GameObject*>& this
 	// thisGroup 순회
 	for (UINT i = 0; i < thisGroup.size(); ++i)
 	{
+		// thisGroup의 모든 충돌체를 가져온다
 		const std::vector<Collider2D*> thisColliders = thisGroup[i]->GetComponents<Collider2D>();
 		for(Collider2D* thisCollider : thisColliders)
 		{
+			// 충돌체를 찾지 못했으면 다음 충돌체로 넘어간다
 			if (!thisCollider)
 				continue;
 
@@ -69,43 +71,49 @@ void CollisionManager::CollisionGroupUpdate(const std::vector<GameObject*>& this
 				if (thisGroup[i] == otherGroup[j])
 					continue;
 
+				// otherGroup의 모든 충돌체를 가져온다
 				const std::vector<Collider2D*> otherColliders = otherGroup[j]->GetComponents<Collider2D>();
 				for (Collider2D* otherCollider : otherColliders)
 				{
+					// 충돌체를 찾지 못했으면 다음 충돌체로 넘어간다
 					if (!otherCollider)
 						continue;
 
 					/// 두 충돌체 아이디 생성 left + right
 					COLLIDER_ID colliderID = {};
 
-					// 두 충돌체의 ID를 가져온다 -> left와 right의 ID를 바탕으로 ID를 생성한다 (같은 메모리공간 사용)
+					// 두 충돌체의 ID를 가져온다 -> left와 right의 ID를 바탕으로 ID를 생성한다 (Union : 같은 메모리공간 사용)
 					colliderID.left_ID = thisCollider->GetID();
 					colliderID.right_ID = otherCollider->GetID();
 
 					// 충돌체의 ID를 찾는다
-					auto iter = m_mapCollisionInfo.find(colliderID.ID);
+					std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter = m_mapCollisionInfo.find(colliderID.ID);
 
 					// 충돌 ID가 없으면 새로 생성
 					if (m_mapCollisionInfo.end() == iter)
 					{
 						// map에 충돌 ID, 충돌 여부를 저장
 						m_mapCollisionInfo.insert(std::make_pair(colliderID.ID, false));
+
 						// 충돌 ID의 Iterator를 가져온다
 						iter = m_mapCollisionInfo.find(colliderID.ID);
 					}
 
-					/// iter->second : 두 충돌체 사이의 충돌 여부
+					////////////////////////////////////////////////////////////////////////////////////
+					//					iter->second : 두 충돌체 사이의 충돌 여부						  //
+					////////////////////////////////////////////////////////////////////////////////////
 
 					// 두 콜라이더가 충돌한 경우
 					if (thisCollider->CheckIntersect(otherCollider))
 					{
-						// 충돌 타입이 Collision인 경우 // But 하나라도 NONE이면 충돌 X
-						if ((thisCollider->m_CollisionType == COLLISION_TPYE::COLLISION && otherCollider->m_CollisionType == COLLISION_TPYE::COLLISION) &&
-								(thisCollider->m_CollisionType != COLLISION_TPYE::NONE && otherCollider->m_CollisionType != COLLISION_TPYE::NONE))
+						// 충돌 타입이 Collision인 경우 충돌하지만 But 하나라도 NONE이면 충돌 X
+						if ((thisCollider->m_CollisionType == COLLISION_TYPE::COLLISION && otherCollider->m_CollisionType == COLLISION_TYPE::COLLISION) &&
+								(thisCollider->m_CollisionType != COLLISION_TYPE::NONE && otherCollider->m_CollisionType != COLLISION_TYPE::NONE))
 						{
 							// 이미 충돌해 있는 경우
 							if (iter->second)
 							{
+								// IsCollision = true
 								thisCollider->TurnOn_IsCollision(otherCollider);
 
 								iter->second = true;
@@ -116,21 +124,25 @@ void CollisionManager::CollisionGroupUpdate(const std::vector<GameObject*>& this
 							// 처음 충돌하는 경우
 							else
 							{
+								// IsCollision = true
 								thisCollider->TurnOn_IsCollision(otherCollider);
 
-								thisCollider->OnCollisionEnter(otherCollider);
-								otherCollider->OnCollisionEnter(thisCollider);
-
 								iter->second = true;
+
+								thisCollider->OnCollisionEnter(thisCollider, otherCollider, iter);
+								otherCollider->OnCollisionEnter(otherCollider, thisCollider, iter);
 							}
 
 							// A 콜라이더->ProcessBlock(B 콜라이더) : A 콜라이더는 B 콜라이더에 대해 "밀려난다"
 							thisCollider->ProcessBlock(otherCollider);
-							//otherCollider->ProcessBlock(thisCollider);
+
+							// 플레이어끼리 밀리도록
+							if(thisCollider->GetOwner()->GetGroupType() == GROUP_TYPE::PLAYER && otherCollider->GetOwner()->GetGroupType() == GROUP_TYPE::PLAYER)
+								otherCollider->ProcessBlock(thisCollider);
 						}
 						// 충돌 타입이 Trigger인 경우 (한 콜라이더라도 TRIGGER면 트리거 발동)
-						else if ((thisCollider->m_CollisionType == COLLISION_TPYE::TRIGGER || otherCollider->m_CollisionType == COLLISION_TPYE::TRIGGER) &&
-									(thisCollider->m_CollisionType != COLLISION_TPYE::NONE && otherCollider->m_CollisionType != COLLISION_TPYE::NONE))
+						else if ((thisCollider->m_CollisionType == COLLISION_TYPE::TRIGGER || otherCollider->m_CollisionType == COLLISION_TYPE::TRIGGER) &&
+									(thisCollider->m_CollisionType != COLLISION_TYPE::NONE && otherCollider->m_CollisionType != COLLISION_TYPE::NONE))
 						{
 							// 이미 충돌해 있는 경우
 							if (iter->second)
@@ -149,17 +161,17 @@ void CollisionManager::CollisionGroupUpdate(const std::vector<GameObject*>& this
 
 								iter->second = true;
 
-								thisCollider->OnTriggerEnter(otherCollider);
-								otherCollider->OnTriggerEnter(thisCollider);
+								thisCollider->OnTriggerEnter(thisCollider, otherCollider, iter);
+								otherCollider->OnTriggerEnter(otherCollider, thisCollider, iter);
 							}
 						}
 					}
 					// 두 콜라이더가 충돌하지 않은 경우
 					else
 					{
-						// 충돌 타입이 Collision인 경우
-						if ((thisCollider->m_CollisionType == COLLISION_TPYE::COLLISION && otherCollider->m_CollisionType == COLLISION_TPYE::COLLISION) &&
-								(thisCollider->m_CollisionType != COLLISION_TPYE::NONE && otherCollider->m_CollisionType != COLLISION_TPYE::NONE))
+						// 둘 다 충돌 타입이 Collision인 경우 + 둘 다 NONE이 아닌 경우
+						if ((thisCollider->m_CollisionType == COLLISION_TYPE::COLLISION && otherCollider->m_CollisionType == COLLISION_TYPE::COLLISION) &&
+								(thisCollider->m_CollisionType != COLLISION_TYPE::NONE && otherCollider->m_CollisionType != COLLISION_TYPE::NONE))
 						{
 							// 이미 충돌해 있었던 경우
 							if (iter->second)
@@ -171,14 +183,15 @@ void CollisionManager::CollisionGroupUpdate(const std::vector<GameObject*>& this
 								thisCollider->OnCollisionExit(otherCollider);
 								otherCollider->OnCollisionExit(thisCollider);
 							}
+							// 원래도 충돌하지 않았던 경우
 							else
 							{
 								iter->second = false;
 							}
 						}
 						// 충돌 타입이 Trigger인 경우
-						else if ((thisCollider->m_CollisionType == COLLISION_TPYE::TRIGGER || otherCollider->m_CollisionType == COLLISION_TPYE::TRIGGER) &&
-									(thisCollider->m_CollisionType != COLLISION_TPYE::NONE && otherCollider->m_CollisionType != COLLISION_TPYE::NONE))
+						else if ((thisCollider->m_CollisionType == COLLISION_TYPE::TRIGGER || otherCollider->m_CollisionType == COLLISION_TYPE::TRIGGER) &&
+									(thisCollider->m_CollisionType != COLLISION_TYPE::NONE && otherCollider->m_CollisionType != COLLISION_TYPE::NONE))
 						{
 							// 이미 충돌해 있었던 경우
 							if (iter->second)
@@ -190,6 +203,7 @@ void CollisionManager::CollisionGroupUpdate(const std::vector<GameObject*>& this
 								thisCollider->OnTriggerExit(otherCollider);
 								otherCollider->OnTriggerExit(thisCollider);
 							}
+							// 원래도 충돌하지 않았던 경우
 							else
 							{
 								iter->second = false;

@@ -9,6 +9,8 @@
 
 bool Spawner::Initialize()
 {
+	m_elapsedTimeList.resize(m_maxCount,-1);
+
 	__super::Initialize();
 
 	return true;

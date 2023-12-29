@@ -24,11 +24,11 @@ public:
 	bool Initialize() final;
 	void Update(const float deltaTime) final;
 
-	void OnCollisionEnter(Collider2D* otherCollision) override;
+	void OnCollisionEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) override;
 	void OnCollisionStay(Collider2D* otherCollision) override;
 	void OnCollisionExit(Collider2D* otherCollision) override;
 
-	void OnTriggerEnter(Collider2D* otherCollision) override;
+	void OnTriggerEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) override;
 	void OnTriggerStay(Collider2D* otherCollision) override;
 	void OnTriggerExit(Collider2D* otherCollision) override;
 };

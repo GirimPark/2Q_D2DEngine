@@ -6,14 +6,34 @@
 #include "SceneComponent.h"
 #include "EventManager.h"
 
-inline int ConvertToRaw(const float& value)
+void PlayerMovement::KeyDirControl()
 {
-	if (value > 0) return 1;
-	else if (value < 0) return -1;
-	else return 0;
+	// MoveDir과 LookDir을 키보드 입력값으로 설정한다
+
+	const float xInupt = InputManager::GetInstance()->GetAxisRaw("Horizontal");
+	const float yInupt = InputManager::GetInstance()->GetAxisRaw("Vertical");
+
+	m_MoveDir = { xInupt, yInupt };
+	m_MoveDir.Normalize();
+
+	// 마지막 LookDir을 보관하는 방법??
+
+	const framework::Vector2D vec = { xInupt, yInupt };
+
+	// 입력이 있을때만 LookDir을 설정한다
+	if(vec.Length() >= 0.1f)
+		m_LookDir = { xInupt, yInupt };
+
+	m_LookDir.Normalize();
 }
 
-void PlayerMovement::MoveControl(int controllerIndex)
+void PlayerMovement::TotalDirControl(int controllerIndex)
+{
+	MoveDirControl(controllerIndex);
+	LookDirControl(controllerIndex);
+}
+
+void PlayerMovement::MoveDirControl(int controllerIndex)
 {
 	// 이전 이동 방향을 기록
 	m_PrevMoveDir = m_MoveDir;
@@ -43,7 +63,7 @@ void PlayerMovement::MoveControl(int controllerIndex)
 	}
 }
 
-void PlayerMovement::DirectionControl(int controllerIndex)
+void PlayerMovement::LookDirControl(int controllerIndex)
 {
 	// 오른쪽 스틱 입력값
 	const framework::Vector2D rawThumbRight = InputManager::GetPadAxisRightThumb(controllerIndex);
@@ -59,151 +79,108 @@ void PlayerMovement::DirectionControl(int controllerIndex)
 	m_LookDir.Normalize();
 }
 
-void PlayerMovement::ApplyFriction()
+void PlayerMovement::PlayerMove(float deltaTime)
 {
-	// 마찰 계수 (0 ~ 1 사이의 값)
-	// constexpr float frictionCoefficient = 0.995f; // 느리게 멈춤
-	constexpr float frictionCoefficient = 0.995f; // 빠르게 멈춤 (등속도 처럼)
+	/// 입력 방향이 바뀌면 빨리 반대로 갈 수 있도록
+	if (std::signbit(m_PrevMoveDir.x * m_MoveDir.x))
+		m_OriginalVelocity.x = 0.f;
+	if (std::signbit(m_PrevMoveDir.y * m_MoveDir.y))
+		m_OriginalVelocity.y = 0.f;
 
-	// 마찰력 적용
-	m_Velocity.x *= frictionCoefficient;
-	m_Velocity.y *= frictionCoefficient;
+	/// 가속도 (속도의 변화율) 계산
+	m_OriginalAccel =  m_MoveDir * m_OriginalAccelSpeed * m_ReverseCoefficient;			// 입력값에 따른 오리지널 가속도
+	m_TotalAccel = m_OriginalAccel + m_ExternalAccel;									// 오리지널 가속도 + 외부 가속도 = 최종 가속도
+
+	/// 속도 (위치의 변화율) 계산
+	m_OriginalVelocity += m_TotalAccel * deltaTime;										// 속도 = 속도 + 가속도 * 시간
+
+	// m_OriginalVelocity Limit
+	m_OriginalVelocity.Limit(m_OriginalVelocityLimit);									// 오리지널 속도 제한
+
+	// m_ExternalVelocity Limit
+	m_ExternalVelocity.Limit(m_ExternalVelocityLimit);									// 외부 속도 제한
+
+	m_TotalVelocity = m_OriginalVelocity + m_ExternalVelocity;							// 오리지널 속도 + 외부 속도 = 최종 속도
+
+	// 이동 입력 없으면 마찰력 작용
+	if (m_MoveDir == framework::Vector2D::Zero())
+		OriginalFriction(deltaTime);
+
+	// 외부 속도에 대한 마찰력은 항시 작동
+	ExternalFriction(deltaTime);
+
+	// 변화되는 속도로 플레이어를 이동
+	m_pOwner->GetRootComponent()->AddRelativeLocation(m_TotalVelocity * deltaTime);
 }
 
-void PlayerMovement::AddForce(framework::Vector2D vec)
+void PlayerMovement::OriginalFriction(float deltaTime)
 {
-	m_Velocity += vec;
+	// OriginalFriction
+	if (m_OriginalVelocity.Length() <= 50.f)
+		m_OriginalVelocity = framework::Vector2D::Zero();
+	else
+	{
+		const framework::Vector2D friction1 = m_OriginalVelocity.GetNormalize() * (-1) * m_OriginalAccelSpeed;
+		m_OriginalVelocity += friction1 * deltaTime;
+	}
 }
 
-/// <summary>
-/// 컨트롤러 기능 테스트
-/// </summary>
-/// <param name="controllerIndex"></param>
-void PlayerMovement::XInputTestFunc(int controllerIndex)
+void PlayerMovement::ExternalFriction(float deltaTime)
 {
-	/*
-	/// A B X Y Input Test
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::A))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 A 버튼 PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::A))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 A 버튼 END" << std::endl;
-
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::B))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 B 버튼 PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::B))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 B 버튼 END" << std::endl;
-
-	/// L1 R1 Input Test
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::L1))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 L1 버튼 PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::L1))
+	// ExternalFriction
+	if (m_ExternalVelocity.Length() <= 50.f)
+		m_ExternalVelocity = framework::Vector2D::Zero();
+	else
 	{
-		std::cout << std::to_string(controllerIndex + 1) << "P의 L1 버튼 END" << std::endl;
-		InputManager::SetControllerVib(controllerIndex, 0, 0);
+		const framework::Vector2D friction2 = m_ExternalVelocity.GetNormalize() * (-1) * m_ExternalAccelSpeed;
+		m_ExternalVelocity += friction2 * deltaTime;
 	}
+}
 
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::R1))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 R1 버튼 PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::R1))
+void PlayerMovement::KnockBack(framework::Vector2D dir, float power)
+{
+	m_ExternalVelocity = dir * power;
+}
+
+void PlayerMovement::ReverseMove()
+{
+	if (!m_IsReverseMove)
 	{
-		std::cout << std::to_string(controllerIndex + 1) << "P의 R1 버튼 END" << std::endl;
-		InputManager::SetControllerVib(controllerIndex, 0, 0);
+		m_ReverseCoefficient = -1.f;
+		m_IsReverseMove = true;
 	}
-
-	/// L3 R3 Input Test
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::L3))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 L3 PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::L3))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 L3 END" << std::endl;
-
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::R3))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 R3 PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::R3))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 R3 END" << std::endl;
-
-	/// START BACK Input Test
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::START))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 START PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::START))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 START END" << std::endl;
-
-	if (InputManager::GetInstance()->IsPadButtonPush(controllerIndex, GamePadButtonCode::BACK))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 BACK PUSH" << std::endl;
-	else if (InputManager::GetInstance()->IsPadButtonEnd(controllerIndex, GamePadButtonCode::BACK))
-		std::cout << std::to_string(controllerIndex + 1) << "P의 BACK END" << std::endl;
-
-	/// L2 R2 Trigger Input Test
-	const float triggerL = InputManager::GetPadAxisLeftTrigger(controllerIndex);
-	const float triggerR = InputManager::GetPadAxisRightTrigger(controllerIndex);
-
-	if (triggerL > 0.2f || triggerR > 0.2f)
+	else
 	{
-		InputManager::SetControllerVib(controllerIndex, static_cast<WORD>(triggerL * 65535),
-			static_cast<WORD>(triggerR * 65535));
+		m_ReverseCoefficient = 1.f;
+		m_IsReverseMove = false;
 	}
-	*/
-
-	/*-----------------------------------------------------------------------------------
-	-------------------------------------------------------------------------------------
-
-			여기서부터 Movement 관련 함수 코드이고 위의 내용은 Input Test Code
-
-	-------------------------------------------------------------------------------------
-	-----------------------------------------------------------------------------------*/
-
-	MoveControl(controllerIndex);
-	DirectionControl(controllerIndex);
 }
 
 void PlayerMovement::Update(const float deltaTime)
 {
-	// 플레이어가 죽어있으면 PlayerMovement가 동작하지 않는다
-	if (m_pOwner->IsDead())
+	// 활성화 상태 아니면 아무것도 하지 않는다
+	if (!m_IsActive)
 		return;
 
 	// 1P ~ 4P까지의 컨트롤러 입력을 받아온다
 	if (m_pOwner->GetName() == L"Player1")
-		XInputTestFunc(0);
-	else if (m_pOwner->GetName() == L"Player2")
-		XInputTestFunc(1);
-	else if (m_pOwner->GetName() == L"Player3")
-		XInputTestFunc(2);
-	else if (m_pOwner->GetName() == L"Player4")
-		XInputTestFunc(3);
-
-	/*
-	/// 입력 방향이 바뀌면 빨리 반대로 갈 수 있도록
-	if (std::signbit(m_PrevMoveDir.x * m_MoveDir.x))
-		m_Velocity.x = 0.f;
-	if (std::signbit(m_PrevMoveDir.y * m_MoveDir.y))
-		m_Velocity.y = 0.f;
-
-	/// 1번 후보 (이걸로 하는게 맞는듯,,,?)
-	m_Velocity.x += m_MoveDir.x * m_AccelSpeed * deltaTime;
-	m_Velocity.y += m_MoveDir.y * m_AccelSpeed * deltaTime;
-
-	/// Velocity Limit
-	m_Velocity.Limit(400.f);
-
-	if (m_pOwner->GetName() == L"Player1")
 	{
-		if (InputManager::GetInstance()->IsPadButtonPush(0, GamePadButtonCode::R3))
+		TotalDirControl(0);
+
+		// 컨트롤러가 연결되어 있지만, 왼쪽 스틱과 오른쪽 스틱 모두 입력이 없는 경우에 키보드로 실행
+		if((InputManager::GetPadAxisLeftThumb(0).Length() < 0.001f) && (InputManager::GetPadAxisRightThumb(0).Length() < 0.001f))
 		{
-			const framework::Vector2D temp = { 3000.f, 3000.f };
-			AddForce(temp);
+			KeyDirControl();
 		}
 	}
+	else if (m_pOwner->GetName() == L"Player2")
+		TotalDirControl(1);
+	else if (m_pOwner->GetName() == L"Player3")
+		TotalDirControl(2);
+	else if (m_pOwner->GetName() == L"Player4")
+		TotalDirControl(3);
 
-	/// 이동 입력 없으면 마찰력 작용
-	// if (m_MoveDir == framework::Vector2D::Zero())
-	// 	ApplyFriction();
-	*/
-
-	// 속도 벡터 계산
-	m_Velocity = m_MoveDir * m_MoveSpeed;
-
-	// 플레이어 이동
-	m_pOwner->GetRootComponent()->AddRelativeLocation(m_Velocity * deltaTime);
+	PlayerMove(deltaTime);
 
 	/// Transition에 정보 전달
 	const framework::EVENT_MOVEMENT_INFO movementInfo = { m_MoveDir, m_LookDir };

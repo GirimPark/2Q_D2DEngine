@@ -18,11 +18,11 @@ public:
 	void SetExtend(float x, float y);
 
 public:
-	void OnCollisionEnter(Collider2D* otherCollision) final;
+	void OnCollisionEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) final;
 	void OnCollisionStay(Collider2D* otherCollision) final;
 	void OnCollisionExit(Collider2D* otherCollision) final;
 
-	void OnTriggerEnter(Collider2D* otherCollision) final;
+	void OnTriggerEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) final;
 	void OnTriggerStay(Collider2D* otherCollision) final;
 	void OnTriggerExit(Collider2D* otherCollision) final;
 

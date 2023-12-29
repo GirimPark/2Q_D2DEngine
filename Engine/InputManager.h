@@ -36,6 +36,8 @@ enum eKeyCode
 	RIGHT = VK_RIGHT,	  // 오른쪽 화살표 키
 	DOWN = VK_DOWN,		  // 아래쪽 화살표 키
 
+	F5 = VK_F5,			  // 디버깅 출력
+
 	A = 65,
 	B,
 	C,
@@ -143,6 +145,17 @@ private:
 	POINT m_mousePos;
 
 private:
+	// HMODULE hX1nput;
+	// typedef void (*MyFunctionType)();
+	// MyFunctionType MyFunction;
+
+private:
+	static bool m_bDebugRendering;
+
+public:
+	static bool IsDebugRendering() { return m_bDebugRendering; }
+
+private:
 	std::vector<int> m_PadButtonList;
 	GamePadButtonInfo m_PadState[4][static_cast<int>(GamePadButtonCode::XINPUT_BUTTON_COUNT)];
 
@@ -190,6 +203,23 @@ public:
 		// 해당 인덱스의 컨트롤러에 진동을 적용
 		XInputSetState(controllerIndex, &vibration);
 		return vibration;
+	}
+
+	// TODO : 모든 컨드롤러 진동 기능
+	static void SetAllControllerVib(WORD leftMotorSpeed, WORD rightMotorSpeed)
+	{
+		for (DWORD i = 0; i < GetMaxControllerCount(); i++)
+		{
+			XINPUT_VIBRATION vibration;
+			ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
+
+			// 최대값은 65535
+			vibration.wLeftMotorSpeed = leftMotorSpeed;  // 왼쪽 모터의 진동 속도
+			vibration.wRightMotorSpeed = rightMotorSpeed; // 오른쪽 모터의 진동 속도
+
+			// 해당 인덱스의 컨트롤러에 진동을 적용
+			XInputSetState(i, &vibration);
+		}
 	}
 
 	// 연결되어있는 컨트롤러의 개수 가져오기

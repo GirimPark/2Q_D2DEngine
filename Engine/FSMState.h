@@ -16,7 +16,7 @@ protected:
 
 	std::wstring m_StateName;
 	std::vector<FSMTransition*> m_Transitions;
-	framework::Vector2D m_Direction;	// 애니메이션 방향
+	framework::Vector2D m_Direction = {0.f, 1.f};	// 애니메이션 방향
 
 public:
 	virtual ~FSMState() { }

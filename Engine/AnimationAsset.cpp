@@ -3,7 +3,7 @@
 #include "CommonApp.h"
 #include <codecvt>
 #include <fstream>
-//#include "nlohmann/json.hpp"
+#include "nlohmann/json.hpp"
 
 AnimationAsset::AnimationAsset()
 	: m_pBitmap(nullptr)
@@ -29,7 +29,7 @@ void AnimationAsset::SetBitmapFilePath(const WCHAR* szFilePath)
 
 void AnimationAsset::Save(const WCHAR* szFilePath) const
 {
-	/*nlohmann::ordered_json obj;
+	nlohmann::ordered_json obj;
 	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 	obj["m_BitmapFilePath"] = converter.to_bytes(szFilePath);
 
@@ -56,12 +56,12 @@ void AnimationAsset::Save(const WCHAR* szFilePath) const
 
 	std::ofstream ofs(szFilePath);
 	ofs << obj.dump(2);
-	ofs.close();*/
+	ofs.close();
 }
 
 bool AnimationAsset::Load(const WCHAR* szFilePath)
 {
-	/*std::ifstream ifs(szFilePath, std::ios::in);
+	std::ifstream ifs(szFilePath, std::ios::in);
 	if (!ifs.is_open())
 	{
 		return false;
@@ -87,7 +87,5 @@ bool AnimationAsset::Load(const WCHAR* szFilePath)
 		}
 		m_Animations.insert({ animationName, frameVec });
 	}
-	return true;*/
-
 	return true;
 }

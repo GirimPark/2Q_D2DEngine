@@ -43,7 +43,7 @@ void ChaeWorld::Finalize()
 
 void ChaeWorld::Enter()
 {
-	std::cout << "ChaeWorld Enter" << std::endl;
+	// std::cout << "ChaeWorld Enter" << std::endl;
 
 	EventManager::GetInstance()->RegisterListener(eEventType::ChangeWorld, dynamic_cast<EventListener*>(this));
 	EventManager::GetInstance()->RegisterListener(eEventType::PauseOn, dynamic_cast<EventListener*>(this));
@@ -58,7 +58,7 @@ void ChaeWorld::Enter()
 
 void ChaeWorld::Exit()
 {
-	std::cout << "ChaeWorld Exit" << std::endl;
+	// std::cout << "ChaeWorld Exit" << std::endl;
 
 	this->Finalize();
 }
@@ -74,12 +74,12 @@ void ChaeWorld::HandleEvent(Event* event)
 	else if (event->eventID == eEventType::PauseOn)
 	{
 		this->SetWorldPauseState(true);
-		printf("못 움직인다.");
+		// printf("못 움직인다.");
 	}
 	else if (event->eventID == eEventType::PauseOff)
 	{
 		this->SetWorldPauseState(false);
-		printf("움직인다.");
+		// printf("움직인다.");
 		m_pPopUpUIObject2->SetPopUpState(false);
 		m_pPopUpUIObject1->SetPopUpState(false);
 		m_pPopUpUIObject1->SetActiveObj(false);

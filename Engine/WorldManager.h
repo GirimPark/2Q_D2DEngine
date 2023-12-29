@@ -33,4 +33,6 @@ private:
 
 	World* m_currentWorld = nullptr;
 	World* m_prevWorld = nullptr;
+
+	bool m_bPaused = false;
 };

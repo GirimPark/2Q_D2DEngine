@@ -17,6 +17,9 @@ protected:
 public:
 	const D2D_MATRIX_3X2_F GetCameraTransform() const { return CameraComponent::m_CameraTransform; }
 
+	void SetVisible(bool isVisible) { m_bVisible = isVisible; }
+	bool GetVisible() { return m_bVisible; }
+
 public:
 	virtual void Render(ID2D1RenderTarget* pRenderTarget) abstract;
 };

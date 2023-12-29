@@ -10,5 +10,10 @@ void PlayerTransition1::HandleEvent(Event* event)
 	{
 		m_MoveDirection = event->movementInfo.moveDirection;
 		m_LookDirection = event->movementInfo.lookDirection;
+		return;
+	}
+	if(event->eventID == eEventType::P1TransperHP)
+	{
+		m_HP = event->hp;
 	}
 }

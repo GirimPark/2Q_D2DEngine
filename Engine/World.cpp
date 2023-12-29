@@ -4,6 +4,8 @@
 
 #include "CollisionManager.h"
 #include "InputManager.h"
+#include "../GameApp/Bar1Object.h"
+#include "../GameApp/PlayerObject.h"
 
 #include "../GameApp/UIObject.h"
 #include "../GameApp/PopUpUIObject.h"
@@ -61,10 +63,28 @@ void World::Update(const float deltaTime)
 		// Object Collision Update
 		m_pCollisionManager->Update(deltaTime, m_GameObjects);
 	}
+
+	if (m_GameObjects[static_cast<UINT>(GROUP_TYPE::BARUI)].empty())
+		return;
+
+	for (size_t i = 0; i < m_GameObjects[static_cast<UINT>(GROUP_TYPE::BARUI)].size()-1; i++)
+	{
+		for (size_t j = i + 1; j < m_GameObjects[static_cast<UINT>(GROUP_TYPE::BARUI)].size(); j++)
+		{
+			if(dynamic_cast<PlayerObject*>(m_GameObjects[static_cast<UINT>(GROUP_TYPE::BARUI)][i]->GetOwnerObj())->GetScore()
+				< dynamic_cast<PlayerObject*>(m_GameObjects[static_cast<UINT>(GROUP_TYPE::BARUI)][j]->GetOwnerObj())->GetScore())
+			{
+				std::swap(m_GameObjects[static_cast<UINT>(GROUP_TYPE::BARUI)][i],
+					m_GameObjects[static_cast<UINT>(GROUP_TYPE::BARUI)][j]);
+			}
+		}
+	}
 }
 
 void World::Render()
 {
+	/// GroupType 순서대로 렌더링 (레이어의 개념)
+
 	// Only Won의 경우 카메라가 고정이기 때문에 렌더링 최적화가 필요 없음
 	// AABB 있는 버전은 230809 오후 커밋 전 리비전에 있음
 	for (auto& gameObjectGroup : m_GameObjects)

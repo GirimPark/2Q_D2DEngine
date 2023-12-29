@@ -54,7 +54,7 @@ eItemType TestWorld::GetRandomItem(eItemBoxType itemType)
 bool TestWorld::Initialize()
 {
 	m_pPlayerObject1 = CreateGameObject<PlayerObject>(L"Player1", GROUP_TYPE::PLAYER);
-	//m_pPlayerObject2 = CreateGameObject<PlayerObject>(L"Player2", GROUP_TYPE::PLAYER);
+	m_pPlayerObject2 = CreateGameObject<PlayerObject>(L"Player2", GROUP_TYPE::PLAYER);
 
 	m_pMoneyObject = CreateGameObject<MoneyObject>(L"Money", GROUP_TYPE::MONEY);
 	m_pItemBoxObject1 = CreateGameObject<ItemBoxObject>(L"ItemBox", GROUP_TYPE::ITEMBOX);
@@ -72,15 +72,15 @@ bool TestWorld::Initialize()
 	//m_pPlayerFSM3 = new PlayerFSM3;
 	//m_pPlayerFSM4 = new PlayerFSM4;
 	m_pPlayerObject1->AttachFSM(m_pPlayerFSM1);
-	//m_pPlayerObject2->AttachFSM(m_pPlayerFSM2);
+	m_pPlayerObject2->AttachFSM(m_pPlayerFSM2);
 
-	/// SetLocation
-	m_pPlayerObject1->SetLocation(ScreenWidth / 2.f - 300.f, ScreenHeight / 2.f);
-	//m_pPlayerObject2->SetLocation(ScreenWidth / 2.f + 300.f, ScreenHeight / 2.f);
+	/// SetGameObjectLocation
+	m_pPlayerObject1->SetGameObjectLocation(ScreenWidth / 2.f - 300.f, ScreenHeight / 2.f);
+	m_pPlayerObject2->SetGameObjectLocation(ScreenWidth / 2.f + 300.f, ScreenHeight / 2.f);
 
-	m_pMoneyObject->SetLocation(300.f, 300.f);
-	m_pItemBoxObject1->SetLocation(ScreenWidth / 2.f, ScreenHeight / 2.f);
-	m_pItemBoxObject2->SetLocation(ScreenWidth / 2.f + 100.f, ScreenHeight / 2.f);
+	m_pMoneyObject->SetGameObjectLocation(300.f, 300.f);
+	m_pItemBoxObject1->SetGameObjectLocation(ScreenWidth / 2.f, ScreenHeight / 2.f);
+	m_pItemBoxObject2->SetGameObjectLocation(ScreenWidth / 2.f + 100.f, ScreenHeight / 2.f);
 
 	m_pCollisionManager->EnableCollisionType(GROUP_TYPE::PLAYER, GROUP_TYPE::PLAYER);
 	m_pCollisionManager->EnableCollisionType(GROUP_TYPE::PLAYER, GROUP_TYPE::MONEY);

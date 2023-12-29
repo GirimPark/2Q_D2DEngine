@@ -5,6 +5,7 @@
 #pragma comment(lib, "Xinput.lib")
 
 InputManager* InputManager::m_pInputInstance = nullptr;
+bool InputManager::m_bDebugRendering = false;
 
 InputManager::InputManager()
 	: m_KeyState{}, m_mousePos(), m_PadState {}
@@ -13,6 +14,10 @@ InputManager::InputManager()
 
 void InputManager::Initialize()
 {
+	// X1nput
+	// hX1nput = LoadLibrary(TEXT("X1nput.dll"));
+	// MyFunction = reinterpret_cast<MyFunctionType>(GetProcAddress(hX1nput, "MyFunction"));
+
 	for (int i = 0; i < 256; i++)
 	{
 		m_KeyState[i].keyState = eKeyState::NONE;
@@ -49,6 +54,7 @@ void InputManager::Update()
 	if (ScreenToClient(CommonApp::m_hWnd, &curMousePos) != false)
 		m_mousePos = curMousePos;
 
+
 	/// 키보드 입력 처리
 
 	for (int i = 0; i < 256; i++)
@@ -60,6 +66,10 @@ void InputManager::Update()
 			else
 			{
 				m_KeyState[i].keyState = eKeyState::PUSH;
+				if(i == eKeyCode::F5)
+				{
+					m_bDebugRendering = !m_bDebugRendering;
+				}
 				m_KeyState[i].prevPushed = true;
 			}
 		}
@@ -179,6 +189,7 @@ void InputManager::Update()
 
 void InputManager::Finalize()
 {
+	// FreeLibrary(hX1nput);
 	delete m_pInputInstance;
 }
 

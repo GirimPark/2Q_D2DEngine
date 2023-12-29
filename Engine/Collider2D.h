@@ -2,7 +2,9 @@
 
 #include "RenderComponent.h"
 
-enum class COLLISION_TPYE
+#include <map>
+
+enum class COLLISION_TYPE
 {
 	COLLISION = 0,
 	TRIGGER,
@@ -54,7 +56,7 @@ protected:
 	D2D1::ColorF m_Color = D2D1::ColorF::Green;
 
 public:
-	COLLISION_TPYE m_CollisionType = COLLISION_TPYE::COLLISION;
+	COLLISION_TYPE m_CollisionType = COLLISION_TYPE::COLLISION;
 	bool m_IsCollision = false;
 	bool m_IsTrigger = false;
 
@@ -72,8 +74,8 @@ public:
 	void SetColor(D2D1::ColorF color) { m_Color = color; }
 
 public:
-	COLLISION_TPYE GetCollisionType() const { return m_CollisionType; }
-	void SetCollisionType(COLLISION_TPYE type) { m_CollisionType = type; }
+	COLLISION_TYPE GetCollisionType() const { return m_CollisionType; }
+	void SetCollisionType(COLLISION_TYPE type) { m_CollisionType = type; }
 
 	void TurnOn_IsCollision(Collider2D* otherCollision) { m_IsCollision = true; otherCollision->m_IsCollision = true; }
 	void TurnOff_IsCollision(Collider2D* otherCollision) { m_IsCollision = false; otherCollision->m_IsCollision = false; }
@@ -92,13 +94,13 @@ public:
 	UINT GetID() const { return m_ID; }
 
 public:
-	virtual void OnCollisionEnter(Collider2D* otherCollision) abstract;
-	virtual void OnCollisionStay(Collider2D* otherCollision) abstract;
-	virtual void OnCollisionExit(Collider2D* otherCollision) abstract;
+	virtual void OnCollisionEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) {}
+	virtual void OnCollisionStay(Collider2D* otherCollision) {}
+	virtual void OnCollisionExit(Collider2D* otherCollision) {}
 
-	virtual void OnTriggerEnter(Collider2D* otherCollision) abstract;
-	virtual void OnTriggerStay(Collider2D* otherCollision) abstract;
-	virtual void OnTriggerExit(Collider2D* otherCollision) abstract;
+	virtual void OnTriggerEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) {}
+	virtual void OnTriggerStay(Collider2D* otherCollision) {}
+	virtual void OnTriggerExit(Collider2D* otherCollision) {}
 
 public:
 	virtual void ProcessBlock(Collider2D* otherCollision) abstract;

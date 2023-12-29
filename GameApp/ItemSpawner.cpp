@@ -14,7 +14,15 @@ bool ItemSpawner::Initialize()
 	EventManager::GetInstance()->RegisterListener(eEventType::DeleteThrow, this);
 	EventManager::GetInstance()->RegisterListener(eEventType::DeleteInstallation, this);
 	EventManager::GetInstance()->RegisterListener(eEventType::DeleteReinforced, this);
+
+	while (m_curCount < m_maxCount)
+	{
+		m_gameObjectList = m_pOwnerWorld->GetGameObjectGroup(GROUP_TYPE::ITEMBOX);
+		RandomSpawn();
+	}
+
 	__super::Initialize();
+
 
 	return true;
 }
@@ -25,17 +33,28 @@ void ItemSpawner::Update(const float deltaTime)
 	m_gameObjectList = m_pOwnerWorld->GetGameObjectGroup(GROUP_TYPE::ITEMBOX);
 
 	// 설정해둔 최대갯수에 도달하면 리턴
-	if (m_curCount[static_cast<UINT>(m_itemBoxType)] == m_maxCount)
+	if (m_curCount == m_maxCount)
 		return;
 
 	if (!m_bCheckAABB)
-		elapsedTime += deltaTime;
-
-	if (elapsedTime >= m_spawnTime)
 	{
-		RandomSpawn();
-		elapsedTime = 0.f;
+		for (size_t i = 0; i < m_elapsedTimeList.size(); i++)
+		{
+			if(m_elapsedTimeList[i] != -1.f)
+				m_elapsedTimeList[i] += deltaTime;
+		}
 	}
+
+	for (size_t i = 0; i < m_elapsedTimeList.size(); i++)
+	{
+		if(m_elapsedTimeList[i] >= m_spawnTime)
+		{
+			m_elapsedTimeList[i] = -1.f;
+			RandomSpawn();
+		}
+	}
+
+	__super::Update(deltaTime);
 }
 
 void ItemSpawner::SetType(eItemBoxType itemType)
@@ -86,22 +105,22 @@ void ItemSpawner::RandomSpawn()
 				m_pOwnerWorld->CreateGameObject<ItemBoxObject>(L"Installation_Item", GROUP_TYPE::ITEMBOX);
 		}
 		m_pSpawnObject->Initialize();
-		m_pSpawnObject->SetLocation(m_randX, m_randY);
+		m_pSpawnObject->SetGameObjectLocation(m_randX, m_randY);
 		m_pSpawnObject->SetItemBoxType(m_itemBoxType);
 
-		m_curCount[static_cast<UINT>(m_itemBoxType)]++;
+		m_curCount++;
 		return;
 	}
 
 	float x = 0.f;
 	float y = 0.f;
 
-	for (size_t i = 0; i < m_gameObjectList.size(); i++)
+	for(size_t i = 0; i < m_gameObjectList.size(); i++)
 	{
 		x =
-			dynamic_cast<ItemBoxObject*>(m_gameObjectList[i])->GetLocation().x;
+			dynamic_cast<ItemBoxObject*>(m_gameObjectList[i])->GetGameObjectLocation().x;
 		y =
-			dynamic_cast<ItemBoxObject*>(m_gameObjectList[i])->GetLocation().y;
+			dynamic_cast<ItemBoxObject*>(m_gameObjectList[i])->GetGameObjectLocation().y;
 
 		if (CheckSpawnArea(x, y))
 		{
@@ -114,7 +133,6 @@ void ItemSpawner::RandomSpawn()
 	if (m_bCheckAABB)
 	{
 		RandomSpawn();
-		m_bCheckAABB = false;
 	}
 	else
 	{
@@ -133,12 +151,11 @@ void ItemSpawner::RandomSpawn()
 			m_pSpawnObject =
 				m_pOwnerWorld->CreateGameObject<ItemBoxObject>(L"Installation_Item", GROUP_TYPE::ITEMBOX);
 		}
-		m_pSpawnObject->Initialize();
-		m_pSpawnObject->SetLocation(m_randX, m_randY);
 		m_pSpawnObject->SetItemBoxType(m_itemBoxType);
+		m_pSpawnObject->Initialize();
+		m_pSpawnObject->SetGameObjectLocation(m_randX, m_randY);
 		m_bCheckAABB = false;
-		m_curCount[static_cast<UINT>(m_itemBoxType)]++;
-		printf("%f %f \n", m_randX, m_randY);
+		m_curCount++;
 	}
 }
 
@@ -146,14 +163,38 @@ void ItemSpawner::HandleEvent(Event* event)
 {
 	if(event->eventID == eEventType::DeleteThrow && m_itemBoxType == eItemBoxType::THROW)
 	{
-		m_curCount[static_cast<UINT>(eItemBoxType::THROW)]--;
+		for (size_t i = 0; i < m_elapsedTimeList.size(); i++)
+		{
+			if (m_elapsedTimeList[i] == -1.f)
+			{
+				m_curCount--;
+				m_elapsedTimeList[i] = 0;
+				break;
+			}
+		}
 	}
 	else if (event->eventID == eEventType::DeleteInstallation && m_itemBoxType == eItemBoxType::INSTALLATION)
 	{
-		m_curCount[static_cast<UINT>(eItemBoxType::INSTALLATION)]--;
+		for (size_t i = 0; i < m_elapsedTimeList.size(); i++)
+		{
+			if (m_elapsedTimeList[i] == -1.f)
+			{
+				m_curCount--;
+				m_elapsedTimeList[i] = 0;
+				break;
+			}
+		}
 	}
 	else if (event->eventID == eEventType::DeleteReinforced && m_itemBoxType == eItemBoxType::REINFORCED)
 	{
-		m_curCount[static_cast<UINT>(eItemBoxType::REINFORCED)]--;
+		for (size_t i = 0; i < m_elapsedTimeList.size(); i++)
+		{
+			if (m_elapsedTimeList[i] == -1.f)
+			{
+				m_curCount--;
+				m_elapsedTimeList[i] = 0;
+				break;
+			}
+		}
 	}
 }

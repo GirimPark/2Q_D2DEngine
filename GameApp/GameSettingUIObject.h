@@ -1,43 +1,37 @@
 #pragma once
 #include "../Engine/GameObject.h"
+#include "../Engine/EventListener.h"
 
 class TextureComponent;
 class ButtonUI;
 class PanelUI;
 
-class GameSettingUIObject :
-    public GameObject
+class GameSettingUIObject
+	: public GameObject
+	, public EventListener
 {
 private:
     TextureComponent* m_pStartTexture = nullptr;
-    TextureComponent* m_pOkayTexture = nullptr;
-    TextureComponent* m_pCancelTexture = nullptr;
-    TextureComponent* m_pLeftTexture = nullptr;
-    TextureComponent* m_pRightTexture = nullptr;
+    TextureComponent* m_pActiveStartTexture = nullptr;
 
+    PanelUI* m_pRootPanel = nullptr;
     PanelUI* m_pGameSettingPanel = nullptr;
+    TextureComponent* m_pBackgroundTexture = nullptr;
 
     ButtonUI* m_pSelectMap1 = nullptr;
+    TextureComponent* m_pSmallMap1Texture = nullptr;
+
     ButtonUI* m_pSelectMap2 = nullptr;
+    TextureComponent* m_pSmallMap2Texture = nullptr;
+
     ButtonUI* m_pSelectMap3 = nullptr;
+    TextureComponent* m_pSmallMap3Texture = nullptr;
 
     PanelUI* m_pMapImage = nullptr;
+    TextureComponent* m_pBigMapTexture = nullptr;
 
-    ButtonUI* m_pLeftButton = nullptr;
-    ButtonUI* m_pRightButton = nullptr;
-
-    ButtonUI* m_pItemButton1 = nullptr;
-    ButtonUI* m_pItemButton2 = nullptr;
-    ButtonUI* m_pItemButton3 = nullptr;
-    ButtonUI* m_pItemButton4 = nullptr;
-    ButtonUI* m_pItemButton5 = nullptr;
-    ButtonUI* m_pItemButton6 = nullptr;
-    ButtonUI* m_pItemButton7 = nullptr;
-    ButtonUI* m_pItemButton8 = nullptr;
-    ButtonUI* m_pItemButton9 = nullptr;
-    ButtonUI* m_pItemButton10 = nullptr;
-    ButtonUI* m_pItemButton11 = nullptr;
-    ButtonUI* m_pItemButton12 = nullptr;
+    TextureComponent* m_pUsingItemTexture = nullptr;
+    TextureComponent* m_pLogoTexture = nullptr;
 
     ButtonUI* m_pStartButton = nullptr;
 
@@ -47,4 +41,6 @@ private:
 public:
     bool Initialize() final;
     void Update(const float deltaTime) final;
+
+    void HandleEvent(Event* event) final;
 };

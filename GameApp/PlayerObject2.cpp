@@ -20,7 +20,7 @@ bool PlayerObject2::Initialize()
 {
 	/// TextrueComponent
 	m_pTextureComponent = CreateComponent<TextureComponent>(L"TextureComponent");
-	m_pTextureComponent->SetTextureAsset(L"../Resource/racoon.png", L"racoonTexture");
+	m_pTextureComponent->SetTextureAsset(L"./Resource/racoon.png", L"racoonTexture");
 	m_pTextureComponent->SetRelativeLocation(ScreenWidth / 2.f + 400.f, ScreenHeight / 2.f);
 	SetRootComponent(m_pTextureComponent);
 
@@ -38,7 +38,7 @@ bool PlayerObject2::Initialize()
 	m_pBoxCollider2D->SetExtend(30.f, 25.f);
 	m_pBoxCollider2D->AttachToComponent(m_pTextureComponent);
 
-	m_pBoxCollider2DPart = CreateComponent<BoxCollider2D>(L"BoxCollider2D_Part");
+	m_pBoxCollider2DPart = CreateComponent<BoxCollider2D>(L"Player_Part");
 	m_pBoxCollider2DPart->SetRelativeLocation(0.f, 30.f);
 	m_pBoxCollider2DPart->SetExtend(10.f, 15.f);
 	m_pBoxCollider2DPart->AttachToComponent(m_pTextureComponent);
@@ -55,7 +55,7 @@ void PlayerObject2::Update(const float deltaTime)
 	if (this->GetRootComponent()->GetWorldLocation().x > ScreenWidth || this->GetRootComponent()->GetWorldLocation().x < 0 ||
 		this->GetRootComponent()->GetWorldLocation().y > ScreenHeight || this->GetRootComponent()->GetWorldLocation().y < 0)
 	{
-		this->SetLocation(ScreenWidth / 2.f, ScreenHeight / 2.f);
+		this->SetGameObjectLocation(ScreenWidth / 2.f, ScreenHeight / 2.f);
 	}
 
 	GameObject::Update(deltaTime);
@@ -68,7 +68,7 @@ void PlayerObject2::Update(const float deltaTime)
 		auto* projectile = GetOwnerWorld()->CreateGameObject<ProjectileObject>(L"Projectile_Clone", GROUP_TYPE::ITEM);
 
 		// 아이템의 소유자 설정
-		projectile->SetOwnerPlayer(this);
+		//projectile->SetOwnerPlayer(this);
 
 		// 속도 변경
 		projectile->SetSpeed(500.f);
@@ -87,7 +87,7 @@ void PlayerObject2::Update(const float deltaTime)
 	}
 }
 
-void PlayerObject2::OnCollisionEnter(Collider2D* otherCollision)
+void PlayerObject2::OnCollisionEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter)
 {
 	if (otherCollision->GetOwner()->GetName() == L"TrainObstacle_Clone")
 		InputManager::SetControllerVib(1, 65535, 65535);
@@ -105,7 +105,7 @@ void PlayerObject2::OnCollisionExit(Collider2D* otherCollision)
 		InputManager::SetControllerVib(1, 0, 0);
 }
 
-void PlayerObject2::OnTriggerEnter(Collider2D* otherCollision)
+void PlayerObject2::OnTriggerEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter)
 {
 	InputManager::SetControllerVib(1, 65535, 65535);
 }

@@ -117,21 +117,24 @@ namespace framework
 
 		Vector2D& Normalize()
 		{
-			if (Length() == 0)
+			const float length = Length();
+			if (length == 0)
 				return *this;
 
-			this->x /= Length(); // this->x == rawX
-			this->y /= Length(); // this->y == rawY
+			this->x /= length; // this->x == rawX
+			this->y /= length; // this->y == rawY
 
 			return *this;		 // 원본이 그대로 반환
 		}
 
 		Vector2D GetNormalize() const
 		{
-			if (Length() == 0)
+			const float length = Length();
+
+			if (length == 0)
 				return *this;
 
-			return { this->x / Length(), this->y / Length() };
+			return { this->x / length, this->y / length };
 		}
 
 		Vector2D& LimitX(float value)
@@ -154,10 +157,11 @@ namespace framework
 		}
 		Vector2D& Limit(float value)
 		{
-			if(this->Length() >= value)
+			const float length = this->Length();
+
+			if(length >= value)
 			{
-				// 벡터를 정규화하고 원하는 길이만큼 곱해줌
-				const float length = this->Length();
+				// 벡터의 길이가 value를 넘지 못하도록 한다
 				*this = (*this / length) * value;
 			}
 

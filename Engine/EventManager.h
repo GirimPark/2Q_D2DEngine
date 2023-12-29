@@ -33,6 +33,25 @@ enum eEventType
 	P3TransperMovement,
 	P4TransperMovement,
 
+	// PlayerObject - FSMTransition
+	P1TransperHP,
+	P2TransperHP,
+	P3TransperHP,
+	P4TransperHP,
+
+	// PlayerObject - 투명화
+	Player1TransparentStart,
+	Player1TransparentEnd,
+	Player2TransparentStart,
+	Player2TransparentEnd,
+	Player3TransparentStart,
+	Player3TransparentEnd,
+	Player4TransparentStart,
+	Player4TransparentEnd,
+	FootprintVisible,
+	FootprintInVisible,
+
+
 	// UIComponent - ButtonUIComponent
 	// 월드 변환
 	ChangeWorld_Start,
@@ -42,12 +61,9 @@ enum eEventType
 	ChangeWorldToMadeBy,			// MadeByWorld로 변환(제작)
 	ChangeWorldToGameSetting,		// GameSettingWorld로 변환(게임설정)
 	ChangeWorldToInGame,			// InGameWorld로 변환(인게임)
+	ChangeWorldToInGame2,			// InGameWorld로 변환(인게임2)
+	GameEnd,			// InGameWorld로 변환(인게임)
 	ChangeWorld_End,
-
-	// 게임 종료할건지 안 할건지
-	CheckQuitGame,
-	QuitGame,
-	ResumeGame,
 
 	// 스폰된 아이템 먹고 지워질 때
 	DeleteThrow,
@@ -55,14 +71,34 @@ enum eEventType
 	DeleteReinforced,
 	DeleteMoney,
 
+	// 아이템 먹었을 때 보관함에 보이기
+	ItemVisible,
+	ItemInVisible,
+
 	// World Pause 월드 퍼즈 ON OFF
 	PauseOn,
 	PauseOff,
+
+	// 일시정지 팝업
+	CheckQuitGame,
+	Continue,
+	CheckQuitGame2,
+	Continue2,
+
+	// 맵선택
+	SetMap1,
+	SetMap2,
+
+	// 게임방법 월드 텍스쳐 전환
+	InstructionTexture,
+	ControllerTexture,
 
 	// DeleteObject
 	DeleteGameObject,
 };
 
+enum class eItemType;
+enum class eItemBoxType;
 
 class EventListener;
 class GameObject;
@@ -83,6 +119,7 @@ private:
 	/// ChagneWorld Event의 경우 WorldManager::ChangeWorld()를 수행하면서 이벤트매니저를 초기화한다.
 	///	이 경우 발생하는 문제를 위한 예외처리용 멤버변수
 	bool m_bChangingWorld = false;
+	bool m_bInitializing = false;
 
 private:
 	static EventManager* m_pInstance;
@@ -108,6 +145,9 @@ public:
 	void SendEvent(eEventType eventId, framework::EVENT_ANIMATION_INFO animationInfo);
 	void SendEvent(eEventType eventId, framework::EVENT_MOVEMENT_INFO movementInfo);
 	void SendEvent(eEventType eventId, GROUP_TYPE group, GameObject* obj);
+	void SendEvent(eEventType eventId, UINT playerNum, eItemBoxType itemBoxType, eItemType itemType);
+	void SendEvent(eEventType eventId, int hp);
+	void SendEvent(eEventType eventId, UINT playerNum, framework::Vector2D playerLocation, framework::Vector2D lookDirection);
 
 private:
 	// 이미 등록된 이벤트인지 확인

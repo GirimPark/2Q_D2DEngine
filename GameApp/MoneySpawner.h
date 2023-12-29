@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MoneyObject.h"
 #include "Spawner.h"
 #include "../Engine/EventListener.h"
 
@@ -15,9 +16,11 @@ class MoneySpawner
 private:
     MoneyObject* m_pSpawnObject = nullptr;
 
-	eMoneyType m_moneyType;
+	eMoneyType m_moneyType = SPAWNED;
 
-	int m_curCount;
+	int m_curCount = 0;
+
+	float m_elapsedTime = 0;
 
 public:
 	bool Initialize() final;
@@ -28,6 +31,6 @@ public:
 	void RandomSpawn();
 
 public:
-	void HandleEvent(Event* event);
+	void HandleEvent(Event* event) final;
 };
 

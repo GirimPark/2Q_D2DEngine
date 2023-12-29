@@ -17,7 +17,7 @@ void UI::Update(const float deltaTime)
 	CheckMouseOn();
 	if(m_bMouseOn)
 	{
-		//printf("UI 안에 있음\n");
+		// printf("UI 안에 있음\n");
 	}
 }
 

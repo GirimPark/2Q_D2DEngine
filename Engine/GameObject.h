@@ -1,23 +1,28 @@
 #pragma once
 
 #include "Object.h"
+#include "Component.h"
+#include "struct.h"
 
 #include <vector>
+#include <map>
 #include <cassert>
-
-#include "SceneComponent.h"
 
 enum class GROUP_TYPE
 {
-	PLAYER = 0,
-	ITEM,
-	MONEY,
-	ITEMBOX,
-	ENVIRONMENT,
-	UI,
-	POPUPUI,
-	OBSTACLE,
+	BACKGROUND = 0,
 	SPAWNER,
+	ITEMBOX,
+	MONEY,
+	OBSTACLE,
+	TRUCK,
+	ITEM,
+	PLAYER,			// 1. 플레이어
+	TRAIN,			// 2. 기차
+	Environment,	// 3. 장애물
+	UI,
+	BARUI,
+	POPUPUI,
 
 	END
 };
@@ -45,11 +50,10 @@ private:
 
 	// (팝업유아이전용)팝업이 됐는지
 	bool m_bPopUpState = false;
-
 	bool m_bActiveObject = true;
-	bool m_bIsDead = false;
 
 protected:
+	GROUP_TYPE m_GroupType = GROUP_TYPE::END;
 	D2D1::ColorF m_CullingRectColor = D2D1::ColorF::Green;
 	std::wstring m_name;
 
@@ -62,9 +66,15 @@ public:
 
 public:
 	void SetRootComponent(SceneComponent* rootComponent) { m_pRootComponent = rootComponent; }
-	SceneComponent* GetRootComponent() const { return m_pRootComponent; }
+	SceneComponent* GetRootComponent() const
+	{
+		return m_pRootComponent;
+	}
 	Component* GetComponent (const std::wstring& name) const;
 	std::vector<Component*> GetComponents(const std::wstring& name) const;
+
+	GROUP_TYPE GetGroupType() const { return m_GroupType; }
+	void SetGroupType(GROUP_TYPE groupType) { m_GroupType = groupType; }
 
 	std::wstring GetName() const { return m_name; }
 	void SetName(const std::wstring name) { m_name = name; }
@@ -75,8 +85,18 @@ public:
 	void SetOwnerWorld(World* pOwnerWorld) { m_pOwnerWorld = pOwnerWorld; }
 	World* GetOwnerWorld() const { return m_pOwnerWorld; }
 
-	void SetLocation(const float x, const float y) const;
-	framework::Vector2D GetLocation() const { return m_pRootComponent->GetWorldLocation(); };
+	void SetGameObjectScale(const float x, const float y) const;
+	void SetGameObjectScale(framework::Vector2D vec) const;
+	framework::Vector2D GetGameObjectScale() const;
+
+	void SetGameObjectRotation(const float angle) const;
+	float GetGameObjectRotation() const;
+
+	void SetGameObjectLocation(const float x, const float y) const;
+	framework::Vector2D GetGameObjectLocation() const;
+
+	void SetWorldTransform(D2D_MATRIX_3X2_F transform);	// RelativeTransform 거치지 않고 강제 고정
+	D2D_MATRIX_3X2_F GetWorldTransform();
 
 	void SetActiveObj(bool activeObject) { m_bActiveObject = activeObject; }
 	bool IsObjActive() const { return m_bActiveObject; }
@@ -84,21 +104,17 @@ public:
 	bool GetPopUpState() { return m_bPopUpState; }
 	void SetPopUpState(bool popupState) { m_bPopUpState = popupState; }
 
-	bool IsDead() const { return m_bIsDead; }
-	void RevivePlayer() { m_bIsDead = false; }
-	void KillPlayer() { m_bIsDead = true; }
-
 public:
 	virtual bool Initialize();
 	virtual void Update(const float deltaTime);
 	virtual void Render();
 
 public:
-	virtual void OnCollisionEnter(Collider2D* otherCollision) {}
+	virtual void OnCollisionEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) {}
 	virtual void OnCollisionStay(Collider2D* otherCollision) {}
 	virtual void OnCollisionExit(Collider2D* otherCollision) {}
 
-	virtual void OnTriggerEnter(Collider2D* otherCollision) {}
+	virtual void OnTriggerEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter) {}
 	virtual void OnTriggerStay(Collider2D* otherCollision) {}
 	virtual void OnTriggerExit(Collider2D* otherCollision) {}
 

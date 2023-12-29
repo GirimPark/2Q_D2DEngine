@@ -1,8 +1,8 @@
 #pragma once
 #include "UI.h"
 
-class PanelUI :
-    public UI
+class PanelUI
+	: public UI
 {
 public:
     bool Initialize() final;

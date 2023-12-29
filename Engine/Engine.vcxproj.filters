@@ -235,9 +235,6 @@
     <ClInclude Include="FSMTransition.h">
       <Filter>9. FSM\FSMState\FSMTransition</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionManager.h">
-      <Filter>2. Manager\CollisionManager</Filter>
-    </ClInclude>
     <ClInclude Include="SoundManager.h">
       <Filter>2. Manager\SoundManager</Filter>
     </ClInclude>
@@ -249,6 +246,11 @@
     </ClInclude>
     <ClInclude Include="PopUpUI.h" />
     <ClInclude Include="Rigidbody2D.h" />
+    <ClInclude Include="DebugRenderComponent.h" />
+    <ClInclude Include="BarUI.h" />
+    <ClInclude Include="CollisionManager.h">
+      <Filter>2. Manager\CollisionManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -355,5 +357,7 @@
     </ClCompile>
     <ClCompile Include="PopUpUI.cpp" />
     <ClCompile Include="Rigidbody2D.cpp" />
+    <ClCompile Include="DebugRenderComponent.cpp" />
+    <ClCompile Include="BarUI.cpp" />
   </ItemGroup>
 </Project>

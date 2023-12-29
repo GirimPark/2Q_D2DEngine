@@ -17,6 +17,12 @@ AnimationComponent::~AnimationComponent()
 
 void AnimationComponent::Update(const float deltaTime)
 {
+	// 한 번만 재생하는 타입인데 활성화가 안되어 있으면 return
+	if(!m_bLoop && !m_bActive)
+	{
+		return;
+	}
+
 	m_ProgressTime += deltaTime;
 	std::vector<framework::FRAME_INFO> curAnimation = m_pAnimationAsset->m_Animations.find(m_AnimationName)->second;
 	float renderTime = curAnimation[m_FrameIndex].RenderTime;
@@ -30,11 +36,21 @@ void AnimationComponent::Update(const float deltaTime)
 			(m_SrcRect.right - m_SrcRect.left) / 2.f, (m_SrcRect.bottom - m_SrcRect.top) / 2.f };
 	}
 
+	// 한 번만 재생하는 타입인데 이번 프레임이 마지막 프레임이었으면 비활성화
+	if(!m_bLoop && (m_FrameIndex == curAnimation.size() - 1))
+	{
+		m_bActive = false;
+		m_FrameIndex = 0;
+	}
+
 	__super::Update(deltaTime);
 }
 
 void AnimationComponent::Render(ID2D1RenderTarget* pRenderTarget)
 {
+	if (!m_bVisible)
+		return;
+
 	if (m_bMirror)
 	{
 		m_WorldTransform = D2D1::Matrix3x2F::Scale(D2D1::SizeF(-1.f, 1.f))
@@ -58,7 +74,6 @@ void AnimationComponent::SetAnimationBitmapFilePath(const WCHAR* szFilePath)
 	m_pAnimationAsset->SetBitmapFilePath(szFilePath);
 	m_pAnimationAsset->Build();
 	//m_pAnimationAsset->m_Animations.insert(std::pair<std::wstring, std::vector<framework::FRAME_INFO>>(animationName, frameInfo));
-	//m_pAnimationAsset->Save(L"../Resource/TestWorld.WorldAsset");
 }
 
 void AnimationComponent::SetAnimationAsset(const WCHAR* szFilePath, const WCHAR* animationName, std::vector<framework::FRAME_INFO> frameInfo)
@@ -66,6 +81,7 @@ void AnimationComponent::SetAnimationAsset(const WCHAR* szFilePath, const WCHAR*
 	m_pAnimationAsset->SetBitmapFilePath(szFilePath);
 	m_pAnimationAsset->Build();
 	m_pAnimationAsset->m_Animations.insert(std::pair<std::wstring, std::vector<framework::FRAME_INFO>>(animationName, frameInfo));
+	m_pAnimationAsset->Save(L"./Resource/Animation.WorldAsset");
 }
 
 
@@ -87,9 +103,10 @@ void AnimationComponent::ChangeAnimation(const std::wstring name, const bool fli
 	m_bMirror = flip;
 }
 
-void AnimationComponent::KeepAnimation(const bool flip)
+void AnimationComponent::KeepAnimation(const std::wstring name, const bool flip)
 {
 	assert(m_pAnimationAsset != nullptr);
 
+	m_AnimationName = name;
 	m_bMirror = flip;
 }

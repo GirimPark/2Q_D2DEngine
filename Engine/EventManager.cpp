@@ -67,11 +67,15 @@ void EventManager::ClearEvents()
 
 void EventManager::Initialize()
 {
+	m_bInitializing = true;
+
 	while (!m_EventList.empty())
 	{
 		ExecuteEvent(&m_EventList.front());
 		m_EventList.pop_front();
 	}
+
+	m_bInitializing = false;
 }
 
 void EventManager::Update()
@@ -120,6 +124,25 @@ void EventManager::SendEvent(eEventType eventId, GROUP_TYPE group, GameObject* o
 	m_EventList.emplace_back(newEvent);
 }
 
+void EventManager::SendEvent(eEventType eventId, UINT playerNum, eItemBoxType itemBoxType, eItemType itemType)
+{
+	Event newEvent(eventId, playerNum, itemBoxType, itemType);
+	m_EventList.emplace_back(newEvent);
+}
+
+
+void EventManager::SendEvent(eEventType eventId, int hp)
+{
+	Event newEvent(eventId, hp);
+	m_EventList.emplace_back(newEvent);
+}
+
+void EventManager::SendEvent(eEventType eventId, UINT playerNum, framework::Vector2D playerLocation, framework::Vector2D lookDirection)
+{
+	Event newEvent(eventId, playerNum, playerLocation, lookDirection);
+	m_EventList.emplace_back(newEvent);
+}
+
 bool EventManager::IsRegistered(eEventType eventType, EventListener* listener)
 {
 	bool alreadyRegistered = false;
@@ -160,9 +183,9 @@ void EventManager::ExecuteEvent(Event* event)
 		// 해당 객체의 HandleEvent 함수 실행
 		iter->second->HandleEvent(event);
 
-		if(m_bChangingWorld)
+		if(!m_bInitializing && m_bChangingWorld)
 		{
-			return;
+			return;	// P1SetDefault해주고 P2가야되는데 여기서 걸려서 나가버림
 		}
 	}
 }

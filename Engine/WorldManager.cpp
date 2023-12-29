@@ -4,6 +4,7 @@
 #include "UIManager.h"
 #include "EventManager.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 
 WorldManager::WorldManager()
 	: m_currentWorld(nullptr)
@@ -29,22 +30,46 @@ void WorldManager::Initialize()
 
 void WorldManager::Update(float deltaTime)
 {
+
+	#ifdef _DEBUG
+	if(InputManager::GetInstance()->IsKeyPush(ESCAPE))
+	{
+		// 윈도우 종료
+		PostQuitMessage(0);
+	}
+	#endif
+
 	/// todo(채원)
 	/// start해서 일시정지하는건 게임 월드에서만 해줘도 되기 때문에 여기서 하지말자
-	if(InputManager::GetInstance()->IsPadButtonPush(0, GamePadButtonCode::START))
+	if(m_currentWorld->GetWorldName() == L"InGameWorld")
 	{
-		bool curState = m_currentWorld->GetWorldPauseState();
-		if(!curState)
+		// 정지 되어있으면 true
+		m_bPaused = m_currentWorld->GetWorldPauseState();
+		if (m_bPaused)
 		{
-			// 아직 모든 월드에 핸들 이벤트를 안 해줘가 작동 안 함
-			//EventManager::GetInstance()->SendEvent(eEventType::PauseOn);
-			m_currentWorld->SetWorldPauseState(true);
-		}
-		else
-		{
-			m_currentWorld->SetWorldPauseState(false);
+			//PopUpUI 오브젝트만 업데이트
+			for (auto& curPopUpUIObject : m_currentWorld->GetGameObjectGroup(GROUP_TYPE::POPUPUI))
+			{
+				if (curPopUpUIObject->IsObjActive())
+					curPopUpUIObject->Update(deltaTime);
+			}
+			m_pUIManager->Update(deltaTime);
+			m_bPaused = false;
+			return;
 		}
 	}
+	else
+	{
+		if (InputManager::GetInstance()->IsPadButtonPush(0, GamePadButtonCode::B))
+		{
+			SoundManager::GetInstance()->PlayMusic(eSoundList::UICancleEffect, eSoundChannel::Player1State, 1.f);
+		}
+		else if (InputManager::GetInstance()->IsPadButtonPush(0, GamePadButtonCode::A))
+		{
+			SoundManager::GetInstance()->PlayMusic(eSoundList::UIClickEffect, eSoundChannel::Player1State, 1.f);
+		}
+	}
+
 	m_currentWorld->Update(deltaTime);
 	m_pUIManager->Update(deltaTime);
 }
@@ -87,8 +112,8 @@ void WorldManager::GoToNextWorld()
 	const UINT curWorldID = m_currentWorld->GetID();
 	const UINT nextWorldID = (curWorldID + 1) % m_worlds.size();
 
-	std::cout << curWorldID << std::endl;
-	std::cout << nextWorldID << std::endl;
+	// std::cout << curWorldID << std::endl;
+	// std::cout << nextWorldID << std::endl;
 
 	// Set Prev World
 	m_prevWorld = m_currentWorld;
@@ -111,8 +136,8 @@ void WorldManager::GoToPrevWorld()
 	const UINT curWorldID = m_currentWorld->GetID();
 	const UINT prevWorldID = (curWorldID - 1 + m_worlds.size()) % static_cast<UINT>(m_worlds.size());
 
-	std::cout << curWorldID << std::endl;
-	std::cout << prevWorldID << std::endl;
+	// std::cout << curWorldID << std::endl;
+	// std::cout << prevWorldID << std::endl;
 
 	// Set Prev World
 	m_prevWorld = m_currentWorld;

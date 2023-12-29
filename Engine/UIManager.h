@@ -18,6 +18,7 @@ public:
 
 public:
 	void SetWorldUIObject(std::vector<GameObject*>& curObject);
+	void SetPopUpUIVector(GameObject* curObject);
 	void SetWorldPopUpUIObject(std::vector<GameObject*>& curObject);
 	void Update(float deltaTime);
 
@@ -27,6 +28,8 @@ public:
 
 private:
 	UI* m_pFocusedUI = nullptr;
+
+	float m_timeElapsed = 0.f;
 
 	GameObject* m_pUIObject;
 	std::vector<GameObject*> m_pPopUpUIObject;

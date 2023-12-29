@@ -34,7 +34,7 @@ void BoxCollider2D::Render(ID2D1RenderTarget* pRenderTarget)
 		pRenderTarget->DrawRectangle(
 			D2D1::RectF(-m_collider.extend.x, -m_collider.extend.y, m_collider.extend.x, m_collider.extend.y),
 			CommonApp::m_pInstance->GetBrush(),
-			5.0f
+			2.f
 		);
 	}
 	else if (m_IsTrigger)
@@ -45,7 +45,7 @@ void BoxCollider2D::Render(ID2D1RenderTarget* pRenderTarget)
 		pRenderTarget->DrawRectangle(
 			D2D1::RectF(-m_collider.extend.x, -m_collider.extend.y, m_collider.extend.x, m_collider.extend.y),
 			CommonApp::m_pInstance->GetBrush(),
-			5.0f
+			2.f
 		);
 	}
 	else
@@ -53,10 +53,16 @@ void BoxCollider2D::Render(ID2D1RenderTarget* pRenderTarget)
 		SetColor(D2D1::ColorF::Green);
 		CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);
 
+		if (m_name == L"BoxCollider2D_Head")
+		{
+			SetColor(D2D1::ColorF::Cyan);
+			CommonApp::m_pInstance->GetBrush()->SetColor(m_Color);
+		}
+
 		pRenderTarget->DrawRectangle(
 			D2D1::RectF(-m_collider.extend.x, -m_collider.extend.y, m_collider.extend.x, m_collider.extend.y),
 			CommonApp::m_pInstance->GetBrush(),
-			5.0f
+			2.f
 		);
 	}
 
@@ -85,11 +91,11 @@ void BoxCollider2D::SetExtend(float x, float y)
 	m_collider.extend.y = y;
 }
 
-void BoxCollider2D::OnCollisionEnter(Collider2D* otherCollision)
+void BoxCollider2D::OnCollisionEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter)
 {
 	// std::wcout << this->m_pOwner->GetName() << L" <-----> " << otherCollision->GetOwner()->GetName() << L" OnCollisionEnter" << std::endl;
 
-	m_pOwner->OnCollisionEnter(otherCollision);
+	m_pOwner->OnCollisionEnter(thisCollision, otherCollision, iter);
 }
 
 void BoxCollider2D::OnCollisionStay(Collider2D* otherCollision)
@@ -106,11 +112,11 @@ void BoxCollider2D::OnCollisionExit(Collider2D* otherCollision)
 	m_pOwner->OnCollisionExit(otherCollision);
 }
 
-void BoxCollider2D::OnTriggerEnter(Collider2D* otherCollision)
+void BoxCollider2D::OnTriggerEnter(Collider2D* thisCollision, Collider2D* otherCollision, std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<const unsigned long long, bool>>>> iter)
 {
 	// std::wcout << this->m_pOwner->GetName() << L" <-----> " << otherCollision->GetOwner()->GetName() << L" OnTriggerEnter" << std::endl;
 
-	m_pOwner->OnTriggerEnter(otherCollision);
+	m_pOwner->OnTriggerEnter(thisCollision, otherCollision, iter);
 }
 
 void BoxCollider2D::OnTriggerStay(Collider2D* otherCollision)
@@ -154,9 +160,9 @@ void BoxCollider2D::ProcessBlock(Collider2D* otherCollision)
 
 	// 오 - 왼 위치일 때 : pushX, pushY 음수로
 	// X축 밀기
-	if (pushLengthX < pushLengthY)
+	if (pushLengthX <= pushLengthY)
 	{
-		if (thisObjectPos.x < otherObjectPos.x)
+		if (thisObjectPos.x <= otherObjectPos.x)
 			pushLengthX *= -1.f;
 
 		thisOwner->GetRootComponent()->AddRelativeLocation(pushLengthX, 0.f);
@@ -164,7 +170,7 @@ void BoxCollider2D::ProcessBlock(Collider2D* otherCollision)
 	// Y축 밀기
 	else
 	{
-		if (thisObjectPos.y < otherObjectPos.y)
+		if (thisObjectPos.y <= otherObjectPos.y)
 			pushLengthY *= -1.f;
 
 		thisOwner->GetRootComponent()->AddRelativeLocation(0.f, pushLengthY);

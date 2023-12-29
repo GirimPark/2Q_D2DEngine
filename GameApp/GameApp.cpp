@@ -2,9 +2,9 @@
 #include "GameApp.h"
 
 #include "Resource.h"
-#include "TestWorld.h"
-#include "JunWorld.h"
-#include "ChaeWorld.h"
+// #include "TestWorld.h"
+// #include "JunWorld.h"
+// #include "ChaeWorld.h"
 #include "GameSettingWorld.h"
 #include "InGameWorld.h"
 #include "InstructionWorld.h"
@@ -68,33 +68,6 @@ void GameApp::Update()
 
     // 월드매니저까지 CommonApp Update로 편입되면 EventManager도 같이 넣을 수 있을듯
     EventManager::GetInstance()->Update();
-
-    /// test : 월드 전환 테스트 코드
-    if (InputManager::GetInstance()->IsKeyPush(eKeyCode::Q))
-    {
-        m_pSoundManager->PlayMusic(eSoundList::PageEffect, eSoundChannel::Effect, 0.f);
-        //m_pSoundManager->SetVolume(1.f, eSoundChannel::Effect);
-        m_pWorldManager->ChangeWorld(WORLD_TYPE::TEST);
-    }
-    else if (InputManager::GetInstance()->IsKeyPush(eKeyCode::W))
-    {
-        m_pSoundManager->PlayMusic(eSoundList::PageEffect, eSoundChannel::Effect, 1.f);
-        //m_pSoundManager->SetVolume(1.f, eSoundChannel::Effect);
-        m_pWorldManager->ChangeWorld(WORLD_TYPE::JUN);
-    }
-    else if (InputManager::GetInstance()->IsKeyPush(eKeyCode::E))
-    {
-        m_pSoundManager->PlayMusic(eSoundList::PageEffect, eSoundChannel::Effect, 0.3f);
-        //m_pSoundManager->SetVolume(1.f, eSoundChannel::Effect);
-        m_pWorldManager->ChangeWorld(WORLD_TYPE::CHAE);
-    }
-
-    /// test : 경과 시간 관리 테스트 코드
-    if (InputManager::GetInstance()->IsKeyPush(eKeyCode::T))
-        TimeManager::SwitchPause();
-
-    // FixedUpdate
-    // LateUpdate
 }
 
 void GameApp::Render()
@@ -103,18 +76,6 @@ void GameApp::Render()
 
     const D2D1::ColorF color(D2D1::ColorF::DarkGray);
     m_pRenderTarget->Clear(color);
-
-    /*
-    // Time Render
-    m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-    m_pD2DRenderer->GetRenderTarget()->DrawTextW(
-        std::to_wstring(TimeManager::GetElapsedTime()).c_str(),
-        static_cast<UINT32>(std::to_wstring(TimeManager::GetElapsedTime()).length()),
-        m_pTextFormat,
-        D2D1::RectF(0, 0, 100, 100),
-        m_pBrush
-    );
-    */
 
     // WorldManager Render
     m_pWorldManager->Render();
@@ -128,9 +89,9 @@ bool GameApp::Initialize()
     assert(res);
 
     // 모든 월드 인스턴스 생성
-    World* pTestWorld = new TestWorld;
-    World* pJunWorld = new JunWorld;
-    World* pChaeWorld = new ChaeWorld;
+    // World* pTestWorld = new TestWorld;
+    // World* pJunWorld = new JunWorld;
+    // World* pChaeWorld = new ChaeWorld;
     World* pMainWorld = new MainWorld;
     World* pInstructionWorld = new InstructionWorld;
     World* pMadeByWorld = new MadeByWorld;
@@ -138,9 +99,9 @@ bool GameApp::Initialize()
     World* pInGameWorld = new InGameWorld;
 
     // 월드 등록
-    m_pWorldManager->RegisterWorld(pJunWorld, WORLD_TYPE::JUN);
-    m_pWorldManager->RegisterWorld(pChaeWorld, WORLD_TYPE::CHAE);
-    m_pWorldManager->RegisterWorld(pTestWorld, WORLD_TYPE::TEST);
+    // m_pWorldManager->RegisterWorld(pJunWorld, WORLD_TYPE::JUN);
+    // m_pWorldManager->RegisterWorld(pChaeWorld, WORLD_TYPE::CHAE);
+    // m_pWorldManager->RegisterWorld(pTestWorld, WORLD_TYPE::TEST);
     m_pWorldManager->RegisterWorld(pMainWorld, WORLD_TYPE::MAIN);
     m_pWorldManager->RegisterWorld(pInstructionWorld, WORLD_TYPE::INSTRUCTION);
     m_pWorldManager->RegisterWorld(pMadeByWorld, WORLD_TYPE::MADEBY);
@@ -148,7 +109,7 @@ bool GameApp::Initialize()
     m_pWorldManager->RegisterWorld(pInGameWorld, WORLD_TYPE::INGAME);
 
     // 기본 월드 설정 ** 여기서 자신의 월드 변경 **
-    m_pWorldManager->SetDefaultWorld(pTestWorld);
+    m_pWorldManager->SetDefaultWorld(pMainWorld);
 
     // 월드 매니저 초기화
     m_pWorldManager->Initialize();
@@ -156,10 +117,6 @@ bool GameApp::Initialize()
     // 이벤트 매니저 초기화
 	EventManager::GetInstance()->Initialize();
 
-    m_pSoundManager->LoadMusic(eSoundList::StartBGM, true, "../Resource/Sound/TestBGM.mp3");
-    m_pSoundManager->LoadMusic(eSoundList::PageEffect, false, "../Resource/Sound/TestEffect.mp3");
-
-    m_pSoundManager->PlayMusic(eSoundList::StartBGM, eSoundChannel::BGM, 0.5f);
     return false;
 }
 

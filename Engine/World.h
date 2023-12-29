@@ -90,10 +90,11 @@ public:
 
 		GameObject* castedObj = dynamic_cast<GameObject*>(obj);
 		assert(castedObj);
-		castedObj->SetName(objectName);	// 자신의 이름 설정
-		castedObj->SetOwnerWorld(this);		// 자신이 속한 월드 설정
+		castedObj->SetName(objectName);									// 자신의 이름 설정
+		castedObj->SetOwnerWorld(this);										// 자신이 속한 월드 설정
 
-		m_GameObjects[static_cast<UINT>(objectType)].push_back(castedObj);
+		castedObj->SetGroupType(objectType);								// 자신의 그룹 설정
+		m_GameObjects[static_cast<UINT>(objectType)].push_back(castedObj);	// 월드에 자신을 등록
 
 		return obj;
 	}

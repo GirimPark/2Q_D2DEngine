@@ -3,6 +3,8 @@
 #include "Spawner.h"
 #include "../Engine/EventListener.h"
 
+#include <list>
+
 enum class eItemBoxType;
 
 class ItemBoxObject;
@@ -11,13 +13,13 @@ class ItemSpawner
 	: public Spawner
 	, public EventListener
 {
-	int m_curCount[static_cast<UINT>(eItemBoxType::END_ITEMBOX)] = {};
+	int m_curCount;
 
-	float elapsedTime = 0;
+	bool m_checkOnce = false;
 
 	ItemBoxObject* m_pSpawnObject = nullptr;
 
-	eItemBoxType m_itemBoxType;
+	eItemBoxType m_itemBoxType = eItemBoxType::THROW;
 
 public:
 	bool Initialize() final;

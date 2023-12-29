@@ -16,6 +16,7 @@ protected:
 	float m_spawnTime = 0.f;
 
 	std::vector<GameObject*> m_gameObjectList;
+	std::vector<float> m_elapsedTimeList;
 
 	bool m_bCheckAABB = false;
 

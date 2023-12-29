@@ -28,7 +28,7 @@ bool PlayerObject0::Initialize()
 	playerFrame.push_back(framework::FRAME_INFO({ 143, 695, 197, 787 }, 0.1f));
 	playerFrame.push_back(framework::FRAME_INFO({ 279, 698, 337, 787 }, 0.1f));
 	playerFrame.push_back(framework::FRAME_INFO({ 347, 699, 406, 787 }, 0.1f));
-	m_pAnimComponent->SetAnimationAsset(L"../Resource/ken.png", L"IDLE", playerFrame);
+	m_pAnimComponent->SetAnimationAsset(L"./Resource/ken.png", L"IDLE", playerFrame);
 
 	// Move
 	playerFrame.clear();
@@ -37,9 +37,9 @@ bool PlayerObject0::Initialize()
 	playerFrame.push_back(framework::FRAME_INFO({ 141,877,204,966 }, 0.1f));
 	playerFrame.push_back(framework::FRAME_INFO({ 216,876,278,964 }, 0.1f));
 	playerFrame.push_back(framework::FRAME_INFO({ 358,878,407,966 }, 0.1f));
-	m_pAnimComponent->SetAnimationAsset(L"../Resource/ken.png", L"MOVE", playerFrame);
+	m_pAnimComponent->SetAnimationAsset(L"./Resource/ken.png", L"MOVE", playerFrame);
 
-	//m_pAnimComponent->LoadAnimationAsset(L"../Resource/ken.png", L"../Resource/TestWorld.WorldAsset");
+	//m_pAnimComponent->LoadAnimationAsset(L"./Resource/ken.png", L"./Resource/TestWorld.WorldAsset");
 
 	m_pAnimComponent->SetRelativeLocation(ScreenWidth / 2.f, ScreenHeight / 2.f);
 	SetRootComponent(m_pAnimComponent);

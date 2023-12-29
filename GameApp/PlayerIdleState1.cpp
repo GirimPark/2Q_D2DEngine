@@ -6,8 +6,10 @@
 
 PlayerIdleState1::PlayerIdleState1()
 {
+	AddTransition(&m_IdleToStun);
 	AddTransition(&m_IdleToMove);
 
+	EventManager::GetInstance()->RegisterListener(eEventType::P1TransperHP, dynamic_cast<EventListener*>(&m_IdleToStun));
 	EventManager::GetInstance()->RegisterListener(eEventType::P1TransperMovement, dynamic_cast<EventListener*>(&m_IdleToMove));
 }
 
@@ -20,19 +22,19 @@ void PlayerIdleState1::SetDefaultAnimationName()
 void PlayerIdleState1::OnEnter()
 {
 	framework::EVENT_ANIMATION_INFO animationInfo;
-	if(m_Direction.y >= 0.9f)
+	if(m_Direction.y == 1.f)
 	{
 		animationInfo = { L"IDLE_FRONT", false };
 	}
-	else if(m_Direction.y <= -0.9f)
+	else if(m_Direction.y == -1.f)
 	{
 		animationInfo = { L"IDLE_BACK", false };
 	}
-	else if(m_Direction.x >= 0.9f)
+	else if(m_Direction.x == 1.f)
 	{
 		animationInfo = { L"IDLE_SIDE", false };
 	}
-	else if (m_Direction.x <= -0.9f)
+	else if (m_Direction.x == -1.f)
 	{
 		animationInfo = { L"IDLE_SIDE", true };
 	}
@@ -43,19 +45,19 @@ void PlayerIdleState1::OnEnter()
 void PlayerIdleState1::OnStay()
 {
 	framework::EVENT_ANIMATION_INFO animationInfo;
-	if (m_Direction.y >= 0.9f)
+	if (m_Direction.y == 1.f)
 	{
 		animationInfo = { L"IDLE_FRONT", false };
 	}
-	else if (m_Direction.y <= -0.9f)
+	else if (m_Direction.y == -1.f)
 	{
 		animationInfo = { L"IDLE_BACK", false };
 	}
-	else if (m_Direction.x >= 0.9f)
+	else if (m_Direction.x == 1.f)
 	{
 		animationInfo = { L"IDLE_SIDE", false };
 	}
-	else if (m_Direction.x <= -0.9f)
+	else if (m_Direction.x == -1.f)
 	{
 		animationInfo = { L"IDLE_SIDE", true };
 	}

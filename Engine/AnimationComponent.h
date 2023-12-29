@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RenderComponent.h"
-#include "EventListener.h"
 
 class AnimationAsset;
 
@@ -12,7 +11,6 @@ class AnimationAsset;
 /// </summary>
 class AnimationComponent
 	: public RenderComponent
-	//, public EventListener
 {
 protected:
 	AnimationAsset* m_pAnimationAsset = nullptr;									// 애니메이션을 위한 기본 데이터 자산 (내부에 D2D1Bitmap)
@@ -25,6 +23,9 @@ protected:
 	bool m_bMirror = false;
 	float m_Speed = 1.f;
 
+	bool m_bLoop = true;
+	bool m_bActive = false;
+
 public:
 	AnimationComponent();
 	virtual ~AnimationComponent();
@@ -32,6 +33,9 @@ public:
 public:
 	void SetSpeed(const float val) { m_Speed = val; }
 	void SetAnimationName(std::wstring name) { m_AnimationName = name; }
+
+	void SetLoop(bool loop) { m_bLoop = loop; }
+	void SetActive(bool active) { m_bActive = active; }
 
 public:
 	void Update(const float deltaTime) final;
@@ -43,8 +47,5 @@ public:
 	void LoadAnimationAsset(const WCHAR* szFilePath, const WCHAR* assetName);
 
 	void ChangeAnimation(const std::wstring name, const bool flip);
-	void KeepAnimation(const bool flip);
-
-public:
-	//void HandleEvent(Event* event) final;
+	void KeepAnimation(const std::wstring name, const bool flip);
 };

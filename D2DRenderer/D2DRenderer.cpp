@@ -38,6 +38,14 @@ HRESULT D2DRenderer::Initialize()
             static_cast<UINT>(rc.bottom - rc.top)
         );
 
+        //D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+        //        D2D1_RENDER_TARGET_TYPE_DEFAULT,
+        //        D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
+        //        0,
+        //        0,
+        //        D2D1_RENDER_TARGET_USAGE_GDI_COMPATIBLE // GDI 호환 모드 설정
+        //    );
+
         // 팩토리로 윈도우핸들, 사이즈를 넘겨 렌더타겟을 만든다.
         // 디버그 용은 화면 주사율 영향 없이 프레임 출력, 릴리즈 용은 화면 주사율 영향을 받는 프레임
 #ifdef _DEBUG
@@ -48,7 +56,7 @@ HRESULT D2DRenderer::Initialize()
         );
 #else
 	hr = m_pD2DFactory->CreateHwndRenderTarget(
-			D2D1::RenderTargetProperties(),
+        D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(CommonApp::m_hWnd, size),
 			&m_pD2DRenderTarget
 		);
